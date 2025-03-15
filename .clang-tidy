@@ -10,9 +10,14 @@ Checks: "*,\
   -llvm-header-guard,\
   -llvm-include-order,\
   -llvmlibc-*,\
+  -cppcoreguidelines-pro-bounds-constant-array-index,\
   -modernize-use-nodiscard,\
+  -misc-include-cleaner,\
+  -misc-non-private-member-variables-in-classes,\
   -modernize-use-trailing-return-type,\
-  -misc-non-private-member-variables-in-classes"
+  -*-magic-numbers,\
+  -*-use-ranges,\
+"
 WarningsAsErrors: ''
 CheckOptions:
   - key: 'bugprone-argument-comment.StrictMode'

@@ -17,7 +17,7 @@ include(cmake/variables.cmake)
 
 add_library(
     based_based
-    source/based.cpp
+    source/instrumentation.cpp
 )
 add_library(based::based ALIAS based_based)
 
