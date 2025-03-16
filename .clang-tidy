@@ -11,10 +11,11 @@ Checks: "*,\
   -llvm-include-order,\
   -llvmlibc-*,\
   -cppcoreguidelines-pro-bounds-constant-array-index,\
-  -modernize-use-nodiscard,\
   -misc-include-cleaner,\
   -misc-non-private-member-variables-in-classes,\
+  -modernize-use-nodiscard,\
   -modernize-use-trailing-return-type,\
+  -readability-identifier-length,\
   -*-magic-numbers,\
   -*-use-ranges,\
 "

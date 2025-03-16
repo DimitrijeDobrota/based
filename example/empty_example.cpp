@@ -15,7 +15,7 @@ int main()
   instrumented::initialize(vec.size());
   std::sort(std::begin(vec), std::end(vec));
 
-  for (std::size_t i = 0; i < instrumented::size(); i++) {
+  for (std::size_t i = 0; i < instrumented::op_num; i++) {
     std::cout << std::format(
         "{:15}: {}\n", instrumented::name(i), instrumented::count(i));
   }
