@@ -19,6 +19,38 @@
 namespace based
 {
 
+class table
+{
+public:
+  explicit table(std::size_t min_wth)
+      : m_min_wth(min_wth)
+  {
+  }
+
+  template<typename I>
+  void print_header(I first, I last)
+  {
+    while (first != last) {
+      std::cout << std::format("{:^{}} | ", *first, m_min_wth);
+      first++;
+    }
+    std::cout << '\n';
+  }
+
+  template<typename I>
+  void print_row(I first, I last, std::size_t precision)
+  {
+    while (first != last) {
+      std::cout << std::format("{:{}.{}f} | ", *first, m_min_wth, precision);
+      first++;
+    }
+    std::cout << '\n';
+  }
+
+private:
+  std::size_t m_min_wth;
+};
+
 inline auto dont_normalize(double x, double /* n */)
 {
   return x;
@@ -41,7 +73,6 @@ inline auto normalize_nlogn1(double x, double n)
 
 struct instrumented_base
 {
-protected:
   BASED_ENUM(op,
              std::uint8_t,
              n,
@@ -70,13 +101,9 @@ protected:
 
   static std::array<double, op::size> counts;
 
-public:
   static constexpr auto op_num = op::size;
 
   static void initialize(std::size_t size);
-
-  static constexpr auto name(std::size_t idx) { return names[idx]; }
-  static auto count(std::size_t idx) { return counts[idx]; }
 };
 
 template<typename T>
@@ -167,6 +194,11 @@ struct instrumented : instrumented_base
   {
     return !(lhs < rhs);
   }
+
+  friend std::ostream& operator<<(std::ostream& ost, const instrumented& rhs)
+  {
+    return ost << rhs.value;
+  }
 };
 
 template<typename Function>
@@ -178,15 +210,13 @@ void count_operations(size_t i,
   using instrumented = based::instrumented<double>;
 
   constexpr size_t cols = instrumented::op_num;
-  const size_t normalized((norm == dont_normalize) ? 0 : 2);
+  const size_t decimals((norm == dont_normalize) ? 0 : 2);
 
-  std::array<size_t, cols> decimals = {0};
-  std::fill(std::next(std::begin(decimals)), std::end(decimals), normalized);
+  std::array<double, cols> values = {0};
 
-  for (size_t k = 0; k < cols; ++k) {
-    std::cout << std::format("{:^12} | ", instrumented::name(k));
-  }
-  std::cout << '\n';
+  table tbl(12);
+  tbl.print_header(std::begin(instrumented::names),
+                   std::end(instrumented::names));
 
   std::mt19937 rng(0);  // NOLINT cert-msc32-c cert-msc51-cpp
   while (i <= j) {
@@ -197,14 +227,14 @@ void count_operations(size_t i,
     instrumented::initialize(i);
     fun(std::begin(vec), std::end(vec));
 
-    std::cout << std::format("{:12} | ", instrumented::count(0));
+    const auto dbl = static_cast<double>(i);
+
+    values[0] = dbl;
     for (size_t k = 1; k < cols; ++k) {
-      std::cout << std::format(
-          "{:12.{}f} | ",
-          norm(instrumented::count(k), static_cast<double>(i)),
-          decimals[k]);
+      values[k] = norm(instrumented::counts[k], dbl);
     }
-    std::cout << '\n' << std::flush;
+
+    tbl.print_row(std::begin(values), std::end(values), decimals);
 
     i <<= 1U;
   }
