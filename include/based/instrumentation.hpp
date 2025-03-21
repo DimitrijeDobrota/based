@@ -40,6 +40,7 @@ public:
   template<typename I>
   void print_row(I first, I last, std::size_t precision)
   {
+    std::cout << std::format("{:{}} | ", *first++, m_min_wth);
     while (first != last) {
       std::cout << std::format("{:{}.{}f} | ", *first, m_min_wth, precision);
       first++;

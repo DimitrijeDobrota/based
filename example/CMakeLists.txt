@@ -21,5 +21,6 @@ function(add_example NAME)
 endfunction()
 
 add_example(instrumentation)
+add_example(algorithm)
 
 add_folders(Example)
