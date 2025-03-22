@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <vector>
 
 namespace based
@@ -35,9 +36,12 @@ private:
 
 public:
   list_pool()
-      : m_free_list(empty())
+      : m_free_list(node_empty())
   {
   }
+
+  bool is_empty(list_type x) const { return x == node_empty(); }
+  list_type node_empty() const { return list_type(0); }
 
   const value_type& value(list_type x) const { return node(x).value; }
   value_type& value(list_type x) { return node(x).value; }
@@ -50,6 +54,20 @@ public:
     const list_type ret = next(x);
     next(x) = m_free_list;
     m_free_list = x;
+    return ret;
+  }
+
+  list_type free(
+      list_type front,  // NOLINT bugprone-easily-swappable-parameters
+      list_type back)
+  {
+    if (is_empty(front)) {
+      return node_empty();
+    }
+
+    const list_type ret = next(back);
+    next(back) = m_free_list;
+    m_free_list = front;
     return ret;
   }
 
@@ -68,8 +86,41 @@ public:
     return new_list;
   }
 
-  bool is_empty(list_type x) const { return x == empty(); }
-  list_type empty() const { return list_type(0); }
+  using queue_t = std::pair<list_type, list_type>;
+
+  bool is_empty(const queue_t& que) const { return is_empty(que.first); }
+  queue_t queue_empty() { return {node_empty(), node_empty()}; }
+
+  queue_t push_front(const queue_t& que, const value_type& val)
+  {
+    auto new_node = allocate(val, que.first);
+    if (is_empty(que)) {
+      return {new_node, new_node};
+    }
+    return {new_node, que.second};
+  }
+
+  queue_t push_back(const queue_t& que, const value_type& val)
+  {
+    auto new_node = allocate(val, node_empty());
+    if (is_empty(que)) {
+      return {new_node, new_node};
+    }
+    next(que.second) = new_node;
+    return {new_node, new_node};
+  }
+
+  queue_t pop_front(const queue_t& que)
+  {
+    if (is_empty(que)) {
+      return que;
+    }
+    queue_t ret = {next(que.first), que.second};
+    free(que.first);
+    return ret;
+  }
+
+  void free(const queue_t& que) { free(que.first, que.second); }
 };
 
 template<typename T, typename N>
