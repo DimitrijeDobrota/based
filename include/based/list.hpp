@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <utility>
 #include <vector>
 
@@ -39,6 +40,59 @@ public:
       : m_free_list(node_empty())
   {
   }
+
+  struct iterator
+  {
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = list_pool::list_type;
+    using value_type = list_pool::value_type;
+    using reference = value_type&;
+    using pointer = value_type*;
+
+    iterator() = default;
+
+    explicit iterator(list_pool& pool)
+        : iterator(pool, pool.node_empty())
+    {
+    }
+
+    iterator(list_pool& pool, list_pool::list_type node)
+        : m_pool(pool)
+        , m_node(node)
+    {
+    }
+
+    reference operator*() const { return m_pool.get().value(m_node); }
+    pointer operator->() const { return &**this; }
+
+    iterator& operator++()
+    {
+      m_node = m_pool.get().next(m_node);
+      return *this;
+    }
+
+    iterator operator++(int)
+    {
+      iterator tmp(*this);
+      ++*this;
+      return tmp;
+    }
+
+    friend bool operator==(const iterator& x, const iterator& y)
+    {
+      // assert(x.m_pool == y.m_pool);
+      return x.m_node == y.m_node;
+    }
+
+    friend bool operator!=(const iterator& x, const iterator& y)
+    {
+      return !(x == y);
+    }
+
+  private:
+    std::reference_wrapper<list_pool> m_pool;
+    list_pool::list_type m_node;
+  };
 
   bool is_empty(list_type x) const { return x == node_empty(); }
   list_type node_empty() const { return list_type(0); }
@@ -107,7 +161,7 @@ public:
       return {new_node, new_node};
     }
     next(que.second) = new_node;
-    return {new_node, new_node};
+    return {que.first, new_node};
   }
 
   queue_t pop_front(const queue_t& que)

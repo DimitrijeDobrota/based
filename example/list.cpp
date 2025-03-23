@@ -7,13 +7,20 @@
 int main()
 {
   using instrumented = based::instrumented<double>;
+  using list_pool = based::list_pool<instrumented, std::uint8_t>;
+  using iter = list_pool::iterator;
 
-  based::list_pool<instrumented, std::uint8_t> pool;
+  auto pool = list_pool();
   auto head = pool.node_empty();
 
   for (std::size_t i = 0; i < 0xFF; i++) {
     head = pool.allocate(static_cast<double>(i), head);
   }
+
+  for (auto it = iter(pool, head); it != iter(pool); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << '\n';
 
   based::free_list(pool, head);
 
@@ -29,6 +36,11 @@ int main()
       queue = pool.pop_front(queue);
     }
   }
+
+  for (auto it = iter(pool, queue.first); it != iter(pool); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << '\n';
 
   pool.free(queue);
 
