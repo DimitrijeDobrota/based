@@ -16,40 +16,52 @@ struct irregular
 template<typename T>
 struct identity
 {
-  using input_types = std::tuple<T>;
-  using output_type = T;
-
-  output_type operator()(T val) { return val; }
+  T operator()(T val) { return val; }
 };
 
-struct identity_wrong_input_tuple
+template<typename T, typename U>
+struct add
 {
-  using input_types = int;  // should be a tuple
-  using output_type = int;
-
-  output_type operator()(int val) { return val; }
-};
-
-struct identity_wrong_input_tuple_irregular
-{
-  using input_types = std::tuple<irregular>;  // should be a regular tuple
-  using output_type = int;
-
-  output_type operator()(irregular /* val */) { return 1; }
+  T operator()(T val1, U val2) { return val1 + val2; }
 };
 
 int main()
 {
-  static_assert(std::same_as<based::domain_t<identity<int>>, std::tuple<int>>);
-  static_assert(based::arity_v<identity<int>> == 1);
+  using id = identity<double>;
+  using ii = identity<irregular>;
 
-  static_assert(based::Procedure<identity<int>>);
-  static_assert(based::Procedure<identity<irregular>>);
+  static_assert(std::same_as<based::domain_t<id>, std::tuple<double>>);
+  static_assert(std::same_as<based::codomain_t<id>, double>);
+  static_assert(based::arity_v<id> == 1);
 
-  static_assert(!based::Procedure<identity_wrong_input_tuple>);
+  static_assert(based::Procedure<id>);
+  static_assert(based::Procedure<ii>);
 
-  static_assert(based::RegularProcedure<identity<int>>);
-  static_assert(!based::RegularProcedure<identity<irregular>>);
+  static_assert(based::RegularProcedure<id>);
+  static_assert(!based::RegularProcedure<ii>);
 
-  static_assert(!based::RegularProcedure<identity_wrong_input_tuple_irregular>);
+  using ad = add<double, double>;
+  using ai = add<irregular, irregular>;
+  using aid = add<irregular, double>;
+  using adi = add<double, irregular>;
+
+  static_assert(std::same_as<based::domain_t<ad>, std::tuple<double, double>>);
+  static_assert(std::same_as<based::codomain_t<ad>, double>);
+  static_assert(based::arity_v<ad> == 2);
+
+  static_assert(based::Procedure<ad>);
+  static_assert(based::Procedure<ai>);
+  static_assert(based::Procedure<aid>);
+  static_assert(based::Procedure<adi>);
+
+  static_assert(based::RegularProcedure<ad>);
+  static_assert(!based::RegularProcedure<ai>);
+  static_assert(!based::RegularProcedure<aid>);
+  static_assert(!based::RegularProcedure<adi>);
+
+  static const auto l1 = [](double a) { return a; };
+  static_assert(based::RegularProcedure<decltype(l1)>);
+
+  static const auto l2 = [](irregular /* a */) { return 1; };
+  static_assert(!based::RegularProcedure<decltype(l2)>);
 }
