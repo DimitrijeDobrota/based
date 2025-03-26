@@ -112,4 +112,6 @@ int main()
   static_assert(based::Procedure<decltype(l2)>);
   static_assert(!based::RegularProcedure<decltype(l2)>);
   static_assert(!based::FunctionalProcedure<decltype(l2)>);
+
+  return 0;
 }

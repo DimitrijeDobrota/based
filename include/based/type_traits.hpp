@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <tuple>
 #include <type_traits>
 
@@ -20,8 +21,8 @@ concept Input =
     || (std::is_lvalue_reference_v<T>
         && std::is_const_v<std::remove_reference_t<T>>);
 
-template<typename P, typename... Args>
-concept Invokable = std::invocable<P, Args...>;
+namespace detail
+{
 
 template<typename Fun>
 concept FreeProcedure = std::is_function_v<Fun>;
@@ -32,10 +33,6 @@ concept MemberProcedure = std::is_member_function_pointer_v<std::decay_t<Fun>>;
 template<typename Fun>
 concept FunctorProcedure = std::is_class_v<std::decay_t<Fun>>
     && requires(Fun&& t) { &std::decay_t<Fun>::operator(); };
-
-template<typename P>
-concept Procedure =
-    FreeProcedure<P> || MemberProcedure<P> || FunctorProcedure<P>;
 
 template<class>
 struct is_regular_tuple : std::false_type
@@ -162,9 +159,6 @@ struct domain<P>
   using type = signature<std::decay_t<P>>::arg_type;
 };
 
-template<typename P>
-using domain_t = domain<P>::type;
-
 template<typename>
 struct codomain;
 
@@ -186,57 +180,54 @@ struct codomain<P>
   using type = signature<std::decay_t<P>>::ret_type;
 };
 
-template<typename P>
-using codomain_t = typename codomain<P>::type;
+}  // namespace detail
 
 template<typename P>
-struct arity
-{
-  static constexpr auto value = std::tuple_size<domain_t<P>>::value;
-};
+using domain_t = detail::domain<P>::type;
 
 template<typename P>
-inline constexpr auto arity_v = arity<P>::value;
+using codomain_t = typename detail::codomain<P>::type;
+
+template<typename P>
+inline constexpr auto arity_v = std::tuple_size<domain_t<P>>::value;
 
 template<typename P, std::size_t Idx>
   requires requires { Idx < arity_v<P>; }
-struct domain_elem
-{
-  using type = std::tuple_element_t<Idx, domain_t<P>>;
-};
+using domain_elem_t = std::tuple_element_t<Idx, domain_t<P>>;
 
-template<typename P, std::size_t Idx>
-using domain_elem_t = typename domain_elem<P, Idx>::type;
+template<typename P>
+concept Procedure = detail::FreeProcedure<P> || detail::MemberProcedure<P>
+    || detail::FunctorProcedure<P>;
 
 template<typename P>
 concept RegularProcedure = requires {
   requires(Procedure<P>);
-  requires(RegularTuple<domain_t<P>>);
+  requires(detail::RegularTuple<domain_t<P>>);
   requires(Regular<codomain_t<P>>);
 };
 
 template<typename P>
 concept FunctionalProcedure = requires {
   requires(RegularProcedure<P>);
-  requires(InputTuple<domain_t<P>>);
+  requires(detail::InputTuple<domain_t<P>>);
 };
 
 template<typename P>
 concept UnaryFunction = requires {
-  requires(FunctorProcedure<P>);
+  requires(FunctionalProcedure<P>);
   requires(arity_v<P> == 1);
 };
 
 template<typename P>
 concept HomogeneousFunction = requires {
-  requires(FunctorProcedure<P>);
+  requires(FunctionalProcedure<P>);
   requires(arity_v<P> > 0);
-  requires(HomogenousTuple<domain_t<P>>);
+  requires(detail::HomogenousTuple<domain_t<P>>);
 };
 
 template<typename P>
 concept Predicate = requires {
-  requires(FunctorProcedure<P>);
+  requires(FunctionalProcedure<P>);
   requires(std::same_as<bool, codomain_t<P>>);
 };
 
