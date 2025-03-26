@@ -7,6 +7,9 @@ namespace based
 {
 
 template<typename T>
+concept Integer = std::integral<T>;
+
+template<typename T>
 concept Regular = std::regular<T>;
 
 template<typename T>
@@ -45,16 +48,16 @@ struct is_regular_tuple<Tuple<Types...>> : std::true_type
 {
 };
 
-template<class>
-struct is_input_tuple : std::false_type
-{
-};
-
 template<class T>
 inline constexpr bool is_regular_tuple_v = is_regular_tuple<T>::value;
 
 template<class T>
 concept RegularTuple = is_regular_tuple_v<T>;
+
+template<class>
+struct is_input_tuple : std::false_type
+{
+};
 
 template<template<class...> class Tuple, class... Types>
   requires(Input<Types> && ...)
@@ -67,6 +70,23 @@ inline constexpr bool is_input_tuple_v = is_input_tuple<T>::value;
 
 template<class T>
 concept InputTuple = is_input_tuple_v<T>;
+
+template<class>
+struct is_homogenous_tuple : std::false_type
+{
+};
+
+template<template<class...> class Tuple, typename Head, typename... Tail>
+  requires(std::same_as<Head, Tail> && ...)
+struct is_homogenous_tuple<Tuple<Head, Tail...>> : std::true_type
+{
+};
+
+template<class T>
+inline constexpr bool is_homogenous_tuple_v = is_homogenous_tuple<T>::value;
+
+template<class T>
+concept HomogenousTuple = is_input_tuple_v<T>;
 
 template<typename>
 struct signature;
@@ -199,6 +219,50 @@ template<typename P>
 concept FunctionalProcedure = requires {
   requires(RegularProcedure<P>);
   requires(InputTuple<domain_t<P>>);
+};
+
+template<typename P>
+concept UnaryFunction = requires {
+  requires(FunctorProcedure<P>);
+  requires(arity_v<P> == 1);
+};
+
+template<typename P>
+concept HomogeneousFunction = requires {
+  requires(FunctorProcedure<P>);
+  requires(arity_v<P> > 0);
+  requires(HomogenousTuple<domain_t<P>>);
+};
+
+template<typename P>
+concept Predicate = requires {
+  requires(FunctorProcedure<P>);
+  requires(std::same_as<bool, codomain_t<P>>);
+};
+
+template<typename P>
+concept HomogenousPredicate = requires {
+  requires(Predicate<P>);
+  requires(HomogeneousFunction<P>);
+};
+
+template<typename P>
+concept UnaryPredicate = requires {
+  requires(Predicate<P>);
+  requires(UnaryFunction<P>);
+};
+
+template<typename P>
+concept Operation = requires {
+  requires(HomogeneousFunction<P>);
+  requires(std::same_as<std::remove_cvref_t<codomain_t<P>>,
+                        std::remove_cvref_t<domain_elem_t<P, 0>>>);
+};
+
+template<typename P>
+concept Transformation = requires {
+  requires(Operation<P>);
+  requires(UnaryFunction<P>);
 };
 
 }  // namespace based

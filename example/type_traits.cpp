@@ -1,5 +1,8 @@
 #include "based/type_traits.hpp"
 
+namespace
+{
+
 struct irregular
 {
   irregular() = default;
@@ -11,6 +14,11 @@ struct irregular
   irregular& operator=(irregular&&) = delete;
 
   ~irregular() = default;
+};
+
+struct no_return
+{
+  void operator()() {}
 };
 
 template<typename T>
@@ -32,13 +40,20 @@ struct mutate
 };
 
 template<typename T, typename U>
-T sub(T val1, U val2)  // NOLINT
+T sub(T val1, U val2)
 {
   return val1 - val2;
 }
 
+}  // namespace
+
 int main()
 {
+  static_assert(based::arity_v<no_return> == 0);
+  static_assert(based::Procedure<no_return>);
+  static_assert(!based::RegularProcedure<no_return>);
+  static_assert(!based::FunctionalProcedure<no_return>);
+
   using id = identity<double>;
   using ii = identity<irregular>;
 
