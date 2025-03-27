@@ -41,7 +41,7 @@ namespace detail
 {
 
 template<typename Fun>
-concept FreeProcedure = std::is_function_v<Fun>;
+concept FreeProcedure = std::is_function_v<std::remove_pointer_t<Fun>>;
 
 template<typename Fun>
 concept MemberProcedure = std::is_member_function_pointer_v<std::decay_t<Fun>>;
@@ -157,16 +157,16 @@ struct signature<Ret (Obj::*)(Args...) const volatile>
 template<typename>
 struct domain;
 
+template<FreeProcedure P>
+struct domain<P>
+{
+  using type = signature<std::remove_pointer_t<P>>::arg_type;
+};
+
 template<FunctorProcedure P>
 struct domain<P>
 {
   using type = signature<decltype(&std::decay_t<P>::operator())>::arg_type;
-};
-
-template<FreeProcedure P>
-struct domain<P>
-{
-  using type = signature<P>::arg_type;
 };
 
 template<MemberProcedure P>
@@ -178,16 +178,16 @@ struct domain<P>
 template<typename>
 struct codomain;
 
+template<FreeProcedure P>
+struct codomain<P>
+{
+  using type = signature<std::remove_pointer_t<P>>::ret_type;
+};
+
 template<FunctorProcedure P>
 struct codomain<P>
 {
   using type = signature<decltype(&std::decay_t<P>::operator())>::ret_type;
-};
-
-template<FreeProcedure P>
-struct codomain<P>
-{
-  using type = signature<P>::ret_type;
 };
 
 template<MemberProcedure P>
