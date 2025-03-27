@@ -134,8 +134,8 @@ orbit_structure_nonterminating_orbit(const domain_t<F>& x, F f)
 template<Transformation F, Integer N>
 codomain_t<F> power_unary(codomain_t<F> x, N n, F f)
 {
-  while (n != N {0}) {
-    n = n - N {1};
+  while (!zero(n)) {
+    n = predecesor(n);
     x = f(x);
   }
   return x;

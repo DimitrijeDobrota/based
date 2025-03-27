@@ -4,11 +4,24 @@
 #include <tuple>
 #include <type_traits>
 
+#include "based/integer.hpp"
+
 namespace based
 {
 
 template<typename T>
-concept Integer = std::integral<T>;
+concept Integer = requires(T n) {
+  successor(n);
+  predecesor(n);
+  twice(n);
+  half(n);
+  positive(n);
+  negative(n);
+  zero(n);
+  one(n);
+  even(n);
+  odd(n);
+};
 
 template<typename T>
 concept Regular = std::regular<T>;
