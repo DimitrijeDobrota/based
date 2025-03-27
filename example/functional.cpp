@@ -21,5 +21,16 @@ int main()
   std::cout << based::circular_nonterminating_orbit(1, func) << '\n';
   std::cout << based::connection_point_nonterminating_orbit(1, func) << '\n';
 
+  std::cout << '\n';
+  std::cout << based::power(3, 0, std::multiplies<int> {}, 1) << '\n';
+  for (std::size_t i = 1; i < 8; i++) {
+    std::cout << based::power(3, i, std::multiplies<int> {}) << '\n';
+  }
+
+  std::cout << '\n';
+  for (std::size_t i = 0; i < 8; i++) {
+    std::cout << based::fibonacci(i) << '\n';
+  }
+
   return 0;
 }

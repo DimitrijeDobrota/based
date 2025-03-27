@@ -275,4 +275,17 @@ concept Transformation = requires {
   requires(UnaryFunction<P>);
 };
 
+template<typename P>
+concept BinaryOperation = requires {
+  requires(Operation<P>);
+  requires(arity_v<P> == 2);
+};
+
+template<typename P>
+concept AssociativeBinaryOperation = requires {
+  requires(Operation<P>);
+  requires(arity_v<P> == 2);
+  // requires(P is associative)
+};
+
 }  // namespace based

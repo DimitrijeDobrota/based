@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 #include "based/type_traits.hpp"
 
 namespace based
@@ -139,6 +141,82 @@ codomain_t<F> power_unary(codomain_t<F> x, N n, F f)
     x = f(x);
   }
   return x;
+}
+
+template<Integer I, BinaryOperation Op>
+codomain_t<Op> power_left_associated(codomain_t<Op> a, I n, Op op)
+{
+  assert(n > 0);
+  return one(n) ? a : op(power_left_associated(a, predecesor(n), op), a);
+}
+
+template<Integer I, BinaryOperation Op>
+codomain_t<Op> power_right_associated(codomain_t<Op> a, I n, Op op)
+{
+  assert(n > 0);
+  return one(n) ? a : op(a, power_right_associated(a, predecesor(n), op));
+}
+
+template<Integer I, AssociativeBinaryOperation Op>
+codomain_t<Op> power_accumulate_positive(codomain_t<Op> r,
+                                         codomain_t<Op> a,
+                                         I n,
+                                         Op op)
+{
+  assert(n > 0);
+  while (true) {
+    if (odd(n)) {
+      r = op(r, a);
+      if (one(n)) {
+        return r;
+      }
+    }
+    a = op(a, a);
+    n = half(n);
+  }
+}
+
+template<Integer I, AssociativeBinaryOperation Op>
+codomain_t<Op> power_accumulate(codomain_t<Op> r, codomain_t<Op> a, I n, Op op)
+{
+  assert(n >= 0);
+  return zero(n) ? r : power_accumulate_positive(r, a, n, op);
+}
+
+template<Integer I, AssociativeBinaryOperation Op>
+codomain_t<Op> power(codomain_t<Op> a, I n, Op op)
+{
+  assert(n > 0);
+  while (even(n)) {
+    a = op(a, a);
+    n = half(n);
+  }
+
+  n = half(n);
+  return zero(n) ? a : power_accumulate_positive(a, op(a, a), n, op);
+}
+
+template<Integer I, AssociativeBinaryOperation Op>
+codomain_t<Op> power(codomain_t<Op> a, I n, Op op, codomain_t<Op> id)
+{
+  assert(n >= 0);
+  return !zero(n) ? power(a, n, op) : id;
+}
+
+template<Integer I>
+std::pair<I, I> fibonacci_matrix_multiply(const std::pair<I, I>& x,
+                                          const std::pair<I, I>& y)
+{
+  return {(x.first * (y.first + y.second)) + (x.second * y.first),
+          (x.first * y.first) + (x.second * y.second)};
+}
+
+template<Integer I>
+I fibonacci(I n)
+{
+  assert(n >= 0);
+  return !zero(n) ? power({I {1}, I {0}}, n, fibonacci_matrix_multiply<I>).first
+                  : I {0};
 }
 
 }  // namespace based
