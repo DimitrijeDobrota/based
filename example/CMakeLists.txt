@@ -24,5 +24,6 @@ add_example(instrumentation)
 add_example(algorithm)
 add_example(list)
 add_example(type_traits)
+add_example(functional)
 
 add_folders(Example)

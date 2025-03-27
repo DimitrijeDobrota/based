@@ -57,7 +57,7 @@ int main()
   using id = identity<double>;
   using ii = identity<irregular>;
 
-  static_assert(std::same_as<based::domain_t<id>, std::tuple<double>>);
+  static_assert(std::same_as<based::domaind>, std::tuple<double>>);
   static_assert(std::same_as<based::codomain_t<id>, double>);
   static_assert(based::arity_v<id> == 1);
 
@@ -75,7 +75,7 @@ int main()
   using aid = add<irregular, double>;
   using adi = add<double, irregular>;
 
-  static_assert(std::same_as<based::domain_t<ad>,
+  static_assert(std::same_as<based::domaind>,
                              std::tuple<const double&, const double&>>);
   static_assert(std::same_as<based::codomain_t<ad>, double>);
   static_assert(based::arity_v<ad> == 2);

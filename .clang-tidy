@@ -147,6 +147,8 @@ CheckOptions:
     value: 'CamelCase'
   - key: 'readability-identifier-naming.TypeAliasCase'
     value: 'lower_case'
+  - key: 'readability-identifier-naming.TypeAliasIgnoredRegexp'
+    value: 'N'
   - key: 'readability-identifier-naming.TypedefCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.TypeTemplateParameterCase'

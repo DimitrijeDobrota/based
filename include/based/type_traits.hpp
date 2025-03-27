@@ -13,11 +13,14 @@ concept Integer = std::integral<T>;
 template<typename T>
 concept Regular = std::regular<T>;
 
+template<typename T, typename U>
+concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;
+
 template<typename T>
 concept Input =
-    std::same_as<T,
-                 std::remove_volatile_t<
-                     std::remove_reference_t<std::remove_pointer_t<T>>>>
+    std::is_same_v<T,
+                   std::remove_volatile_t<
+                       std::remove_reference_t<std::remove_pointer_t<T>>>>
     || (std::is_lvalue_reference_v<T>
         && std::is_const_v<std::remove_reference_t<T>>);
 
@@ -194,6 +197,9 @@ inline constexpr auto arity_v = std::tuple_size<domain_t<P>>::value;
 template<typename P, std::size_t Idx>
   requires requires { Idx < arity_v<P>; }
 using domain_elem_t = std::tuple_element_t<Idx, domain_t<P>>;
+
+template<typename P>
+using distance_t = std::uint64_t;
 
 template<typename P>
 concept Procedure = detail::FreeProcedure<P> || detail::MemberProcedure<P>
