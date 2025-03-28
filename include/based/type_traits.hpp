@@ -64,9 +64,6 @@ struct is_regular_tuple<Tuple<Types...>> : std::true_type
 template<class T>
 inline constexpr bool is_regular_tuple_v = is_regular_tuple<T>::value;
 
-template<class T>
-concept RegularTuple = is_regular_tuple_v<T>;
-
 template<class>
 struct is_input_tuple : std::false_type
 {
@@ -81,9 +78,6 @@ struct is_input_tuple<Tuple<Types...>> : std::true_type
 template<class T>
 inline constexpr bool is_input_tuple_v = is_input_tuple<T>::value;
 
-template<class T>
-concept InputTuple = is_input_tuple_v<T>;
-
 template<class>
 struct is_homogenous_tuple : std::false_type
 {
@@ -97,9 +91,6 @@ struct is_homogenous_tuple<Tuple<Head, Tail...>> : std::true_type
 
 template<class T>
 inline constexpr bool is_homogenous_tuple_v = is_homogenous_tuple<T>::value;
-
-template<class T>
-concept HomogenousTuple = is_input_tuple_v<T>;
 
 template<typename>
 struct signature;
@@ -196,20 +187,38 @@ struct codomain<P>
   using type = signature<std::decay_t<P>>::ret_type;
 };
 
+template<typename P>
+using domain_t = domain<P>::type;
+
+template<typename P>
+using codomain_t = codomain<P>::type;
+
+template<class T>
+concept RegularDomain = is_regular_tuple_v<domain_t<T>>;
+
+template<class T>
+concept InputDomain = is_input_tuple_v<domain_t<T>>;
+
+template<class T>
+concept HomogenousDomain = is_input_tuple_v<domain_t<T>>;
+
 }  // namespace detail
-
 template<typename P>
-using domain_t = detail::domain<P>::type;
-
-template<typename P>
-using codomain_t = typename detail::codomain<P>::type;
-
-template<typename P>
-inline constexpr auto arity_v = std::tuple_size<domain_t<P>>::value;
+inline constexpr auto arity_v = std::tuple_size<detail::domain_t<P>>::value;
 
 template<typename P, std::size_t Idx>
   requires requires { Idx < arity_v<P>; }
-using domain_elem_t = std::tuple_element_t<Idx, domain_t<P>>;
+using domain_elem_t =
+    std::decay_t<std::tuple_element_t<Idx, detail::domain_t<P>>>;
+
+template<typename P>
+using domain_t =
+    std::conditional_t<detail::is_homogenous_tuple_v<detail::domain_t<P>>,
+                       domain_elem_t<P, 0>,
+                       detail::domain_t<P>>;
+
+template<typename P>
+using codomain_t = detail::codomain_t<P>;
 
 template<typename P>
 using distance_t = std::uint64_t;
@@ -221,14 +230,14 @@ concept Procedure = detail::FreeProcedure<P> || detail::MemberProcedure<P>
 template<typename P>
 concept RegularProcedure = requires {
   requires(Procedure<P>);
-  requires(detail::RegularTuple<domain_t<P>>);
+  requires(detail::RegularDomain<P>);
   requires(Regular<codomain_t<P>>);
 };
 
 template<typename P>
 concept FunctionalProcedure = requires {
   requires(RegularProcedure<P>);
-  requires(detail::InputTuple<domain_t<P>>);
+  requires(detail::InputDomain<P>);
 };
 
 template<typename P>
@@ -241,7 +250,7 @@ template<typename P>
 concept HomogeneousFunction = requires {
   requires(FunctionalProcedure<P>);
   requires(arity_v<P> > 0);
-  requires(detail::HomogenousTuple<domain_t<P>>);
+  requires(detail::HomogenousDomain<P>);
 };
 
 template<typename P>
@@ -283,8 +292,7 @@ concept BinaryOperation = requires {
 
 template<typename P>
 concept AssociativeBinaryOperation = requires {
-  requires(Operation<P>);
-  requires(arity_v<P> == 2);
+  requires(BinaryOperation<P>);
   // requires(P is associative)
 };
 

@@ -8,7 +8,7 @@ namespace based
 {
 
 template<Transformation F>
-distance_t<F> distance(codomain_t<F> x, codomain_t<F> y, F f)
+distance_t<F> distance(domain_t<F> x, domain_t<F> y, F f)
 {
   // Precondition: y is reachable from x under f
   using N = distance_t<F>;
@@ -22,7 +22,7 @@ distance_t<F> distance(codomain_t<F> x, codomain_t<F> y, F f)
 }
 
 template<Transformation F>
-codomain_t<F> convergant_point(codomain_t<F> x0, codomain_t<F> x1, F f)
+domain_t<F> convergant_point(domain_t<F> x0, domain_t<F> x1, F f)
 {
   // Precondition: (exists n from distance_t<F>) n>= 0 ^ f^n(x0) = f^n(x1)
   while (x0 != x1) {
@@ -34,7 +34,7 @@ codomain_t<F> convergant_point(codomain_t<F> x0, codomain_t<F> x1, F f)
 
 template<Transformation F, UnaryPredicate P>
   requires SameAs<domain_t<F>, domain_t<P>>
-codomain_t<F> collision_point(const codomain_t<F>& x, F f, P p)
+domain_t<F> collision_point(const domain_t<F>& x, F f, P p)
 {
   // Precondition p(x) <=> f(x) is defined
   if (!p(x)) {
@@ -60,7 +60,7 @@ codomain_t<F> collision_point(const codomain_t<F>& x, F f, P p)
 
 template<Transformation F, UnaryPredicate P>
   requires SameAs<domain_t<F>, domain_t<P>>
-bool terminating(const codomain_t<F>& x, F f, P p)
+bool terminating(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
   return !p(collision_point(x, f, p));
@@ -68,7 +68,7 @@ bool terminating(const codomain_t<F>& x, F f, P p)
 
 template<Transformation F, UnaryPredicate P>
   requires SameAs<domain_t<F>, domain_t<P>>
-bool circular(const codomain_t<F>& x, F f, P p)
+bool circular(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
   const auto y = collision_point(x, f, p);
@@ -77,7 +77,7 @@ bool circular(const codomain_t<F>& x, F f, P p)
 
 template<Transformation F, UnaryPredicate P>
   requires SameAs<domain_t<F>, domain_t<P>>
-bool connection_point(const codomain_t<F>& x, F f, P p)
+bool connection_point(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
   const auto y = collision_point(x, f, p);
@@ -90,7 +90,7 @@ bool connection_point(const codomain_t<F>& x, F f, P p)
 template<Transformation F, UnaryPredicate P>
   requires SameAs<domain_t<F>, domain_t<P>>
 std::tuple<distance_t<F>, distance_t<F>, domain_t<F>> orbit_structure(
-    const codomain_t<F>& x, F f, P p)
+    const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
   const auto y = connection_point(x, f, p);
@@ -100,7 +100,7 @@ std::tuple<distance_t<F>, distance_t<F>, domain_t<F>> orbit_structure(
 }
 
 template<Transformation F>
-codomain_t<F> collision_point_nonterminating_orbit(const codomain_t<F>& x, F f)
+domain_t<F> collision_point_nonterminating_orbit(const domain_t<F>& x, F f)
 {
   auto slow = x;
   auto fast = f(x);
@@ -114,13 +114,13 @@ codomain_t<F> collision_point_nonterminating_orbit(const codomain_t<F>& x, F f)
 }
 
 template<Transformation F>
-bool circular_nonterminating_orbit(const codomain_t<F>& x, F f)
+bool circular_nonterminating_orbit(const domain_t<F>& x, F f)
 {
   return x == f(collision_point_nonterminating_orbit(x, f));
 }
 
 template<Transformation F>
-codomain_t<F> connection_point_nonterminating_orbit(const codomain_t<F>& x, F f)
+domain_t<F> connection_point_nonterminating_orbit(const domain_t<F>& x, F f)
 {
   return convergant_point(x, f(collision_point_nonterminating_orbit(x, f)), f);
 }
@@ -134,7 +134,7 @@ orbit_structure_nonterminating_orbit(const domain_t<F>& x, F f)
 }
 
 template<Transformation F, Integer N>
-codomain_t<F> power_unary(codomain_t<F> x, N n, F f)
+domain_t<F> power_unary(domain_t<F> x, N n, F f)
 {
   while (!zero(n)) {
     n = predecesor(n);
@@ -144,24 +144,24 @@ codomain_t<F> power_unary(codomain_t<F> x, N n, F f)
 }
 
 template<Integer I, BinaryOperation Op>
-codomain_t<Op> power_left_associated(codomain_t<Op> a, I n, Op op)
+domain_t<Op> power_left_associated(domain_t<Op> a, I n, Op op)
 {
   assert(n > 0);
   return one(n) ? a : op(power_left_associated(a, predecesor(n), op), a);
 }
 
 template<Integer I, BinaryOperation Op>
-codomain_t<Op> power_right_associated(codomain_t<Op> a, I n, Op op)
+domain_t<Op> power_right_associated(domain_t<Op> a, I n, Op op)
 {
   assert(n > 0);
   return one(n) ? a : op(a, power_right_associated(a, predecesor(n), op));
 }
 
 template<Integer I, AssociativeBinaryOperation Op>
-codomain_t<Op> power_accumulate_positive(codomain_t<Op> r,
-                                         codomain_t<Op> a,
-                                         I n,
-                                         Op op)
+domain_t<Op> power_accumulate_positive(domain_t<Op> r,
+                                       domain_t<Op> a,
+                                       I n,
+                                       Op op)
 {
   assert(n > 0);
   while (true) {
@@ -177,14 +177,14 @@ codomain_t<Op> power_accumulate_positive(codomain_t<Op> r,
 }
 
 template<Integer I, AssociativeBinaryOperation Op>
-codomain_t<Op> power_accumulate(codomain_t<Op> r, codomain_t<Op> a, I n, Op op)
+domain_t<Op> power_accumulate(domain_t<Op> r, domain_t<Op> a, I n, Op op)
 {
   assert(n >= 0);
   return zero(n) ? r : power_accumulate_positive(r, a, n, op);
 }
 
 template<Integer I, AssociativeBinaryOperation Op>
-codomain_t<Op> power(codomain_t<Op> a, I n, Op op)
+domain_t<Op> power(domain_t<Op> a, I n, Op op)
 {
   assert(n > 0);
   while (even(n)) {
@@ -197,7 +197,7 @@ codomain_t<Op> power(codomain_t<Op> a, I n, Op op)
 }
 
 template<Integer I, AssociativeBinaryOperation Op>
-codomain_t<Op> power(codomain_t<Op> a, I n, Op op, codomain_t<Op> id)
+domain_t<Op> power(domain_t<Op> a, I n, Op op, domain_t<Op> id)
 {
   assert(n >= 0);
   return !zero(n) ? power(a, n, op) : id;
