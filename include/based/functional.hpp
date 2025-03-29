@@ -219,4 +219,22 @@ I fibonacci(I n)
                   : I {0};
 }
 
+template<Relation R>
+auto complement(R r)
+{
+  return [r](const domain_t<R>& a, const domain_t<R>& b) { return !r(a, b); };
+}
+
+template<Relation R>
+auto converse(R r)
+{
+  return [r](const domain_t<R>& a, const domain_t<R>& b) { return r(b, a); };
+}
+
+template<Relation R>
+auto complement_of_converse(R r)
+{
+  return [r](const domain_t<R>& a, const domain_t<R>& b) { return !r(b, a); };
+}
+
 }  // namespace based

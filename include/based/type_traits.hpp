@@ -26,6 +26,9 @@ concept Integer = requires(T n) {
 template<typename T>
 concept Regular = std::regular<T>;
 
+template<typename T>
+concept RegularIterator = std::regular<typename T::value_type>;
+
 template<typename T, typename U>
 concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;
 
@@ -294,6 +297,12 @@ template<typename P>
 concept AssociativeBinaryOperation = requires {
   requires(BinaryOperation<P>);
   // requires(P is associative)
+};
+
+template<typename P>
+concept Relation = requires {
+  requires(HomogenousPredicate<P>);
+  requires(arity_v<P> == 2);
 };
 
 }  // namespace based

@@ -3,27 +3,30 @@
 #include <functional>
 #include <utility>
 
+#include "based/type_traits.hpp"
+
 namespace based
 {
 
 // need to deal with returned reference to temporary object...
 
 // returns min element, first if equal
-template<typename T, typename Cmp>
-const T& min(const T& lhs, const T& rhs, Cmp cmp)
+template<Relation R>
+const domain_t<R>& min(const domain_t<R>& lhs, const domain_t<R>& rhs, R r)
 {
-  return cmp(rhs, lhs) ? rhs : lhs;
+  return r(rhs, lhs) ? rhs : lhs;
 }
 
-template<typename T>
+template<Regular T>
 const T& min(const T& lhs, const T& rhs)
 {
-  return based::min(lhs, rhs, std::less());
+  return based::min(lhs, rhs, std::less<T>());
 }
 
 // return first min element
-template<typename I, typename Cmp>
-I min_element(I first, I last, Cmp cmp)
+template<RegularIterator I, Relation R>
+  requires std::same_as<typename I::value_type, domain_t<R>>
+I min_element(I first, I last, R r)
 {
   if (first == last) {
     return last;
@@ -31,7 +34,7 @@ I min_element(I first, I last, Cmp cmp)
 
   I mini = first++;
   while (first != last) {
-    if (cmp(*first, *mini)) {
+    if (r(*first, *mini)) {
       mini = first;
     }
     first++;
@@ -39,28 +42,29 @@ I min_element(I first, I last, Cmp cmp)
   return mini;
 }
 
-template<typename I>
+template<RegularIterator I>
 I min_element(I first, I last)
 {
-  return based::min_element(first, last, std::less());
+  return based::min_element(first, last, std::less<typename I::value_type>());
 }
 
 // returns max element, second if equal
-template<typename T, typename Cmp>
-const T& max(const T& lhs, const T& rhs, Cmp cmp)
+template<Relation R>
+const domain_t<R>& max(const domain_t<R>& lhs, const domain_t<R>& rhs, R r)
 {
-  return cmp(rhs, lhs) ? lhs : rhs;
+  return r(rhs, lhs) ? lhs : rhs;
 }
 
-template<typename T>
+template<Regular T>
 const T& max(const T& lhs, const T& rhs)
 {
-  return based::max(lhs, rhs, std::less());
+  return based::max(lhs, rhs, std::less<T>());
 }
 
 // return last max element
-template<typename I, typename Cmp>
-I max_element(I first, I last, Cmp cmp)
+template<RegularIterator I, Relation R>
+  requires std::same_as<typename I::value_type, domain_t<R>>
+I max_element(I first, I last, R r)
 {
   if (first == last) {
     return last;
@@ -68,7 +72,7 @@ I max_element(I first, I last, Cmp cmp)
 
   I maxi = first++;
   while (first != last) {
-    if (!cmp(*first, *maxi)) {
+    if (!r(*first, *maxi)) {
       maxi = first;
     }
     first++;
@@ -76,15 +80,16 @@ I max_element(I first, I last, Cmp cmp)
   return maxi;
 }
 
-template<typename I>
+template<RegularIterator I>
 I max_element(I first, I last)
 {
-  return based::max_element(first, last, std::less());
+  return based::max_element(first, last, std::less<typename I::value_type>());
 }
 
 // return first min and last max element
-template<typename I, typename Cmp>
-std::pair<I, I> minmax_element(I first, I last, Cmp cmp)
+template<RegularIterator I, Relation R>
+  requires std::same_as<typename I::value_type, domain_t<R>>
+std::pair<I, I> minmax_element(I first, I last, R r)
 {
   if (first == last) {
     return {last, last};
@@ -96,7 +101,7 @@ std::pair<I, I> minmax_element(I first, I last, Cmp cmp)
   }
 
   I maxi = first++;
-  if (cmp(*maxi, *mini)) {
+  if (r(*maxi, *mini)) {
     std::swap(mini, maxi);
   }
 
@@ -105,15 +110,15 @@ std::pair<I, I> minmax_element(I first, I last, Cmp cmp)
     I pmini = first;
     I pmaxi = next;
 
-    if (cmp(*pmaxi, *pmini)) {
+    if (r(*pmaxi, *pmini)) {
       std::swap(pmini, pmaxi);
     }
 
-    if (cmp(*pmini, *mini)) {
+    if (r(*pmini, *mini)) {
       mini = pmini;
     }
 
-    if (!cmp(*pmaxi, *maxi)) {
+    if (!r(*pmaxi, *maxi)) {
       maxi = pmaxi;
     }
 
@@ -123,9 +128,9 @@ std::pair<I, I> minmax_element(I first, I last, Cmp cmp)
   }
 
   if (first != last) {
-    if (cmp(*first, *mini)) {
+    if (r(*first, *mini)) {
       mini = first;
-    } else if (!cmp(*first, *maxi)) {
+    } else if (!r(*first, *maxi)) {
       maxi = first;
     }
   }
@@ -133,10 +138,11 @@ std::pair<I, I> minmax_element(I first, I last, Cmp cmp)
   return {mini, maxi};
 }
 
-template<typename I>
+template<RegularIterator I>
 std::pair<I, I> minmax_element(I first, I last)
 {
-  return based::minmax_element(first, last, std::less());
+  return based::minmax_element(
+      first, last, std::less<typename I::value_type>());
 }
 
 }  // namespace based
