@@ -12,14 +12,22 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
 endif()
 
+find_package(Catch2 REQUIRED)
+include(Catch)
+
 # ---- Tests ----
 
-add_executable(based_test source/based_test.cpp)
-target_link_libraries(
-    based_test PRIVATE
-    based::based
-)
-target_compile_features(based_test PRIVATE cxx_std_20)
+function(add_test NAME)
+  add_executable("${NAME}" "source/${NAME}.cpp")
+  target_link_libraries("${NAME}" PRIVATE based::based)
+  target_link_libraries("${NAME}" PRIVATE Catch2::Catch2WithMain)
+  target_compile_features("${NAME}" PRIVATE cxx_std_20)
+  catch_discover_tests("${NAME}")
+endfunction()
+
+# ---- Algorithm ----
+
+add_test(min_test)
 
 # ---- End-of-file commands ----
 

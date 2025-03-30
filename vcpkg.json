@@ -8,6 +8,10 @@
     "test": {
       "description": "Dependencies for testing",
       "dependencies": [
+        {
+          "name": "catch2",
+          "version>=": "3.7.1"
+        }
       ]
     }
   },
