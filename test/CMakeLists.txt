@@ -7,11 +7,6 @@ include(../cmake/folders.cmake)
 
 # ---- Dependencies ----
 
-if(PROJECT_IS_TOP_LEVEL)
-  find_package(based REQUIRED)
-  enable_testing()
-endif()
-
 find_package(Catch2 REQUIRED)
 include(Catch)
 

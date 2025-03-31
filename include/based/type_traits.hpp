@@ -24,13 +24,22 @@ concept Integer = requires(T n) {
 };
 
 template<typename T>
+using bare_t = std::remove_cvref_t<T>;
+
+template<typename T>
 concept Regular = std::regular<T>;
+
+template<typename T>
+concept BareRegular = std::regular<bare_t<T>>;
 
 template<typename T>
 concept RegularIterator = std::regular<typename T::value_type>;
 
 template<typename T, typename U>
 concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;
+
+template<typename T, typename U>
+concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;
 
 template<typename T>
 concept Input =

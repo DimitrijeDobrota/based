@@ -8,19 +8,20 @@
 namespace based
 {
 
-// need to deal with returned reference to temporary object...
-
 // returns min element, first if equal
-template<Relation R>
-const domain_t<R>& min(const domain_t<R>& lhs, const domain_t<R>& rhs, R r)
+template<Relation R, BareRegular T, BareRegular U>
+  requires BareSameAs<T, U> && BareSameAs<T, domain_t<R>>
+decltype(auto) min(T&& lhs, U&& rhs, R r)
 {
-  return r(rhs, lhs) ? rhs : lhs;
+  return r(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
 }
 
-template<Regular T>
-const T& min(const T& lhs, const T& rhs)
+template<BareRegular T, BareRegular U>
+  requires BareSameAs<T, U>
+decltype(auto) min(T&& lhs, U&& rhs)
 {
-  return based::min(lhs, rhs, std::less<T>());
+  return based::min(
+      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
 }
 
 // return first min element
