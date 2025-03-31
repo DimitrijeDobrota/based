@@ -50,16 +50,19 @@ I min_element(I first, I last)
 }
 
 // returns max element, second if equal
-template<Relation R>
-const domain_t<R>& max(const domain_t<R>& lhs, const domain_t<R>& rhs, R r)
+template<Relation R, BareRegular T, BareRegular U>
+  requires BareSameAs<T, U> && BareSameAs<T, domain_t<R>>
+decltype(auto) max(T&& lhs, U&& rhs, R r)
 {
-  return r(rhs, lhs) ? lhs : rhs;
+  return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
 }
 
-template<Regular T>
-const T& max(const T& lhs, const T& rhs)
+template<BareRegular T, BareRegular U>
+  requires BareSameAs<T, U>
+decltype(auto) max(T&& lhs, U&& rhs)
 {
-  return based::max(lhs, rhs, std::less<T>());
+  return based::max(
+      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
 }
 
 // return last max element
