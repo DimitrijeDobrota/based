@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iterator>
 #include <tuple>
 #include <type_traits>
 
@@ -27,13 +28,25 @@ template<typename T>
 using bare_t = std::remove_cvref_t<T>;
 
 template<typename T>
+using iter_value_t = std::iterator_traits<T>::value_type;
+
+template<typename T>
+using iter_diff_t = std::iterator_traits<T>::difference_type;
+
+template<typename T>
+using iter_ptr_t = std::iterator_traits<T>::pointer;
+
+template<typename T>
+using iter_ref_t = std::iterator_traits<T>::reference;
+
+template<typename T>
 concept Regular = std::regular<T>;
 
 template<typename T>
 concept BareRegular = std::regular<bare_t<T>>;
 
 template<typename T>
-concept RegularIterator = std::regular<typename T::value_type>;
+concept RegularIterator = std::regular<iter_value_t<T>>;
 
 template<typename T, typename U>
 concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;

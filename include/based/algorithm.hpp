@@ -16,6 +16,7 @@ decltype(auto) min(T&& lhs, U&& rhs, R r)
   return r(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
 }
 
+// returns min element, first if equal
 template<BareRegular T, BareRegular U>
   requires BareSameAs<T, U>
 decltype(auto) min(T&& lhs, U&& rhs)
@@ -26,7 +27,7 @@ decltype(auto) min(T&& lhs, U&& rhs)
 
 // return first min element
 template<RegularIterator I, Relation R>
-  requires std::same_as<typename I::value_type, domain_t<R>>
+  requires SameAs<iter_value_t<I>, domain_t<R>>
 I min_element(I first, I last, R r)
 {
   if (first == last) {
@@ -46,7 +47,7 @@ I min_element(I first, I last, R r)
 template<RegularIterator I>
 I min_element(I first, I last)
 {
-  return based::min_element(first, last, std::less<typename I::value_type>());
+  return based::min_element(first, last, std::less<iter_value_t<I>>());
 }
 
 // returns max element, second if equal
@@ -57,6 +58,7 @@ decltype(auto) max(T&& lhs, U&& rhs, R r)
   return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
 }
 
+// returns max element, second if equal
 template<BareRegular T, BareRegular U>
   requires BareSameAs<T, U>
 decltype(auto) max(T&& lhs, U&& rhs)
@@ -67,7 +69,7 @@ decltype(auto) max(T&& lhs, U&& rhs)
 
 // return last max element
 template<RegularIterator I, Relation R>
-  requires std::same_as<typename I::value_type, domain_t<R>>
+  requires std::same_as<iter_value_t<I>, domain_t<R>>
 I max_element(I first, I last, R r)
 {
   if (first == last) {
@@ -87,12 +89,12 @@ I max_element(I first, I last, R r)
 template<RegularIterator I>
 I max_element(I first, I last)
 {
-  return based::max_element(first, last, std::less<typename I::value_type>());
+  return based::max_element(first, last, std::less<iter_value_t<I>>());
 }
 
 // return first min and last max element
 template<RegularIterator I, Relation R>
-  requires std::same_as<typename I::value_type, domain_t<R>>
+  requires std::same_as<iter_value_t<I>, domain_t<R>>
 std::pair<I, I> minmax_element(I first, I last, R r)
 {
   if (first == last) {
@@ -145,8 +147,7 @@ std::pair<I, I> minmax_element(I first, I last, R r)
 template<RegularIterator I>
 std::pair<I, I> minmax_element(I first, I last)
 {
-  return based::minmax_element(
-      first, last, std::less<typename I::value_type>());
+  return based::minmax_element(first, last, std::less<iter_value_t<I>>());
 }
 
 }  // namespace based
