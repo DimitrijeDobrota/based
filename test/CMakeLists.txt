@@ -23,7 +23,9 @@ endfunction()
 # ---- Algorithm ----
 
 add_test(min_test)
+add_test(min_element_test)
 add_test(max_test)
+add_test(max_element_test)
 
 # ---- End-of-file commands ----
 
