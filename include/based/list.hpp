@@ -142,39 +142,39 @@ public:
 
   using queue_t = std::pair<list_type, list_type>;
 
-  bool is_empty(const queue_t& que) const { return is_empty(que.first); }
+  bool is_empty(const queue_t& queue) const { return is_empty(queue.first); }
   queue_t queue_empty() { return {node_empty(), node_empty()}; }
 
-  queue_t push_front(const queue_t& que, const value_type& val)
+  queue_t push_front(const queue_t& queue, const value_type& val)
   {
-    auto new_node = allocate(val, que.first);
-    if (is_empty(que)) {
+    auto new_node = allocate(val, queue.first);
+    if (is_empty(queue)) {
       return {new_node, new_node};
     }
-    return {new_node, que.second};
+    return {new_node, queue.second};
   }
 
-  queue_t push_back(const queue_t& que, const value_type& val)
+  queue_t push_back(const queue_t& queue, const value_type& val)
   {
     auto new_node = allocate(val, node_empty());
-    if (is_empty(que)) {
+    if (is_empty(queue)) {
       return {new_node, new_node};
     }
-    next(que.second) = new_node;
-    return {que.first, new_node};
+    next(queue.second) = new_node;
+    return {queue.first, new_node};
   }
 
-  queue_t pop_front(const queue_t& que)
+  queue_t pop_front(const queue_t& queue)
   {
-    if (is_empty(que)) {
-      return que;
+    if (is_empty(queue)) {
+      return queue;
     }
-    queue_t ret = {next(que.first), que.second};
-    free(que.first);
+    queue_t ret = {next(queue.first), queue.second};
+    free(queue.first);
     return ret;
   }
 
-  void free(const queue_t& que) { free(que.first, que.second); }
+  void free(const queue_t& queue) { free(queue.first, queue.second); }
 };
 
 template<typename T, typename N>

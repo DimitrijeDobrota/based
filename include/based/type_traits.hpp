@@ -13,7 +13,7 @@ namespace based
 template<typename T>
 concept Integer = requires(T n) {
   successor(n);
-  predecesor(n);
+  predecessor(n);
   twice(n);
   half(n);
   positive(n);

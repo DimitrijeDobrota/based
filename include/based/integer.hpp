@@ -10,7 +10,7 @@ T successor(T n)
 }
 
 template<typename T>
-T predecesor(T n)
+T predecessor(T n)
 {
   return n - T {1};
 }
@@ -60,13 +60,13 @@ bool two(T n)
 template<typename T>
 bool even(T n)
 {
-  return n % T{2} == T{0};
+  return n % T {2} == T {0};
 }
 
 template<typename T>
 bool odd(T n)
 {
-  return n % T{2} != T{0};
+  return n % T {2} != T {0};
 }
 
 }  // namespace based

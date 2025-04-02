@@ -137,7 +137,7 @@ template<Transformation F, Integer N>
 domain_t<F> power_unary(domain_t<F> x, N n, F f)
 {
   while (!zero(n)) {
-    n = predecesor(n);
+    n = predecessor(n);
     x = f(x);
   }
   return x;
@@ -147,14 +147,14 @@ template<Integer I, BinaryOperation Op>
 domain_t<Op> power_left_associated(domain_t<Op> a, I n, Op op)
 {
   assert(n > 0);
-  return one(n) ? a : op(power_left_associated(a, predecesor(n), op), a);
+  return one(n) ? a : op(power_left_associated(a, predecessor(n), op), a);
 }
 
 template<Integer I, BinaryOperation Op>
 domain_t<Op> power_right_associated(domain_t<Op> a, I n, Op op)
 {
   assert(n > 0);
-  return one(n) ? a : op(a, power_right_associated(a, predecesor(n), op));
+  return one(n) ? a : op(a, power_right_associated(a, predecessor(n), op));
 }
 
 template<Integer I, AssociativeBinaryOperation Op>
