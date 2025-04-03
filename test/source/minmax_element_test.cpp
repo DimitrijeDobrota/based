@@ -2,7 +2,7 @@
 
 #include "based/algorithm.hpp"
 
-TEST_CASE("minmax_element(empty)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(empty)", "[algorithm/minmax_element]")
 {
   std::array<int, 0> arr = {};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -10,7 +10,7 @@ TEST_CASE("minmax_element(empty)", "[based/algorithm/minmax_element]")
   REQUIRE(max == std::end(arr));
 }
 
-TEST_CASE("minmax_element(1)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(1)", "[algorithm/minmax_element]")
 {
   std::array arr = {0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -20,7 +20,7 @@ TEST_CASE("minmax_element(1)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == 0);
 }
 
-TEST_CASE("minmax_element(increasing even)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(increasing even)", "[algorithm/minmax_element]")
 {
   std::array arr = {0, 1, 2, 3};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -30,7 +30,7 @@ TEST_CASE("minmax_element(increasing even)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == std::size(arr) - 1);
 }
 
-TEST_CASE("minmax_element(increasing odd)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(increasing odd)", "[algorithm/minmax_element]")
 {
   std::array arr = {0, 1, 2, 3, 4};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -40,7 +40,7 @@ TEST_CASE("minmax_element(increasing odd)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == std::size(arr) - 1);
 }
 
-TEST_CASE("minmax_element(decreasing even)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(decreasing even)", "[algorithm/minmax_element]")
 {
   std::array arr = {3, 2, 1, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -50,7 +50,7 @@ TEST_CASE("minmax_element(decreasing even)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == 0);
 }
 
-TEST_CASE("minmax_element(decreasing odd)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(decreasing odd)", "[algorithm/minmax_element]")
 {
   std::array arr = {4, 3, 2, 1, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -60,7 +60,7 @@ TEST_CASE("minmax_element(decreasing odd)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == 0);
 }
 
-TEST_CASE("minmax_element(stable even)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(stable even)", "[algorithm/minmax_element]")
 {
   std::array arr = {3, 0, 0, 3};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -70,7 +70,7 @@ TEST_CASE("minmax_element(stable even)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == std::size(arr) - 1);
 }
 
-TEST_CASE("minmax_element(stable odd)", "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(stable odd)", "[algorithm/minmax_element]")
 {
   std::array arr = {3, 0, 3, 3, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -80,8 +80,7 @@ TEST_CASE("minmax_element(stable odd)", "[based/algorithm/minmax_element]")
   REQUIRE(maxi == std::size(arr) - 2);
 }
 
-TEST_CASE("minmax_element(stable increasing)",
-          "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(stable increasing)", "[algorithm/minmax_element]")
 {
   std::array arr = {0, 0, 1, 2, 3, 4, 4};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
@@ -91,8 +90,7 @@ TEST_CASE("minmax_element(stable increasing)",
   REQUIRE(maxi == std::size(arr) - 1);
 }
 
-TEST_CASE("minmax_element(stable decreasing)",
-          "[based/algorithm/minmax_element]")
+TEST_CASE("minmax_element(stable decreasing)", "[algorithm/minmax_element]")
 {
   std::array arr = {4, 4, 3, 2, 1, 0, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
