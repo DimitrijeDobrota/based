@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <functional>
 #include <utility>
 #include <vector>
@@ -26,8 +27,17 @@ private:
   std::vector<node_t> m_pool;
   list_type m_free_list;
 
-  const node_t& node(list_type x) const { return m_pool[x - 1]; }
-  node_t& node(list_type x) { return m_pool[x - 1]; }
+  const node_t& node(list_type x) const
+  {
+    assert(x != 0);
+    return m_pool[x - 1];
+  }
+
+  node_t& node(list_type x)
+  {
+    assert(x != 0);
+    return m_pool[x - 1];
+  }
 
   list_type new_node()
   {

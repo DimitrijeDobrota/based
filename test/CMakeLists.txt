@@ -28,6 +28,9 @@ add_test(max_test)
 add_test(max_element_test)
 add_test(minmax_element_test)
 
+# ---- List ----
+add_test(list_test)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)
