@@ -10,6 +10,8 @@
 namespace based
 {
 
+/* ----- Integer ----- */
+
 template<typename T>
 concept Integer = requires(T n) {
   successor(n);
@@ -24,20 +26,10 @@ concept Integer = requires(T n) {
   odd(n);
 };
 
+/* ----- Regular ----- */
+
 template<typename T>
 using bare_t = std::remove_cvref_t<T>;
-
-template<typename T>
-using iter_value_t = std::iterator_traits<T>::value_type;
-
-template<typename T>
-using iter_diff_t = std::iterator_traits<T>::difference_type;
-
-template<typename T>
-using iter_ptr_t = std::iterator_traits<T>::pointer;
-
-template<typename T>
-using iter_ref_t = std::iterator_traits<T>::reference;
 
 template<typename T>
 concept Regular = std::regular<T>;
@@ -45,14 +37,64 @@ concept Regular = std::regular<T>;
 template<typename T>
 concept BareRegular = std::regular<bare_t<T>>;
 
-template<typename T>
-concept RegularIterator = std::regular<iter_value_t<T>>;
-
 template<typename T, typename U>
 concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;
 
 template<typename T, typename U>
 concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;
+
+/* ----- Iterator ----- */
+
+// clang-format off
+
+namespace detail {
+    template<typename I>
+    struct iterator_traits {
+        using value_type = std::iterator_traits<I>::value_type;
+        using distance_type = std::iterator_traits<I>::difference_type;
+        using pointer_type = std::iterator_traits<I>::pointer;
+        using reference_type = std::iterator_traits<I>::reference;
+    };
+
+} // namespace detail
+
+
+template<typename T>
+using iter_value_t = detail::iterator_traits<T>::value_type;
+
+template<typename T>
+using iter_dist_t = detail::iterator_traits<T>::distance_type;
+
+template<typename T>
+using iter_ptr_t = detail::iterator_traits<T>::pointer;
+
+template<typename T>
+using iter_ref_t = detail::iterator_traits<T>::reference;
+
+template<typename T>
+concept Readable = requires(T t) {
+  requires(Regular<T>);
+  typename T::value_type;
+  { *t } -> std::same_as<typename T::value_type>;
+};
+
+template<typename T>
+concept Iterator = requires(T t) {
+    requires(Regular<T>);
+    typename iter_dist_t<T>;
+    // requires(Integer<iter_dist_t<T>>);
+    { ++t } -> BareSameAs<T>;
+    // successor is not necessarily regular
+
+};
+
+template<typename T>
+concept ReadableIterator = requires {
+    requires(Iterator<T>);
+    requires(Readable<T>);
+};
+
+// clang-format on
 
 template<typename T>
 concept Input =
@@ -228,6 +270,7 @@ template<class T>
 concept HomogenousDomain = is_input_tuple_v<domain_t<T>>;
 
 }  // namespace detail
+
 template<typename P>
 inline constexpr auto arity_v = std::tuple_size<detail::domain_t<P>>::value;
 
@@ -245,12 +288,18 @@ using domain_t =
 template<typename P>
 using codomain_t = detail::codomain_t<P>;
 
-template<typename P>
+template<typename T>
 using distance_t = std::uint64_t;
 
 template<typename P>
 concept Procedure = detail::FreeProcedure<P> || detail::MemberProcedure<P>
     || detail::FunctorProcedure<P>;
+
+template<typename P>
+concept UnaryProcedure = requires {
+  requires(Procedure<P>);
+  requires(arity_v<P> == 1);
+};
 
 template<typename P>
 concept RegularProcedure = requires {
@@ -268,7 +317,7 @@ concept FunctionalProcedure = requires {
 template<typename P>
 concept UnaryFunction = requires {
   requires(FunctionalProcedure<P>);
-  requires(arity_v<P> == 1);
+  requires(UnaryProcedure<P>);
 };
 
 template<typename P>
