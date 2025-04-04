@@ -20,7 +20,7 @@ public:
 private:
   struct node_t
   {
-    value_type value;
+    value_type value {};
     list_type next = list_type(0);
   };
 
@@ -67,17 +67,17 @@ public:
     }
 
     iterator(list_pool& pool, list_pool::list_type node)
-        : m_pool(pool)
+        : m_pool(&pool)
         , m_node(node)
     {
     }
 
-    reference operator*() const { return m_pool.get().value(m_node); }
+    reference operator*() const { return m_pool->value(m_node); }
     pointer operator->() const { return &**this; }
 
     iterator& operator++()
     {
-      m_node = m_pool.get().next(m_node);
+      m_node = m_pool->next(m_node);
       return *this;
     }
 
@@ -90,7 +90,7 @@ public:
 
     friend bool operator==(const iterator& x, const iterator& y)
     {
-      // assert(x.m_pool == y.m_pool);
+      assert(x.m_pool == y.m_pool);
       return x.m_node == y.m_node;
     }
 
@@ -100,7 +100,7 @@ public:
     }
 
   private:
-    std::reference_wrapper<list_pool> m_pool;
+    list_pool* m_pool;
     list_pool::list_type m_node;
   };
 
