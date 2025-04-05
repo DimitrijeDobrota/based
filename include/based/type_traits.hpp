@@ -50,11 +50,21 @@ concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;
 namespace detail {
     template<typename I>
     struct iterator_traits {
+        using value_type = I;
+        using distance_type = std::uint64_t;
+        using pointer_type = I&;
+        using reference_type = I*;
+    };
+
+    template<typename I>
+     requires   std::input_or_output_iterator<I>
+    struct iterator_traits<I> {
         using value_type = std::iterator_traits<I>::value_type;
         using distance_type = std::iterator_traits<I>::difference_type;
         using pointer_type = std::iterator_traits<I>::pointer;
         using reference_type = std::iterator_traits<I>::reference;
     };
+
 
 } // namespace detail
 
@@ -74,8 +84,8 @@ using iter_ref_t = detail::iterator_traits<T>::reference;
 template<typename T>
 concept Readable = requires(T t) {
   requires(Regular<T>);
-  typename T::value_type;
-  { *t } -> std::same_as<typename T::value_type>;
+  typename iter_value_t<T>;
+  { *t } -> BareSameAs<iter_value_t<T>>;
 };
 
 template<typename T>

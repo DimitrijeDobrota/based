@@ -27,6 +27,11 @@ add_test(min_element_test)
 add_test(max_test)
 add_test(max_element_test)
 add_test(minmax_element_test)
+add_test(for_each_test)
+add_test(find_test)
+add_test(find_if_test)
+add_test(count_test)
+add_test(count_if_test)
 
 # ---- List ----
 add_test(list_test)

@@ -168,7 +168,7 @@ I find(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f != x) {
-    f == next(f);
+    f = next(f);
   }
   return f;
 }
@@ -178,7 +178,7 @@ I find_not(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f == x) {
-    f == next(f);
+    f = next(f);
   }
   return f;
 }
@@ -189,7 +189,7 @@ I find_if(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && !p(*f)) {
-    f == next(f);
+    f = next(f);
   }
   return f;
 }
@@ -200,7 +200,7 @@ I find_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && p(*f)) {
-    f == next(f);
+    f = next(f);
   }
   return f;
 }
@@ -226,7 +226,7 @@ template<ReadableIterator I, UnaryPredicate P>
 bool not_all(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
-  return find_if_not(f, d, p) != d;
+  return f == d || find_if_not(f, d, p) != d;
 }
 
 template<ReadableIterator I, UnaryPredicate P>
@@ -235,6 +235,45 @@ bool some(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return find_if(f, d, p) != d;
+}
+
+template<ReadableIterator I, Iterator J>
+J count(I f, I d, const iter_value_t<I>& x, J j)
+{
+  // Precondition: readable_bounded_range(f, d);
+  while (f != d) {
+    if (*f == x) {
+      j = next(j);
+    }
+    f = next(f);
+  }
+  return j;
+}
+
+template<ReadableIterator I>
+iter_dist_t<I> count(I f, I d, const iter_value_t<I>& x)
+{
+  // Precondition: readable_bounded_range(f, d);
+  return count(f, d, x, iter_dist_t<I> {0});
+}
+template<ReadableIterator I, Iterator J>
+J count_not(I f, I d, const iter_value_t<I>& x, J j)
+{
+  // Precondition: readable_bounded_range(f, d);
+  while (f != d) {
+    if (*f != x) {
+      j = next(j);
+    }
+    f = next(f);
+  }
+  return j;
+}
+
+template<ReadableIterator I>
+iter_dist_t<I> count_not(I f, I d, const iter_value_t<I>& x)
+{
+  // Precondition: readable_bounded_range(f, d);
+  return count_not(f, d, x, iter_dist_t<I> {0});
 }
 
 template<ReadableIterator I, UnaryPredicate P, Iterator J>
@@ -259,26 +298,6 @@ iter_dist_t<I> count_if(I f, I d, P p)
   return count_if(f, d, p, iter_dist_t<I> {0});
 }
 
-template<ReadableIterator I, Iterator J>
-J count(I f, I d, const iter_value_t<I>& x, J j)
-{
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (*f == x) {
-      j = next(j);
-    }
-    f = next(f);
-  }
-  return j;
-}
-
-template<ReadableIterator I>
-iter_dist_t<I> count(I f, I d, const iter_value_t<I>& x)
-{
-  // Precondition: readable_bounded_range(f, d);
-  return count(f, d, x, iter_dist_t<I> {0});
-}
-
 template<ReadableIterator I, UnaryPredicate P, Iterator J>
   requires SameAs<iter_value_t<I>, domain_t<P>>
 J count_if_not(I f, I d, P p, J j)
@@ -299,26 +318,6 @@ iter_dist_t<I> count_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return count_if_not(f, d, p, iter_dist_t<I> {0});
-}
-
-template<ReadableIterator I, Iterator J>
-J count_not(I f, I d, const iter_value_t<I>& x, J j)
-{
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (*f != x) {
-      j = next(j);
-    }
-    f = next(f);
-  }
-  return j;
-}
-
-template<ReadableIterator I>
-iter_dist_t<I> count_not(I f, I d, const iter_value_t<I>& x)
-{
-  // Precondition: readable_bounded_range(f, d);
-  return count_not(f, d, x, iter_dist_t<I> {0});
 }
 
 }  // namespace based
