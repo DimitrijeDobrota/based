@@ -27,8 +27,7 @@ decltype(auto) min(T&& lhs, U&& rhs)
 }
 
 // return first min element
-template<Iterator I, Relation R>
-  requires SameAs<iter_value_t<I>, domain_t<R>>
+template<Iterator I, IterRelation<I> R>
 I min_element(I first, I last, R r)
 {
   if (first == last) {
@@ -69,8 +68,7 @@ decltype(auto) max(T&& lhs, U&& rhs)
 }
 
 // return last max element
-template<Iterator I, Relation R>
-  requires std::same_as<iter_value_t<I>, domain_t<R>>
+template<Iterator I, IterRelation<I> R>
 I max_element(I first, I last, R r)
 {
   if (first == last) {
@@ -94,8 +92,7 @@ I max_element(I first, I last)
 }
 
 // return first min and last max element
-template<Iterator I, Relation R>
-  requires std::same_as<iter_value_t<I>, domain_t<R>>
+template<Iterator I, IterRelation<I> R>
 std::pair<I, I> minmax_element(I first, I last, R r)
 {
   if (first == last) {
@@ -151,8 +148,7 @@ std::pair<I, I> minmax_element(I first, I last)
   return based::minmax_element(first, last, std::less<iter_value_t<I>>());
 }
 
-template<ReadableIterator I, UnaryProcedure Proc>
-  requires SameAs<iter_value_t<I>, domain_t<Proc>>
+template<ReadableIterator I, IterUnaryProcedure<I> Proc>
 Proc for_each(I f, I d, Proc proc)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -183,8 +179,7 @@ I find_not(I f, I d, const iter_value_t<I>& x)
   return f;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 I find_if(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -194,8 +189,7 @@ I find_if(I f, I d, P p)
   return f;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 I find_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -205,32 +199,28 @@ I find_if_not(I f, I d, P p)
   return f;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 bool all(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return find_if_not(f, d, p) == d;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 bool none(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return find_if(f, d, p) == d;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 bool not_all(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return f == d || find_if_not(f, d, p) != d;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 bool some(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -276,8 +266,7 @@ iter_dist_t<I> count_not(I f, I d, const iter_value_t<I>& x)
   return count_not(f, d, x, iter_dist_t<I> {0});
 }
 
-template<ReadableIterator I, UnaryPredicate P, Iterator J>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
 J count_if(I f, I d, P p, J j)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -290,16 +279,14 @@ J count_if(I f, I d, P p, J j)
   return j;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 iter_dist_t<I> count_if(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return count_if(f, d, p, iter_dist_t<I> {0});
 }
 
-template<ReadableIterator I, UnaryPredicate P, Iterator J>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
 J count_if_not(I f, I d, P p, J j)
 {
   // Precondition: readable_bounded_range(f, d);
@@ -312,8 +299,7 @@ J count_if_not(I f, I d, P p, J j)
   return j;
 }
 
-template<ReadableIterator I, UnaryPredicate P>
-  requires SameAs<iter_value_t<I>, domain_t<P>>
+template<ReadableIterator I, IterUnaryPredicate<I> P>
 iter_dist_t<I> count_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);

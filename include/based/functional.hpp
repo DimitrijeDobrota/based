@@ -32,8 +32,7 @@ domain_t<F> convergant_point(domain_t<F> x0, domain_t<F> x1, F f)
   return x0;
 }
 
-template<Transformation F, UnaryPredicate P>
-  requires SameAs<domain_t<F>, domain_t<P>>
+template<Transformation F, TransformUnaryPredicate<F> P>
 domain_t<F> collision_point(const domain_t<F>& x, F f, P p)
 {
   // Precondition p(x) <=> f(x) is defined
@@ -58,16 +57,14 @@ domain_t<F> collision_point(const domain_t<F>& x, F f, P p)
   // Postcondition: return value is terminal point or collision point
 }
 
-template<Transformation F, UnaryPredicate P>
-  requires SameAs<domain_t<F>, domain_t<P>>
+template<Transformation F, TransformUnaryPredicate<F> P>
 bool terminating(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
   return !p(collision_point(x, f, p));
 }
 
-template<Transformation F, UnaryPredicate P>
-  requires SameAs<domain_t<F>, domain_t<P>>
+template<Transformation F, TransformUnaryPredicate<F> P>
 bool circular(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
@@ -75,8 +72,7 @@ bool circular(const domain_t<F>& x, F f, P p)
   return p(y) && x == f(y);
 }
 
-template<Transformation F, UnaryPredicate P>
-  requires SameAs<domain_t<F>, domain_t<P>>
+template<Transformation F, TransformUnaryPredicate<F> P>
 bool connection_point(const domain_t<F>& x, F f, P p)
 {
   // Precondition: p(x) <=> F(x) is defined
@@ -87,8 +83,7 @@ bool connection_point(const domain_t<F>& x, F f, P p)
   return convergant_point(x, f(y), f);
 }
 
-template<Transformation F, UnaryPredicate P>
-  requires SameAs<domain_t<F>, domain_t<P>>
+template<Transformation F, TransformUnaryPredicate<F> P>
 std::tuple<distance_t<F>, distance_t<F>, domain_t<F>> orbit_structure(
     const domain_t<F>& x, F f, P p)
 {

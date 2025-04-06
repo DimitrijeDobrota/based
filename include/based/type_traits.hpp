@@ -386,6 +386,45 @@ concept Relation = requires {
   requires(arity_v<P> == 2);
 };
 
+/* ----- Iterator variants ----- */
+
+template<typename P, typename I>
+concept IterUnaryProcedure = requires {
+  requires(UnaryProcedure<P>);
+  requires(Iterator<I>);
+  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+};
+
+template<typename P, typename I>
+concept IterUnaryFunction = requires {
+  requires(UnaryFunction<P>);
+  requires(Iterator<I>);
+  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+};
+
+template<typename P, typename I>
+concept IterUnaryPredicate = requires {
+  requires(UnaryPredicate<P>);
+  requires(Iterator<I>);
+  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+};
+
+template<typename P, typename I>
+concept IterRelation = requires {
+  requires(Relation<P>);
+  requires(Iterator<I>);
+  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+};
+
+/* ----- Transformation Variant ----- */
+
+template<typename P, typename T>
+concept TransformUnaryPredicate = requires {
+  requires(UnaryPredicate<P>);
+  requires(Transformation<T>);
+  requires(SameAs<domain_t<T>, domain_t<P>>);
+};
+
 /* ----- Abstract Algebra ----- */
 
 // clang-format off
