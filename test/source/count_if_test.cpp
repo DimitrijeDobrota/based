@@ -19,7 +19,7 @@ struct predicate
 
 TEST_CASE("count_if return type", "[algorithm/count_if]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
                         decltype(based::count_if(
@@ -34,7 +34,7 @@ TEST_CASE("count_if return type", "[algorithm/count_if]")
 
 TEST_CASE("count_if(empty)", "[algorithm/count_if]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   const auto count =
       based::count_if(std::begin(arr), std::end(arr), predicate {0});
@@ -44,7 +44,7 @@ TEST_CASE("count_if(empty)", "[algorithm/count_if]")
 
 TEST_CASE("count_if(homogeneous)", "[algorithm/count_if]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   const auto count0 =
       based::count_if(std::begin(arr), std::end(arr), predicate {0});
@@ -57,7 +57,7 @@ TEST_CASE("count_if(homogeneous)", "[algorithm/count_if]")
 
 TEST_CASE("count_if(non homogeneous)", "[algorithm/count_if]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   const auto count0 =
       based::count_if(std::begin(arr), std::end(arr), predicate {0});
@@ -73,7 +73,7 @@ TEST_CASE("count_if(non homogeneous)", "[algorithm/count_if]")
 
 TEST_CASE("count_if_not return type", "[algorithm/count_if_not]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
                         decltype(based::count_if_not(
@@ -88,7 +88,7 @@ TEST_CASE("count_if_not return type", "[algorithm/count_if_not]")
 
 TEST_CASE("count_if_not(empty)", "[algorithm/count_if_not]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   const auto count =
       based::count_if_not(std::begin(arr), std::end(arr), predicate {0});
@@ -98,7 +98,7 @@ TEST_CASE("count_if_not(empty)", "[algorithm/count_if_not]")
 
 TEST_CASE("count_if_not(homogeneous)", "[algorithm/count_if_not]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   const auto count0 =
       based::count_if_not(std::begin(arr), std::end(arr), predicate {0});
@@ -111,7 +111,7 @@ TEST_CASE("count_if_not(homogeneous)", "[algorithm/count_if_not]")
 
 TEST_CASE("count_if_not(non homogeneous)", "[algorithm/count_if_not]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   const auto count0 =
       based::count_if_not(std::begin(arr), std::end(arr), predicate {0});

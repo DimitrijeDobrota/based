@@ -7,7 +7,7 @@
 
 TEST_CASE("count return type", "[algorithm/count]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(
       based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
@@ -21,7 +21,7 @@ TEST_CASE("count return type", "[algorithm/count]")
 
 TEST_CASE("count(empty)", "[algorithm/count]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   const auto count = based::count(std::begin(arr), std::end(arr), 0);
 
@@ -30,7 +30,7 @@ TEST_CASE("count(empty)", "[algorithm/count]")
 
 TEST_CASE("count(homogeneous)", "[algorithm/count]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   const auto count0 = based::count(std::begin(arr), std::end(arr), 0);
   const auto count1 = based::count(std::begin(arr), std::end(arr), 1);
@@ -41,7 +41,7 @@ TEST_CASE("count(homogeneous)", "[algorithm/count]")
 
 TEST_CASE("count(non homogeneous)", "[algorithm/count]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   const auto count0 = based::count(std::begin(arr), std::end(arr), 0);
   const auto count1 = based::count(std::begin(arr), std::end(arr), 1);
@@ -54,7 +54,7 @@ TEST_CASE("count(non homogeneous)", "[algorithm/count]")
 
 TEST_CASE("count_not return type", "[algorithm/count_not]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
                         decltype(based::count_not(
@@ -68,7 +68,7 @@ TEST_CASE("count_not return type", "[algorithm/count_not]")
 
 TEST_CASE("count_not(empty)", "[algorithm/count_not]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   const auto count_not = based::count_not(std::begin(arr), std::end(arr), 0);
 
@@ -77,7 +77,7 @@ TEST_CASE("count_not(empty)", "[algorithm/count_not]")
 
 TEST_CASE("count_not(homogeneous)", "[algorithm/count_not]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   const auto count0 = based::count_not(std::begin(arr), std::end(arr), 0);
   const auto count1 = based::count_not(std::begin(arr), std::end(arr), 1);
@@ -88,7 +88,7 @@ TEST_CASE("count_not(homogeneous)", "[algorithm/count_not]")
 
 TEST_CASE("count_not(non homogeneous)", "[algorithm/count_not]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   const auto count0 = based::count_not(std::begin(arr), std::end(arr), 0);
   const auto count1 = based::count_not(std::begin(arr), std::end(arr), 1);

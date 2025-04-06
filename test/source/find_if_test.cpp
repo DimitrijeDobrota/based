@@ -18,7 +18,7 @@ struct predicate
 
 TEST_CASE("find_if(empty)", "[algorithm/find_if]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
   const auto* it =
       based::find_if(std::begin(arr), std::end(arr), predicate {0});
 
@@ -27,7 +27,7 @@ TEST_CASE("find_if(empty)", "[algorithm/find_if]")
 
 TEST_CASE("find_if(one) = found", "[algorithm/find_if]")
 {
-  std::array arr = {0};
+  const std::array arr = {0};
 
   SECTION("found")
   {
@@ -48,7 +48,7 @@ TEST_CASE("find_if(one) = found", "[algorithm/find_if]")
 
 TEST_CASE("find_if(two) = found", "[algorithm/find_if]")
 {
-  std::array arr = {0, 1};
+  const std::array arr = {0, 1};
 
   SECTION("found 1")
   {
@@ -77,7 +77,7 @@ TEST_CASE("find_if(two) = found", "[algorithm/find_if]")
 
 TEST_CASE("find_if(multiple) = found", "[algorithm/find_if]")
 {
-  std::array arr = {0, 0, 0, 0};
+  const std::array arr = {0, 0, 0, 0};
 
   SECTION("found")
   {
@@ -98,7 +98,7 @@ TEST_CASE("find_if(multiple) = found", "[algorithm/find_if]")
 
 TEST_CASE("find_if_not(empty)", "[algorithm/find_if_not]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
   const auto* it =
       based::find_if_not(std::begin(arr), std::end(arr), predicate {0});
 
@@ -107,7 +107,7 @@ TEST_CASE("find_if_not(empty)", "[algorithm/find_if_not]")
 
 TEST_CASE("find_if_not(one) = found", "[algorithm/find_if_not]")
 {
-  std::array arr = {0};
+  const std::array arr = {0};
 
   SECTION("found")
   {
@@ -129,7 +129,7 @@ TEST_CASE("find_if_not(one) = found", "[algorithm/find_if_not]")
 
 TEST_CASE("find_if_not(two) = found", "[algorithm/find_if_not]")
 {
-  std::array arr = {0, 1};
+  const std::array arr = {0, 1};
 
   SECTION("found 1")
   {
@@ -150,7 +150,7 @@ TEST_CASE("find_if_not(two) = found", "[algorithm/find_if_not]")
 
 TEST_CASE("find_if_not(multiple) = found", "[algorithm/find_if_not]")
 {
-  std::array arr = {0, 0, 0, 0};
+  const std::array arr = {0, 0, 0, 0};
 
   SECTION("found")
   {
@@ -171,14 +171,14 @@ TEST_CASE("find_if_not(multiple) = found", "[algorithm/find_if_not]")
 
 TEST_CASE("all(empty)", "[algorithm/all]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::all(std::begin(arr), std::end(arr), predicate {0}));
 }
 
 TEST_CASE("all(homogeneous)", "[algorithm/all]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   REQUIRE(based::all(std::begin(arr), std::end(arr), predicate {1}));
   REQUIRE(!based::all(std::begin(arr), std::end(arr), predicate {2}));
@@ -186,7 +186,7 @@ TEST_CASE("all(homogeneous)", "[algorithm/all]")
 
 TEST_CASE("all(non homogenous)", "[algorithm/all]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   REQUIRE(!based::all(std::begin(arr), std::end(arr), predicate {1}));
   REQUIRE(!based::all(std::begin(arr), std::end(arr), predicate {2}));
@@ -194,14 +194,14 @@ TEST_CASE("all(non homogenous)", "[algorithm/all]")
 
 TEST_CASE("none(empty)", "[algorithm/none]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::none(std::begin(arr), std::end(arr), predicate {0}));
 }
 
 TEST_CASE("none(homogeneous)", "[algorithm/none]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   REQUIRE(based::none(std::begin(arr), std::end(arr), predicate {2}));
   REQUIRE(!based::none(std::begin(arr), std::end(arr), predicate {1}));
@@ -209,7 +209,7 @@ TEST_CASE("none(homogeneous)", "[algorithm/none]")
 
 TEST_CASE("none(non homogeneous)", "[algorithm/none]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   REQUIRE(based::none(std::begin(arr), std::end(arr), predicate {0}));
   REQUIRE(!based::none(std::begin(arr), std::end(arr), predicate {2}));
@@ -218,14 +218,14 @@ TEST_CASE("none(non homogeneous)", "[algorithm/none]")
 
 TEST_CASE("not_all(empty)", "[algorithm/not_all]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(based::not_all(std::begin(arr), std::end(arr), predicate {0}));
 }
 
 TEST_CASE("not_all(homogeneous)", "[algorithm/not_all]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   REQUIRE(based::not_all(std::begin(arr), std::end(arr), predicate {2}));
   REQUIRE(!based::not_all(std::begin(arr), std::end(arr), predicate {1}));
@@ -233,7 +233,7 @@ TEST_CASE("not_all(homogeneous)", "[algorithm/not_all]")
 
 TEST_CASE("not_all(non homogeneous)", "[algorithm/not_all]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   REQUIRE(based::not_all(std::begin(arr), std::end(arr), predicate {0}));
   REQUIRE(based::not_all(std::begin(arr), std::end(arr), predicate {1}));
@@ -242,14 +242,14 @@ TEST_CASE("not_all(non homogeneous)", "[algorithm/not_all]")
 
 TEST_CASE("some(empty)", "[algorithm/some]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
 
   REQUIRE(!based::some(std::begin(arr), std::end(arr), predicate {0}));
 }
 
 TEST_CASE("some(homogeneous)", "[algorithm/some]")
 {
-  std::array arr = {1, 1, 1, 1, 1, 1};
+  const std::array arr = {1, 1, 1, 1, 1, 1};
 
   REQUIRE(based::some(std::begin(arr), std::end(arr), predicate {1}));
   REQUIRE(!based::some(std::begin(arr), std::end(arr), predicate {2}));
@@ -257,7 +257,7 @@ TEST_CASE("some(homogeneous)", "[algorithm/some]")
 
 TEST_CASE("some(non homogeneous)", "[algorithm/some]")
 {
-  std::array arr = {1, 2, 1, 1, 1, 2};
+  const std::array arr = {1, 2, 1, 1, 1, 2};
 
   REQUIRE(based::some(std::begin(arr), std::end(arr), predicate {1}));
   REQUIRE(based::some(std::begin(arr), std::end(arr), predicate {2}));

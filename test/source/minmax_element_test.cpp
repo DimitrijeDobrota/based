@@ -4,7 +4,7 @@
 
 TEST_CASE("minmax_element(empty)", "[algorithm/minmax_element]")
 {
-  std::array<int, 0> arr = {};
+  const std::array<int, 0> arr = {};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   REQUIRE(min == std::end(arr));
   REQUIRE(max == std::end(arr));
@@ -12,7 +12,7 @@ TEST_CASE("minmax_element(empty)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(1)", "[algorithm/minmax_element]")
 {
-  std::array arr = {0};
+  const std::array arr = {0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -22,7 +22,7 @@ TEST_CASE("minmax_element(1)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(increasing even)", "[algorithm/minmax_element]")
 {
-  std::array arr = {0, 1, 2, 3};
+  const std::array arr = {0, 1, 2, 3};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -32,7 +32,7 @@ TEST_CASE("minmax_element(increasing even)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(increasing odd)", "[algorithm/minmax_element]")
 {
-  std::array arr = {0, 1, 2, 3, 4};
+  const std::array arr = {0, 1, 2, 3, 4};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -42,7 +42,7 @@ TEST_CASE("minmax_element(increasing odd)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(decreasing even)", "[algorithm/minmax_element]")
 {
-  std::array arr = {3, 2, 1, 0};
+  const std::array arr = {3, 2, 1, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -52,7 +52,7 @@ TEST_CASE("minmax_element(decreasing even)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(decreasing odd)", "[algorithm/minmax_element]")
 {
-  std::array arr = {4, 3, 2, 1, 0};
+  const std::array arr = {4, 3, 2, 1, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -62,7 +62,7 @@ TEST_CASE("minmax_element(decreasing odd)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(stable even)", "[algorithm/minmax_element]")
 {
-  std::array arr = {3, 0, 0, 3};
+  const std::array arr = {3, 0, 0, 3};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -72,7 +72,7 @@ TEST_CASE("minmax_element(stable even)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(stable odd)", "[algorithm/minmax_element]")
 {
-  std::array arr = {3, 0, 3, 3, 0};
+  const std::array arr = {3, 0, 3, 3, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -82,7 +82,7 @@ TEST_CASE("minmax_element(stable odd)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(stable increasing)", "[algorithm/minmax_element]")
 {
-  std::array arr = {0, 0, 1, 2, 3, 4, 4};
+  const std::array arr = {0, 0, 1, 2, 3, 4, 4};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
@@ -92,7 +92,7 @@ TEST_CASE("minmax_element(stable increasing)", "[algorithm/minmax_element]")
 
 TEST_CASE("minmax_element(stable decreasing)", "[algorithm/minmax_element]")
 {
-  std::array arr = {4, 4, 3, 2, 1, 0, 0};
+  const std::array arr = {4, 4, 3, 2, 1, 0, 0};
   const auto [min, max] = based::minmax_element(std::begin(arr), std::end(arr));
   const auto mini = std::distance(std::begin(arr), min);
   const auto maxi = std::distance(std::begin(arr), max);
