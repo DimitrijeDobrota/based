@@ -107,325 +107,134 @@ concept ReadableIterator = requires {
 // clang-format on
 
 template<typename T>
-concept Input =
-    std::is_same_v<T,
-                       std::remove_cvref_t<std::remove_pointer_t<T>>>
+concept Input = std::is_same_v<T, std::remove_cvref_t<std::remove_pointer_t<T>>>
     || std::is_const_v<std::remove_reference_t<T>>
     || std::is_const_v<std::remove_pointer_t<T>>;
 
 namespace detail
 {
 
-template<typename Fun>
-concept FreeProcedure = std::is_function_v<std::remove_pointer_t<Fun>>;
-
-template<typename Fun>
-concept MemberProcedure = std::is_member_function_pointer_v<std::decay_t<Fun>>;
-
-template<typename Fun>
-concept FunctorProcedure = std::is_class_v<std::decay_t<Fun>>
-    && requires(Fun&& t) { &std::decay_t<Fun>::operator(); };
-
-template<class>
-struct is_regular_tuple : std::false_type
+template<typename... Args>
+struct is_homogeneous_domain : std::false_type
 {
 };
 
-template<template<class...> class Tuple, class... Types>
-  requires(Regular<std::remove_cvref_t<Types>> && ...)
-struct is_regular_tuple<Tuple<Types...>> : std::true_type
+template<typename Head, typename... Args>
+  requires(std::same_as<Head, Args> && ...)
+struct is_homogeneous_domain<Head, Args...> : std::true_type
 {
 };
-
-template<class T>
-inline constexpr bool is_regular_tuple_v = is_regular_tuple<T>::value;
-
-template<class>
-struct is_input_tuple : std::false_type
-{
-};
-
-template<template<class...> class Tuple, class... Types>
-  requires(Input<Types> && ...)
-struct is_input_tuple<Tuple<Types...>> : std::true_type
-{
-};
-
-template<class T>
-inline constexpr bool is_input_tuple_v = is_input_tuple<T>::value;
-
-template<class>
-struct is_homogenous_tuple : std::false_type
-{
-};
-
-template<template<class...> class Tuple, typename Head, typename... Tail>
-  requires(std::same_as<Head, Tail> && ...)
-struct is_homogenous_tuple<Tuple<Head, Tail...>> : std::true_type
-{
-};
-
-template<class T>
-inline constexpr bool is_homogenous_tuple_v = is_homogenous_tuple<T>::value;
-
-template<typename>
-struct signature;
-
-template<typename Ret, typename... Args>
-struct signature<Ret(Args...)>
-{
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_value = std::false_type;
-  using volataile_value = std::false_type;
-};
-
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...)>
-{
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_value = std::false_type;
-  using volataile_value = std::false_type;
-};
-
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const>
-{
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_value = std::true_type;
-  using volataile_value = std::false_type;
-};
-
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile>
-{
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_value = std::false_type;
-  using volataile_value = std::true_type;
-};
-
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile>
-{
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_value = std::true_type;
-  using volataile_value = std::true_type;
-};
-
-template<typename>
-struct domain;
-
-template<FreeProcedure P>
-struct domain<P>
-{
-  using type = signature<std::remove_pointer_t<P>>::arg_type;
-};
-
-template<FunctorProcedure P>
-struct domain<P>
-{
-  using type = signature<decltype(&std::decay_t<P>::operator())>::arg_type;
-};
-
-template<MemberProcedure P>
-struct domain<P>
-{
-  using type = signature<std::decay_t<P>>::arg_type;
-};
-
-template<typename>
-struct codomain;
-
-template<FreeProcedure P>
-struct codomain<P>
-{
-  using type = signature<std::remove_pointer_t<P>>::ret_type;
-};
-
-template<FunctorProcedure P>
-struct codomain<P>
-{
-  using type = signature<decltype(&std::decay_t<P>::operator())>::ret_type;
-};
-
-template<MemberProcedure P>
-struct codomain<P>
-{
-  using type = signature<std::decay_t<P>>::ret_type;
-};
-
-template<typename P>
-using domain_t = domain<P>::type;
-
-template<typename P>
-using codomain_t = codomain<P>::type;
-
-template<class T>
-concept RegularDomain = is_regular_tuple_v<domain_t<T>>;
-
-template<class T>
-concept InputDomain = is_input_tuple_v<domain_t<T>>;
-
-template<class T>
-concept HomogenousDomain = is_input_tuple_v<domain_t<T>>;
 
 }  // namespace detail
 
-template<typename P>
-inline constexpr auto arity_v = std::tuple_size<detail::domain_t<P>>::value;
+template<typename... Args>
+concept RegularDomain =
+    requires { requires(Regular<std::remove_cvref_t<Args>> && ...); };
 
-template<typename P, std::size_t Idx>
-  requires requires { Idx < arity_v<P>; }
-using domain_elem_t =
-    std::decay_t<std::tuple_element_t<Idx, detail::domain_t<P>>>;
+template<typename... Args>
+concept InputDomain = requires { requires(Input<Args> && ...); };
 
-template<typename P>
-using domain_t =
-    std::conditional_t<detail::is_homogenous_tuple_v<detail::domain_t<P>>,
-                       domain_elem_t<P, 0>,
-                       detail::domain_t<P>>;
-
-template<typename P>
-using codomain_t = detail::codomain_t<P>;
+template<typename... Args>
+concept HomogenousDomain = detail::is_homogeneous_domain<Args...>::value;
 
 template<typename T>
 using distance_t = std::uint64_t;
 
-template<typename P>
-concept Procedure = detail::FreeProcedure<P> || detail::MemberProcedure<P>
-    || detail::FunctorProcedure<P>;
+template<typename P, typename... Args>
+concept Procedure = std::invocable<P, Args...>;
 
-template<typename P>
+template<typename P, typename... Args>
+  requires Procedure<P, Args...>
+inline constexpr auto arity_v = std::tuple_size<std::tuple<Args...>>::value;
+
+template<typename P, std::size_t Idx, typename... Args>
+  requires Procedure<P, Args...> && requires { Idx < arity_v<Args...>; }
+using domain_elem_t =
+    std::decay_t<std::tuple_element_t<Idx, std::tuple<Args...>>>;
+
+template<typename P, typename... Args>
+  requires Procedure<P, Args...>
+using codomain_t = std::invoke_result_t<P, Args...>;
+
+template<typename P, typename Arg>
 concept UnaryProcedure = requires {
-  requires(Procedure<P>);
-  requires(arity_v<P> == 1);
+  requires(Procedure<P, Arg>);
+  requires(arity_v<P, Arg> == 1);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept RegularProcedure = requires {
-  requires(Procedure<P>);
-  requires(detail::RegularDomain<P>);
-  requires(Regular<codomain_t<P>>);
+  requires(Procedure<P, Args...>);
+  requires(RegularDomain<Args...>);
+  requires(Regular<codomain_t<P, Args...>>);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept FunctionalProcedure = requires {
-  requires(RegularProcedure<P>);
-  requires(detail::InputDomain<P>);
+  requires(RegularProcedure<P, Args...>);
+  requires(InputDomain<Args...>);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept UnaryFunction = requires {
-  requires(FunctionalProcedure<P>);
-  requires(UnaryProcedure<P>);
+  requires(FunctionalProcedure<P, Arg>);
+  requires(UnaryProcedure<P, Arg>);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept HomogeneousFunction = requires {
-  requires(FunctionalProcedure<P>);
-  requires(arity_v<P> > 0);
-  requires(detail::HomogenousDomain<P>);
+  requires(FunctionalProcedure<P, Args...>);
+  requires(arity_v<P, Args...> > 0);
+  requires(HomogenousDomain<Args...>);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept Predicate = requires {
-  requires(FunctionalProcedure<P>);
-  requires(std::same_as<bool, codomain_t<P>>);
+  requires(FunctionalProcedure<P, Args...>);
+  requires(std::same_as<bool, codomain_t<P, Args...>>);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept HomogeneousPredicate = requires {
-  requires(Predicate<P>);
-  requires(HomogeneousFunction<P>);
+  requires(Predicate<P, Args...>);
+  requires(HomogeneousFunction<P, Args...>);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept UnaryPredicate = requires {
-  requires(Predicate<P>);
-  requires(UnaryFunction<P>);
+  requires(Predicate<P, Arg>);
+  requires(UnaryFunction<P, Arg>);
 };
 
-template<typename P>
+template<typename P, typename... Args>
 concept Operation = requires {
-  requires(HomogeneousFunction<P>);
-  requires(BareSameAs<codomain_t<P>, domain_t<P>>);
+  requires(HomogeneousFunction<P, Args...>);
+  requires(BareSameAs<codomain_t<P, Args...>,
+                      std::tuple_element_t<0, std::tuple<Args...>>>);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept Transformation = requires {
-  requires(Operation<P>);
-  requires(UnaryFunction<P>);
+  requires(Operation<P, Arg>);
+  requires(UnaryFunction<P, Arg>);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept BinaryOperation = requires {
-  requires(Operation<P>);
-  requires(arity_v<P> == 2);
+  requires(Operation<P, Arg, Arg>);
+  requires(arity_v<P, Arg, Arg> == 2);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept AssociativeBinaryOperation = requires {
-  requires(BinaryOperation<P>);
-  // requires(P is associative)
+  requires(Operation<P, Arg, Arg>);
+  requires(arity_v<P, Arg, Arg> == 2);
 };
 
-template<typename P>
+template<typename P, typename Arg>
 concept Relation = requires {
-  requires(HomogeneousPredicate<P>);
-  requires(arity_v<P> == 2);
-};
-
-/* ----- Value variants ----- */
-
-template<typename P, typename V>
-concept ValUnaryProcedure = requires {
-  requires(UnaryProcedure<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValUnaryFunction = requires {
-  requires(UnaryFunction<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValHomogeneousPredicate = requires {
-  requires(HomogeneousPredicate<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValUnaryPredicate = requires {
-  requires(UnaryPredicate<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValOperation = requires {
-  requires(Operation<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValBinaryOperation = requires {
-  requires(Operation<P>);
-  requires(SameAs<V, domain_t<P>>);
-};
-
-template<typename P, typename V>
-concept ValRelation = requires {
-  requires(Relation<P>);
-  requires(SameAs<V, domain_t<P>>);
+  requires(HomogeneousPredicate<P, Arg, Arg>);
+  requires(arity_v<P, Arg, Arg> == 2);
 };
 
 /* ----- Iterator variants ----- */
@@ -433,52 +242,43 @@ concept ValRelation = requires {
 template<typename P, typename I>
 concept IterUnaryProcedure = requires {
   requires(Iterator<I>);
-  requires(ValUnaryProcedure<P, iter_value_t<I>>);
+  requires(UnaryProcedure<P, iter_value_t<I>>);
 };
 
 template<typename P, typename I>
 concept IterUnaryFunction = requires {
   requires(Iterator<I>);
-  requires(ValUnaryFunction<P, iter_value_t<I>>);
+  requires(UnaryFunction<P, iter_value_t<I>>);
 };
 
-template<typename P, typename I>
+template<typename P, typename... I>
 concept IterHomogeneousPredicate = requires {
-  requires(Iterator<I>);
-  requires(ValHomogeneousPredicate<P, iter_value_t<I>>);
+  requires(Iterator<I> && ...);
+  requires(HomogeneousPredicate<P, iter_value_t<I>...>);
 };
 
 template<typename P, typename I>
 concept IterUnaryPredicate = requires {
   requires(Iterator<I>);
-  requires(ValUnaryPredicate<P, iter_value_t<I>>);
+  requires(UnaryPredicate<P, iter_value_t<I>>);
 };
 
-template<typename P, typename I>
+template<typename P, typename... I>
 concept IterOperation = requires {
-  requires(Iterator<I>);
-  requires(ValOperation<P, iter_value_t<I>>);
+  requires(Iterator<I> && ...);
+  requires(Operation<P, iter_value_t<I>...>);
 };
 
 template<typename P, typename I>
 concept IterBinaryOperation = requires {
   requires(Iterator<I>);
-  requires(ValBinaryOperation<P, iter_value_t<I>>);
+  requires(BinaryOperation<P, iter_value_t<I>>);
 };
 
 template<typename P, typename I>
 concept IterRelation = requires {
   requires(Iterator<I>);
-  requires(ValRelation<P, iter_value_t<I>>);
-};
-
-/* ----- Transformation Variant ----- */
-
-template<typename P, typename T>
-concept TransformUnaryPredicate = requires {
-  requires(UnaryPredicate<P>);
-  requires(Transformation<T>);
-  requires(SameAs<domain_t<T>, domain_t<P>>);
+  requires(Relation<P, iter_value_t<I>>);
 };
 
 /* ----- Abstract Algebra ----- */

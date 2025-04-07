@@ -9,9 +9,21 @@
 namespace based
 {
 
+namespace detail
+{
+
+template<typename P, typename Arg>
+concept NoninputRelation = requires {
+  requires(RegularProcedure<P, Arg, Arg>);
+  requires(std::same_as<bool, codomain_t<P, Arg, Arg>>);
+  requires(arity_v<P, Arg, Arg> == 2);
+};
+
+}  // namespace detail
+
 // returns min element, first if equal
-template<Relation R, BareRegular T, BareRegular U>
-  requires BareSameAs<T, U> && BareSameAs<T, domain_t<R>>
+template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
+  requires BareSameAs<T, U>
 decltype(auto) min(T&& lhs, U&& rhs, R r)
 {
   return r(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
@@ -51,8 +63,8 @@ I min_element(I first, I last)
 }
 
 // returns max element, second if equal
-template<Relation R, BareRegular T, BareRegular U>
-  requires BareSameAs<T, U> && BareSameAs<T, domain_t<R>>
+template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
+  requires BareSameAs<T, U>
 decltype(auto) max(T&& lhs, U&& rhs, R r)
 {
   return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);

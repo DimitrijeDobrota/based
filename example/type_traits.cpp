@@ -57,60 +57,64 @@ int main()
   using id = identity<double>;
   using ii = identity<irregular>;
 
-  static_assert(std::same_as<based::domain_t<id>, double>);
-  static_assert(std::same_as<based::codomain_t<id>, double>);
-  static_assert(based::arity_v<id> == 1);
+  static_assert(std::same_as<based::codomain_t<id, double>, double>);
+  static_assert(based::arity_v<id, double> == 1);
 
-  static_assert(based::Procedure<id>);
-  static_assert(based::Procedure<ii>);
+  static_assert(based::Procedure<id, double>);
+  static_assert(!based::Procedure<ii, irregular>);
 
-  static_assert(based::RegularProcedure<id>);
-  static_assert(!based::RegularProcedure<ii>);
+  static_assert(based::RegularProcedure<id, double>);
+  static_assert(!based::RegularProcedure<ii, irregular>);
 
-  static_assert(based::FunctionalProcedure<id>);
-  static_assert(!based::FunctionalProcedure<ii>);
+  static_assert(based::FunctionalProcedure<id, double>);
+  static_assert(!based::FunctionalProcedure<ii, irregular>);
 
   using ad = add<double, double>;
   using ai = add<irregular, irregular>;
   using aid = add<irregular, double>;
   using adi = add<double, irregular>;
 
-  static_assert(std::same_as<based::domain_t<ad>, double>);
-  static_assert(std::same_as<based::codomain_t<ad>, double>);
-  static_assert(based::arity_v<ad> == 2);
+  static_assert(std::same_as<based::codomain_t<ad, double, double>, double>);
+  static_assert(based::arity_v<ad, double, double> == 2);
 
-  static_assert(based::Procedure<ad>);
-  static_assert(based::Procedure<ai>);
-  static_assert(based::Procedure<aid>);
-  static_assert(based::Procedure<adi>);
+  static_assert(based::Procedure<ad, double, double>);
+  static_assert(based::Procedure<ai, irregular, irregular>);
+  static_assert(based::Procedure<aid, irregular, double>);
+  static_assert(based::Procedure<adi, double, irregular>);
 
-  static_assert(based::RegularProcedure<ad>);
-  static_assert(!based::RegularProcedure<ai>);
-  static_assert(!based::RegularProcedure<aid>);
-  static_assert(!based::RegularProcedure<adi>);
+  static_assert(based::RegularProcedure<ad, double, double>);
+  static_assert(!based::RegularProcedure<ai, irregular, irregular>);
+  static_assert(!based::RegularProcedure<aid, irregular, double>);
+  static_assert(!based::RegularProcedure<adi, double, irregular>);
 
-  static_assert(based::FunctionalProcedure<ad>);
-  static_assert(!based::FunctionalProcedure<ai>);
-  static_assert(!based::FunctionalProcedure<aid>);
-  static_assert(!based::FunctionalProcedure<adi>);
+  static_assert(based::FunctionalProcedure<ad, double, double>);
+  static_assert(!based::FunctionalProcedure<ai, irregular, irregular>);
+  static_assert(!based::FunctionalProcedure<aid, irregular, double>);
+  static_assert(!based::FunctionalProcedure<adi, double, irregular>);
 
   using md = mutate<double>;
 
-  static_assert(based::Procedure<md>);
-  static_assert(based::RegularProcedure<md>);
+  static_assert(based::Procedure<md, double*>);
+  static_assert(based::RegularProcedure<md, double*>);
   static_assert(!based::FunctionalProcedure<md>);
 
-  static_assert(based::RegularProcedure<decltype(sub<double, double>)>);
+  static_assert(
+      based::RegularProcedure<decltype(sub<double, double>), double, double>);
 
   static const auto l1 = [](double a) { return a; };
-  static_assert(based::Procedure<decltype(l1)>);
-  static_assert(based::RegularProcedure<decltype(l1)>);
-  static_assert(based::FunctionalProcedure<decltype(l1)>);
+  static_assert(based::Procedure<decltype(l1), double>);
+  static_assert(based::RegularProcedure<decltype(l1), double>);
+  static_assert(based::FunctionalProcedure<decltype(l1), double>);
 
   static const auto l2 = [](irregular /* a */) { return 1; };
-  static_assert(based::Procedure<decltype(l2)>);
-  static_assert(!based::RegularProcedure<decltype(l2)>);
-  static_assert(!based::FunctionalProcedure<decltype(l2)>);
+  static_assert(!based::Procedure<decltype(l2), irregular>);
+  static_assert(!based::RegularProcedure<decltype(l2), irregular>);
+  static_assert(!based::FunctionalProcedure<decltype(l2), irregular>);
+
+  static const auto l3 = [](const irregular& /* a */) { return 1; };
+  static_assert(based::Procedure<decltype(l3), irregular>);
+  static_assert(!based::RegularProcedure<decltype(l3), irregular>);
+  static_assert(!based::FunctionalProcedure<decltype(l3), irregular>);
 
   return 0;
 }
