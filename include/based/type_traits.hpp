@@ -109,10 +109,9 @@ concept ReadableIterator = requires {
 template<typename T>
 concept Input =
     std::is_same_v<T,
-                   std::remove_volatile_t<
-                       std::remove_reference_t<std::remove_pointer_t<T>>>>
-    || (std::is_lvalue_reference_v<T>
-        && std::is_const_v<std::remove_reference_t<T>>);
+                       std::remove_cvref_t<std::remove_pointer_t<T>>>
+    || std::is_const_v<std::remove_reference_t<T>>
+    || std::is_const_v<std::remove_pointer_t<T>>;
 
 namespace detail
 {
@@ -344,7 +343,7 @@ concept Predicate = requires {
 };
 
 template<typename P>
-concept HomogenousPredicate = requires {
+concept HomogeneousPredicate = requires {
   requires(Predicate<P>);
   requires(HomogeneousFunction<P>);
 };
@@ -358,8 +357,7 @@ concept UnaryPredicate = requires {
 template<typename P>
 concept Operation = requires {
   requires(HomogeneousFunction<P>);
-  requires(std::same_as<std::remove_cvref_t<codomain_t<P>>,
-                        std::remove_cvref_t<domain_elem_t<P, 0>>>);
+  requires(BareSameAs<codomain_t<P>, domain_t<P>>);
 };
 
 template<typename P>
@@ -382,38 +380,96 @@ concept AssociativeBinaryOperation = requires {
 
 template<typename P>
 concept Relation = requires {
-  requires(HomogenousPredicate<P>);
+  requires(HomogeneousPredicate<P>);
   requires(arity_v<P> == 2);
+};
+
+/* ----- Value variants ----- */
+
+template<typename P, typename V>
+concept ValUnaryProcedure = requires {
+  requires(UnaryProcedure<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValUnaryFunction = requires {
+  requires(UnaryFunction<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValHomogeneousPredicate = requires {
+  requires(HomogeneousPredicate<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValUnaryPredicate = requires {
+  requires(UnaryPredicate<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValOperation = requires {
+  requires(Operation<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValBinaryOperation = requires {
+  requires(Operation<P>);
+  requires(SameAs<V, domain_t<P>>);
+};
+
+template<typename P, typename V>
+concept ValRelation = requires {
+  requires(Relation<P>);
+  requires(SameAs<V, domain_t<P>>);
 };
 
 /* ----- Iterator variants ----- */
 
 template<typename P, typename I>
 concept IterUnaryProcedure = requires {
-  requires(UnaryProcedure<P>);
   requires(Iterator<I>);
-  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+  requires(ValUnaryProcedure<P, iter_value_t<I>>);
 };
 
 template<typename P, typename I>
 concept IterUnaryFunction = requires {
-  requires(UnaryFunction<P>);
   requires(Iterator<I>);
-  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+  requires(ValUnaryFunction<P, iter_value_t<I>>);
+};
+
+template<typename P, typename I>
+concept IterHomogeneousPredicate = requires {
+  requires(Iterator<I>);
+  requires(ValHomogeneousPredicate<P, iter_value_t<I>>);
 };
 
 template<typename P, typename I>
 concept IterUnaryPredicate = requires {
-  requires(UnaryPredicate<P>);
   requires(Iterator<I>);
-  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+  requires(ValUnaryPredicate<P, iter_value_t<I>>);
+};
+
+template<typename P, typename I>
+concept IterOperation = requires {
+  requires(Iterator<I>);
+  requires(ValOperation<P, iter_value_t<I>>);
+};
+
+template<typename P, typename I>
+concept IterBinaryOperation = requires {
+  requires(Iterator<I>);
+  requires(ValBinaryOperation<P, iter_value_t<I>>);
 };
 
 template<typename P, typename I>
 concept IterRelation = requires {
-  requires(Relation<P>);
   requires(Iterator<I>);
-  requires(SameAs<iter_value_t<I>, domain_t<P>>);
+  requires(ValRelation<P, iter_value_t<I>>);
 };
 
 /* ----- Transformation Variant ----- */
