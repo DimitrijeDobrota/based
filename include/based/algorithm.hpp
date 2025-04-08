@@ -12,6 +12,8 @@ namespace based
 namespace detail
 {
 
+/* ----- Min and Max ----- */
+
 template<typename P, typename Arg>
 concept NoninputRelation = requires {
   requires(RegularProcedure<P, Arg, Arg>);
@@ -38,6 +40,25 @@ decltype(auto) min(T&& lhs, U&& rhs)
       std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
 }
 
+// returns max element, second if equal
+template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
+  requires BareSameAs<T, U>
+decltype(auto) max(T&& lhs, U&& rhs, R r)
+{
+  return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
+}
+
+// returns max element, second if equal
+template<BareRegular T, BareRegular U>
+  requires BareSameAs<T, U>
+decltype(auto) max(T&& lhs, U&& rhs)
+{
+  return based::max(
+      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
+}
+
+/* ----- Bounded Range Algorithms ----- */
+
 // return first min element
 template<Iterator I, IterRelation<I> R>
 I min_element(I first, I last, R r)
@@ -60,23 +81,6 @@ template<Iterator I>
 I min_element(I first, I last)
 {
   return based::min_element(first, last, std::less<iter_value_t<I>>());
-}
-
-// returns max element, second if equal
-template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
-  requires BareSameAs<T, U>
-decltype(auto) max(T&& lhs, U&& rhs, R r)
-{
-  return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
-}
-
-// returns max element, second if equal
-template<BareRegular T, BareRegular U>
-  requires BareSameAs<T, U>
-decltype(auto) max(T&& lhs, U&& rhs)
-{
-  return based::max(
-      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
 }
 
 // return last max element
@@ -121,7 +125,7 @@ std::pair<I, I> minmax_element(I first, I last, R r)
     std::swap(mini, maxi);
   }
 
-  I next = based::next(first);
+  I next = successor(first);
   while (first != last && next != last) {
     I pmini = first;
     I pmaxi = next;
@@ -166,7 +170,7 @@ Proc for_each(I f, I d, Proc proc)
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     proc(*f);
-    f++;
+    f = successor(f);
   }
   return proc;
 }
@@ -176,7 +180,7 @@ I find(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f != x) {
-    f++;
+    f = successor(f);
   }
   return f;
 }
@@ -186,7 +190,7 @@ I find_not(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f == x) {
-    f++;
+    f = successor(f);
   }
   return f;
 }
@@ -196,7 +200,7 @@ I find_if(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && !p(*f)) {
-    f++;
+    f = successor(f);
   }
   return f;
 }
@@ -206,7 +210,7 @@ I find_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && p(*f)) {
-    f++;
+    f = successor(f);
   }
   return f;
 }
@@ -247,7 +251,7 @@ J count(I f, I d, const iter_value_t<I>& x, J j)
     if (*f == x) {
       j++;
     }
-    f++;
+    f = successor(f);
   }
   return j;
 }
@@ -267,7 +271,7 @@ J count_not(I f, I d, const iter_value_t<I>& x, J j)
     if (*f != x) {
       j++;
     }
-    f++;
+    f = successor(f);
   }
   return j;
 }
@@ -287,7 +291,7 @@ J count_if(I f, I d, P p, J j)
     if (p(*f)) {
       j++;
     }
-    f++;
+    f = successor(f);
   }
   return j;
 }
@@ -307,7 +311,7 @@ J count_if_not(I f, I d, P p, J j)
     if (!p(*f)) {
       j++;
     }
-    f++;
+    f = successor(f);
   }
   return j;
 }
@@ -327,10 +331,10 @@ auto reduce_nonempty(I f, I d, Op op, F fun)
   // Precondition: partially_associative(op)
 
   auto r = fun(f);
-  f++;
+  f = successor(f);
   while (f != d) {
     r = op(r, fun(f));
-    f++;
+    f = successor(f);
   }
   return r;
 }
@@ -359,7 +363,7 @@ auto reduce_nonzero(
       return z;
     }
     x = fun(f);
-    f++;
+    f = successor(f);
   } while (x == z);
 
   while (f != d) {
@@ -367,9 +371,179 @@ auto reduce_nonzero(
     if (y != z) {
       x = op(x, y);
     }
-    f++;
+    f = successor(f);
   }
   return x;
+}
+
+/* ----- Counted Range Algorithms ----- */
+
+template<ReadableIterator I, IterUnaryProcedure<I> Proc>
+auto for_each_n(I f, iter_dist_t<I> n, Proc proc)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n)) {
+    n = predecessor(n);
+    proc(*f);
+    f = successor(f);
+  }
+  return std::make_pair(proc, f);
+}
+
+template<ReadableIterator I>
+auto find_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n) && *f != x) {
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, n);
+}
+
+template<ReadableIterator I>
+auto find_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n) && *f == x) {
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, n);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+auto find_if_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n) && !p(*f)) {
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, n);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+auto find_if_not_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n) && p(*f)) {
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, n);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+bool all_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, d);
+  return find_if_not_n(f, n, p).second == 0;
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+bool none_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  return find_if_n(f, n, p).second == 0;
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+bool not_all_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  return n == 0 || find_if_not_n(f, n, p).second != 0;
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+bool some_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  return find_if_n(f, n, p).second != 0;
+}
+
+template<ReadableIterator I, Iterator J>
+auto count_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x, J j)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n)) {
+    if (*f == x) {
+      j++;
+    }
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, j);
+}
+
+template<ReadableIterator I>
+auto count_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+{
+  // Precondition: readable_weak_range(f, n);
+  return count_n(f, n, x, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I, Iterator J>
+auto count_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x, J j)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n)) {
+    if (*f != x) {
+      j++;
+    }
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, j);
+}
+
+template<ReadableIterator I>
+auto count_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+{
+  // Precondition: readable_weak_range(f, n);
+  return count_not_n(f, n, x, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
+auto count_if_n(I f, iter_dist_t<I> n, P p, J j)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n)) {
+    if (p(*f)) {
+      j++;
+    }
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, j);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+auto count_if_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  return count_if_n(f, n, p, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
+auto count_if_not_n(I f, iter_dist_t<I> n, P p, J j)
+{
+  // Precondition: readable_weak_range(f, n);
+  while (!zero(n)) {
+    if (!p(*f)) {
+      j++;
+    }
+    n = predecessor(n);
+    f = successor(f);
+  }
+  return std::make_pair(f, j);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+auto count_if_not_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_weak_range(f, n);
+  return count_if_not_n(f, n, p, iter_dist_t<I> {0});
 }
 
 }  // namespace based

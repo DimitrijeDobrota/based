@@ -5,7 +5,7 @@ namespace based
 {
 
 template<Iterator I>
-I next(I i)
+I successor(I i)
 {
   return ++i;
 }
@@ -23,7 +23,7 @@ I operator+(I f, distance_t<I> n)
   // Precondition: n >= 0 & weak_range(f, n)
   while (!zero(n)) {
     n = predecessor(n);
-    f = based::next(f);
+    f = successor(f);
   }
   return f;
 }
@@ -35,7 +35,7 @@ distance_t<I> operator-(I d, I f)
   distance_t<I> n {0};
   while (f != d) {
     n = successor(n);
-    f = next(f);
+    f = successor(f);
   }
   return n;
 }
