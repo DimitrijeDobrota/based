@@ -166,7 +166,7 @@ Proc for_each(I f, I d, Proc proc)
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     proc(*f);
-    f = next(f);
+    f++;
   }
   return proc;
 }
@@ -176,7 +176,7 @@ I find(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f != x) {
-    f = next(f);
+    f++;
   }
   return f;
 }
@@ -186,7 +186,7 @@ I find_not(I f, I d, const iter_value_t<I>& x)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && *f == x) {
-    f = next(f);
+    f++;
   }
   return f;
 }
@@ -196,7 +196,7 @@ I find_if(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && !p(*f)) {
-    f = next(f);
+    f++;
   }
   return f;
 }
@@ -206,7 +206,7 @@ I find_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d && p(*f)) {
-    f = next(f);
+    f++;
   }
   return f;
 }
@@ -245,9 +245,9 @@ J count(I f, I d, const iter_value_t<I>& x, J j)
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     if (*f == x) {
-      j = next(j);
+      j++;
     }
-    f = next(f);
+    f++;
   }
   return j;
 }
@@ -258,15 +258,16 @@ iter_dist_t<I> count(I f, I d, const iter_value_t<I>& x)
   // Precondition: readable_bounded_range(f, d);
   return count(f, d, x, iter_dist_t<I> {0});
 }
+
 template<ReadableIterator I, Iterator J>
 J count_not(I f, I d, const iter_value_t<I>& x, J j)
 {
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     if (*f != x) {
-      j = next(j);
+      j++;
     }
-    f = next(f);
+    f++;
   }
   return j;
 }
@@ -284,9 +285,9 @@ J count_if(I f, I d, P p, J j)
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     if (p(*f)) {
-      j = next(j);
+      j++;
     }
-    f = next(f);
+    f++;
   }
   return j;
 }
@@ -304,9 +305,9 @@ J count_if_not(I f, I d, P p, J j)
   // Precondition: readable_bounded_range(f, d);
   while (f != d) {
     if (!p(*f)) {
-      j = next(j);
+      j++;
     }
-    f = next(f);
+    f++;
   }
   return j;
 }
@@ -316,6 +317,59 @@ iter_dist_t<I> count_if_not(I f, I d, P p)
 {
   // Precondition: readable_bounded_range(f, d);
   return count_if_not(f, d, p, iter_dist_t<I> {0});
+}
+
+template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+auto reduce_nonempty(I f, I d, Op op, F fun)
+{
+  assert(f != d);
+  // Precondition: bounded_range(f,d)
+  // Precondition: partially_associative(op)
+
+  auto r = fun(f);
+  f++;
+  while (f != d) {
+    r = op(r, fun(f));
+    f++;
+  }
+  return r;
+}
+
+template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+auto reduce(
+    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z)
+{
+  // Precondition: bounded_range(f,d)
+  // Precondition: partially_associative(op)
+  if (f == d) {
+    return z;
+  }
+  return reduce_nonempty(f, d, op, fun);
+}
+
+template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+auto reduce_nonzero(
+    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z)
+{
+  // Precondition: bounded_range(f,d)
+  // Precondition: partially_associative(op)
+  codomain_t<F, I> x;
+  do {
+    if (f == d) {
+      return z;
+    }
+    x = fun(f);
+    f++;
+  } while (x == z);
+
+  while (f != d) {
+    auto y = fun(f);
+    if (y != z) {
+      x = op(x, y);
+    }
+    f++;
+  }
+  return x;
 }
 
 }  // namespace based

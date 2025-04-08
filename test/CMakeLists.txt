@@ -32,6 +32,7 @@ add_test(find_test)
 add_test(find_if_test)
 add_test(count_test)
 add_test(count_if_test)
+add_test(reduce_test)
 
 # ---- List ----
 add_test(list_test)
