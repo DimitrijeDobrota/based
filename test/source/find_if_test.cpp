@@ -25,7 +25,7 @@ TEST_CASE("find_if(empty)", "[algorithm/find_if]")
   REQUIRE(it == std::end(arr));
 }
 
-TEST_CASE("find_if(one) = found", "[algorithm/find_if]")
+TEST_CASE("find_if(one)", "[algorithm/find_if]")
 {
   const std::array arr = {0};
 
@@ -46,7 +46,7 @@ TEST_CASE("find_if(one) = found", "[algorithm/find_if]")
   }
 }
 
-TEST_CASE("find_if(two) = found", "[algorithm/find_if]")
+TEST_CASE("find_if(two)", "[algorithm/find_if]")
 {
   const std::array arr = {0, 1};
 
@@ -75,7 +75,7 @@ TEST_CASE("find_if(two) = found", "[algorithm/find_if]")
   }
 }
 
-TEST_CASE("find_if(multiple) = found", "[algorithm/find_if]")
+TEST_CASE("find_if(multiple)", "[algorithm/find_if]")
 {
   const std::array arr = {0, 0, 0, 0};
 
@@ -105,7 +105,7 @@ TEST_CASE("find_if_not(empty)", "[algorithm/find_if_not]")
   REQUIRE(it == std::end(arr));
 }
 
-TEST_CASE("find_if_not(one) = found", "[algorithm/find_if_not]")
+TEST_CASE("find_if_not(one)", "[algorithm/find_if_not]")
 {
   const std::array arr = {0};
 
@@ -127,7 +127,7 @@ TEST_CASE("find_if_not(one) = found", "[algorithm/find_if_not]")
   }
 }
 
-TEST_CASE("find_if_not(two) = found", "[algorithm/find_if_not]")
+TEST_CASE("find_if_not(two)", "[algorithm/find_if_not]")
 {
   const std::array arr = {0, 1};
 
@@ -148,7 +148,7 @@ TEST_CASE("find_if_not(two) = found", "[algorithm/find_if_not]")
   }
 }
 
-TEST_CASE("find_if_not(multiple) = found", "[algorithm/find_if_not]")
+TEST_CASE("find_if_not(multiple)", "[algorithm/find_if_not]")
 {
   const std::array arr = {0, 0, 0, 0};
 

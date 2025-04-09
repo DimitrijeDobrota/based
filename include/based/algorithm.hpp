@@ -546,4 +546,26 @@ auto count_if_not_n(I f, iter_dist_t<I> n, P p)
   return count_if_not_n(f, n, p, iter_dist_t<I> {0});
 }
 
+/* ----- Sentinel Ranges ----- */
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+I find_if_unguarded(I f, P p)
+{
+  // Precondition: readable_bounded_range(f, d) && some(f, d, p);
+  while (!p(*f)) {
+    f = successor(f);
+  }
+  return f;
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> P>
+I find_if_not_unguarded(I f, P p)
+{
+  // Precondition: readable_bounded_range(f, d) && not_all(f, d, p);
+  while (p(*f)) {
+    f = successor(f);
+  }
+  return f;
+}
+
 }  // namespace based

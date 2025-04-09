@@ -40,7 +40,6 @@ add_test(count_test)
 add_test(count_if_test)
 add_test(reduce_test)
 
-
 ## ----- Bounden Range -----
 
 add_test(for_each_n_test)
@@ -48,6 +47,10 @@ add_test(find_n_test)
 add_test(find_if_n_test)
 add_test(count_n_test)
 add_test(count_if_n_test)
+
+## ----- Unguarded Range -----
+
+add_test(find_if_unguarded_test)
 
 # ---- List ----
 add_test(list_test)

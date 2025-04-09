@@ -14,7 +14,7 @@ TEST_CASE("find_n(empty)", "[algorithm/find_n]")
   REQUIRE(idx + left == std::size(arr));
 }
 
-TEST_CASE("find_n(one) = found", "[algorithm/find_n]")
+TEST_CASE("find_n(one)", "[algorithm/find_n]")
 {
   const std::array arr = {0};
 
@@ -36,7 +36,7 @@ TEST_CASE("find_n(one) = found", "[algorithm/find_n]")
   }
 }
 
-TEST_CASE("find_n(two) = found", "[algorithm/find_n]")
+TEST_CASE("find_n(two)", "[algorithm/find_n]")
 {
   const std::array arr = {0, 1};
 
@@ -68,7 +68,7 @@ TEST_CASE("find_n(two) = found", "[algorithm/find_n]")
   }
 }
 
-TEST_CASE("find_n(multiple) = found", "[algorithm/find_n]")
+TEST_CASE("find_n(multiple)", "[algorithm/find_n]")
 {
   const std::array arr = {0, 0, 0, 0};
 
@@ -103,7 +103,7 @@ TEST_CASE("find_not_n(empty)", "[algorithm/find_not_n]")
   REQUIRE(idx + left == std::size(arr));
 }
 
-TEST_CASE("find_not_n(one) = found", "[algorithm/find_not_n]")
+TEST_CASE("find_not_n(one)", "[algorithm/find_not_n]")
 {
   const std::array arr = {0};
 
@@ -128,7 +128,7 @@ TEST_CASE("find_not_n(one) = found", "[algorithm/find_not_n]")
   }
 }
 
-TEST_CASE("find_not_n(two) = found", "[algorithm/find_not_n]")
+TEST_CASE("find_not_n(two)", "[algorithm/find_not_n]")
 {
   const std::array arr = {0, 1};
 
@@ -153,7 +153,7 @@ TEST_CASE("find_not_n(two) = found", "[algorithm/find_not_n]")
   }
 }
 
-TEST_CASE("find_not_n(multiple) = found", "[algorithm/find_not_n]")
+TEST_CASE("find_not_n(multiple)", "[algorithm/find_not_n]")
 {
   const std::array arr = {0, 0, 0, 0};
 

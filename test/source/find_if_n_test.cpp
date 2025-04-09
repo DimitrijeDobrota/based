@@ -25,7 +25,7 @@ TEST_CASE("find_if_n(empty)", "[algorithm/find_if_n]")
   REQUIRE(itr == std::end(arr));
 }
 
-TEST_CASE("find_if_n(one) = found", "[algorithm/find_if_n]")
+TEST_CASE("find_if_n(one)", "[algorithm/find_if_n]")
 {
   const std::array arr = {0};
 
@@ -50,7 +50,7 @@ TEST_CASE("find_if_n(one) = found", "[algorithm/find_if_n]")
   }
 }
 
-TEST_CASE("find_if_n(two) = found", "[algorithm/find_if_n]")
+TEST_CASE("find_if_n(two)", "[algorithm/find_if_n]")
 {
   const std::array arr = {0, 1};
 
@@ -85,7 +85,7 @@ TEST_CASE("find_if_n(two) = found", "[algorithm/find_if_n]")
   }
 }
 
-TEST_CASE("find_if_n(multiple) = found", "[algorithm/find_if_n]")
+TEST_CASE("find_if_n(multiple)", "[algorithm/find_if_n]")
 {
   const std::array arr = {0, 0, 0, 0};
 
@@ -119,7 +119,7 @@ TEST_CASE("find_if_not_n(empty)", "[algorithm/find_if_not_n]")
   REQUIRE(itr == std::end(arr));
 }
 
-TEST_CASE("find_if_not_n(one) = found", "[algorithm/find_if_not_n]")
+TEST_CASE("find_if_not_n(one)", "[algorithm/find_if_not_n]")
 {
   const std::array arr = {0};
 
@@ -145,7 +145,7 @@ TEST_CASE("find_if_not_n(one) = found", "[algorithm/find_if_not_n]")
   }
 }
 
-TEST_CASE("find_if_not_n(two) = found", "[algorithm/find_if_not_n]")
+TEST_CASE("find_if_not_n(two)", "[algorithm/find_if_not_n]")
 {
   const std::array arr = {0, 1};
 
@@ -169,7 +169,7 @@ TEST_CASE("find_if_not_n(two) = found", "[algorithm/find_if_not_n]")
   }
 }
 
-TEST_CASE("find_if_not_n(multiple) = found", "[algorithm/find_if_not_n]")
+TEST_CASE("find_if_not_n(multiple)", "[algorithm/find_if_not_n]")
 {
   const std::array arr = {0, 0, 0, 0};
 
