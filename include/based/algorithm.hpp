@@ -376,6 +376,19 @@ auto reduce_nonzero(
   return x;
 }
 
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
+  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch(I0 f0, I0 d0, I1 f1, I1 d1, R r)
+{
+  // Precondition: bounded_range(f0,d0)
+  // Precondition: bounded_range(f1,d1)
+  while (f0 != d0 && f1 != d1 && r(*f0, *f1)) {
+    f0 = successor(f0);
+    f1 = successor(f1);
+  }
+  return std::make_pair(f0, f1);
+}
+
 /* ----- Counted Range Algorithms ----- */
 
 template<ReadableIterator I, IterUnaryProcedure<I> Proc>
@@ -544,6 +557,49 @@ auto count_if_not_n(I f, iter_dist_t<I> n, P p)
 {
   // Precondition: readable_weak_range(f, n);
   return count_if_not_n(f, n, p, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
+  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_n(I0 f0, iter_dist_t<I0> n0, I1 f1, I1 d1, R r)
+{
+  // Precondition: readable_weak_range(f0,n0)
+  // Precondition: readable_bounded_range(f1,d1)
+  while (!zero(n0) && f1 != d1 && r(*f0, *f1)) {
+    n0 = predecessor(n0);
+    f0 = successor(f0);
+    f1 = successor(f1);
+  }
+  return std::make_tuple(f0, n0, f1);
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
+  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
+{
+  // Precondition: readable_bounded_range(f0,d0)
+  // Precondition: readable_weak_range(f1,n1)
+  while (f0 != d0 && !zero(n1) && r(*f0, *f1)) {
+    n1 = predecessor(n1);
+    f0 = successor(f0);
+    f1 = successor(f1);
+  }
+  return std::make_tuple(f0, f1, n1);
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
+  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_n_m(I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r)
+{
+  // Precondition: readable_weak_range(f0,n0)
+  // Precondition: readable_weak_range(f1,n1)
+  while (!zero(n0) && !zero(n1) && r(*f0, *f1)) {
+    n0 = predecessor(n0);
+    n1 = predecessor(n1);
+    f0 = successor(f0);
+    f1 = successor(f1);
+  }
+  return std::make_tuple(f0, n0, f1, n1);
 }
 
 /* ----- Sentinel Ranges ----- */
