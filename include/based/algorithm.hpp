@@ -389,6 +389,25 @@ auto find_mismatch(I0 f0, I0 d0, I1 f1, I1 d1, R r)
   return std::make_pair(f0, f1);
 }
 
+template<ReadableIterator I, IterRelation<I> R>
+I find_adjacent_mismatch(I f, I d, R r)
+{
+  // Precondition: bounded_range(f,d)
+
+  if (f == d) {
+    return d;
+  }
+
+  auto x = *f;
+  f = successor(f);
+  while (f != d && r(x, *f)) {
+    x = *f;
+    f = successor(f);
+  }
+
+  return f;
+}
+
 /* ----- Counted Range Algorithms ----- */
 
 template<ReadableIterator I, IterUnaryProcedure<I> Proc>
@@ -589,7 +608,8 @@ auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
 
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
   requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
-auto find_mismatch_n_m(I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r)
+auto find_mismatch_n_m(
+    I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r)
 {
   // Precondition: readable_weak_range(f0,n0)
   // Precondition: readable_weak_range(f1,n1)
