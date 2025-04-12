@@ -3,6 +3,7 @@
 #include <functional>
 #include <utility>
 
+#include "based/functional.hpp"
 #include "based/iterator.hpp"
 #include "based/type_traits.hpp"
 
@@ -408,6 +409,82 @@ I find_adjacent_mismatch(I f, I d, R r)
   return f;
 }
 
+template<ReadableForwardIterator I, IterRelation<I> R>
+I find_adjacent_mismatch_forward(I f, I d, R r)
+{
+  // Precondition: readable_bounded_range(f, d)
+
+  if (f == d) {
+    return d;
+  }
+
+  I t;
+  do {
+    t = f;
+    f = successor(f);
+  } while (f != d && r(*t, *f));
+
+  return f;
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool relation_preserving(I f, I d, R r)
+{
+  // Precondition: readable_bounded_range(f,d)
+  // Precondition: weak_ordering(r);
+  return find_adjacent_mismatch(f, d, r) == d;
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool strictly_increasing_range(I f, I d, R r)
+{
+  // Precondition: readable_bounded_range(f,d)
+  // Precondition: weak_ordering(r);
+  return relation_preserving(f, d, r);
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool increasing_range(I f, I d, R r)
+{
+  // Precondition: readable_bounded_range(f,d)
+  // Precondition: weak_ordering(r);
+  return relation_preserving(f, d, complement_of_converse(r));
+}
+
+template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
+bool partitioned(I f, I d, P p)
+{
+  // Precondition: readable_bounded_range(f, d)
+  return find_if(f, d, p).second != d;
+}
+
+template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
+I partition_point(I f, I d, P p)
+{
+  // Precondition: readable_bounded_range(f, d)
+  assert(partitioned(f, d, p));
+
+  return partition_point_n(f, d - f, p);
+}
+
+template<ReadableForwardIterator I, IterRelation<I> R>
+I lower_bound(I f, I d, const iter_value_t<I>& a, R r)
+{
+  // Precondition: weak_ordering(r)
+  assert(increasing_range(f, d, r));
+
+  return partition_point(f, d, lower_bound_predicate(a, r));
+}
+
+template<ReadableForwardIterator I, IterRelation<I> R>
+I upper_bound(I f, I d, const iter_value_t<I>& a, R r)
+{
+  // Precondition: weak_ordering(r)
+  assert(increasing_range(f, d, r));
+
+  return partition_point(f, d, upper_bound_predicate(a, r));
+}
+
 /* ----- Counted Range Algorithms ----- */
 
 template<ReadableIterator I, IterUnaryProcedure<I> Proc>
@@ -620,6 +697,92 @@ auto find_mismatch_n_m(
     f1 = successor(f1);
   }
   return std::make_tuple(f0, n0, f1, n1);
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+auto find_adjacent_mismatch_n(I f, iter_dist_t<I> n, R r)
+{
+  // Precondition: readable_bounded_range(f,d)
+
+  if (zero(n)) {
+    return std::make_pair(f, n);
+  }
+
+  auto x = *f;
+  f = successor(f);
+  while (!zero(n) && r(x, *f)) {
+    x = *f;
+    n = predecessor(n);
+    f = successor(f);
+  }
+
+  return std::make_pair(f, n);
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool relation_preserving_n(I f, iter_dist_t<I> n, R r)
+{
+  // Precondition: readable_bounded_range(f,n)
+  // Precondition: weak_ordering(r);
+  return find_adjacent_mismatch_n(f, n, r).second != 0;
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool strictly_increasing_range_n(I f, iter_dist_t<I> n, R r)
+{
+  // Precondition: readable_bounded_range(f,n)
+  // Precondition: weak_ordering(r);
+  return relation_preserving_n(f, n, r);
+}
+
+template<ReadableIterator I, IterRelation<I> R>
+bool increasing_range_n(I f, iter_dist_t<I> n, R r)
+{
+  // Precondition: readable_bounded_range(f,n)
+  // Precondition: weak_ordering(r);
+  return relation_preserving_n(f, n, complement_of_converse(r));
+}
+
+template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
+bool partitioned_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_bounded_range(f, n)
+  return find_if_n(f, n, p).second != 0;
+}
+
+template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
+I partition_point_n(I f, iter_dist_t<I> n, P p)
+{
+  // Precondition: readable_bounded_range(f, n)
+  assert(partitioned_n(f, n, p));
+
+  auto h = half(n);
+  I m = f + h;
+  if (p(*f)) {
+    n = h;
+  } else {
+    n -= successor(h);
+    f = successor(n);
+  }
+  return f;
+}
+
+template<ReadableForwardIterator I, IterRelation<I> R>
+I lower_bound_n(I f, iter_dist_t<I> n, const iter_value_t<I>& a, R r)
+{
+  // Precondition: weak_ordering(r)
+  assert(increasing_range_n(f, n, r));
+
+  return partition_point_n(f, n, lower_bound_predicate(a, r));
+}
+
+template<ReadableForwardIterator I, IterRelation<I> R>
+I upper_bound_n(I f, iter_dist_t<I> n, const iter_value_t<I>& a, R r)
+{
+  // Precondition: weak_ordering(r)
+  assert(increasing_range_n(f, n, r));
+
+  return partition_point_n(f, n, upper_bound_predicate(a, r));
 }
 
 /* ----- Sentinel Ranges ----- */

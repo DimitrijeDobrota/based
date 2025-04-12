@@ -99,8 +99,20 @@ concept Iterator = requires(T t) {
 };
 
 template<typename T>
+concept ForwardIterator = requires(T t) {
+    requires(Iterator<T>);
+    // successor is regular
+};
+
+template<typename T>
 concept ReadableIterator = requires {
     requires(Iterator<T>);
+    requires(Readable<T>);
+};
+
+template<typename T>
+concept ReadableForwardIterator = requires {
+    requires(ForwardIterator<T>);
     requires(Readable<T>);
 };
 
