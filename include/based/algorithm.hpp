@@ -377,11 +377,11 @@ auto reduce_nonzero(
 }
 
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
 auto find_mismatch(I0 f0, I0 d0, I1 f1, I1 d1, R r)
 {
-  // Precondition: bounded_range(f0,d0)
-  // Precondition: bounded_range(f1,d1)
+  // Precondition: readable_bounded_range(f0,d0)
+  // Precondition: readable_bounded_range(f1,d1)
   while (f0 != d0 && f1 != d1 && r(*f0, *f1)) {
     f0 = successor(f0);
     f1 = successor(f1);
@@ -392,7 +392,7 @@ auto find_mismatch(I0 f0, I0 d0, I1 f1, I1 d1, R r)
 template<ReadableIterator I, IterRelation<I> R>
 I find_adjacent_mismatch(I f, I d, R r)
 {
-  // Precondition: bounded_range(f,d)
+  // Precondition: readable_bounded_range(f,d)
 
   if (f == d) {
     return d;
@@ -579,7 +579,7 @@ auto count_if_not_n(I f, iter_dist_t<I> n, P p)
 }
 
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
 auto find_mismatch_n(I0 f0, iter_dist_t<I0> n0, I1 f1, I1 d1, R r)
 {
   // Precondition: readable_weak_range(f0,n0)
@@ -593,7 +593,7 @@ auto find_mismatch_n(I0 f0, iter_dist_t<I0> n0, I1 f1, I1 d1, R r)
 }
 
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
 auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
 {
   // Precondition: readable_bounded_range(f0,d0)
@@ -607,7 +607,7 @@ auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
 }
 
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires SameAs<iter_value_t<I0>, iter_value_t<I1>>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
 auto find_mismatch_n_m(
     I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r)
 {
