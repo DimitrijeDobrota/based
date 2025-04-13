@@ -27,7 +27,7 @@ endfunction()
 add_test(min_test)
 add_test(max_test)
 
-## ----- Bounden Range -----
+## ----- Bounded Range -----
 
 add_test(min_element_test)
 add_test(max_element_test)
@@ -40,8 +40,9 @@ add_test(count_test)
 add_test(count_if_test)
 add_test(reduce_test)
 add_test(find_mismatch_test)
+add_test(partition_test)
 
-## ----- Bounden Range -----
+## ----- Counted Range -----
 
 add_test(for_each_n_test)
 add_test(find_n_test)

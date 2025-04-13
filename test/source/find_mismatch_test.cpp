@@ -176,3 +176,69 @@ TEST_CASE("find_adjacent_mismatch(nonequal)",
 
   REQUIRE(itr == std::next(std::begin(arr), 4));
 }
+
+TEST_CASE("find_adjacent_mismatch_forward(empty)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array<int, 0> arr = {};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::end(arr));
+}
+
+TEST_CASE("find_adjacent_mismatch_forward(one)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array arr = {0};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::end(arr));
+}
+
+TEST_CASE("find_adjacent_mismatch_forward(two equal)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array arr = {0, 0};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::end(arr));
+}
+
+TEST_CASE("find_adjacent_mismatch_forward(two nonequal)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array arr = {0, 1};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::next(std::begin(arr), 1));
+}
+
+TEST_CASE("find_adjacent_mismatch_forward(equal)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array arr = {0, 0, 0, 0, 0, 0};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::end(arr));
+}
+
+TEST_CASE("find_adjacent_mismatch_forward(nonequal)",
+          "[algorithm/find_adjacent_mismatch_forward]")
+{
+  std::array arr = {0, 0, 0, 0, 1, 1, 1, 1};
+
+  const auto* itr = based::find_adjacent_mismatch_forward(
+      std::begin(arr), std::end(arr), equal {});
+
+  REQUIRE(itr == std::next(std::begin(arr), 4));
+}
