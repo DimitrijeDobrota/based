@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 
 #include "based/template.hpp"
@@ -13,6 +14,16 @@ int main()
 
   double d = 7.3;
   l(&d);
+
+  {
+    const based::Function f = [](int a) { return a + 1; };
+    f(3);
+  }
+
+  {
+    const std::function f = [](int a) { return a + 1; };
+    f(3);
+  }
 
   return 0;
 }
