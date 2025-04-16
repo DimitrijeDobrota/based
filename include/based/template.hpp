@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <functional>
 #include <type_traits>
@@ -17,18 +16,200 @@ template<typename Ret, typename... Args>
 struct signature<Ret(Args...)>
 {
   using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
 };
 
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...)>
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) noexcept(Ne)>
 {
   using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
 };
 
-template<typename Ret, typename Obj, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const>
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) & noexcept(Ne)>
 {
   using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) && noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const & noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const && noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile & noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile && noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
+};
+
+template<typename Ret, typename Obj, bool Ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(Ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, Ne>;
 };
 
 /* ----- Overload Lambdas ----- */
