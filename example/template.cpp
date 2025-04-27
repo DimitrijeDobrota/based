@@ -17,12 +17,12 @@ int main()
 
   {
     const based::Function f = [](int a) { return a + 1; };
-    f(3);
+    std::cout << f(3) << '\n';
   }
 
   {
     const std::function f = [](int a) { return a + 1; };
-    f(3);
+    std::cout << f(3) << '\n';
   }
 
   return 0;
