@@ -123,7 +123,8 @@ public:
 
   list_type free(
       list_type front,  // NOLINT bugprone-easily-swappable-parameters
-      list_type back)
+      list_type back
+  )
   {
     if (is_empty(front)) {
       return node_empty();

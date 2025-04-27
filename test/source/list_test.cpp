@@ -82,10 +82,15 @@ TEST_CASE("list_pool iterator", "[list/list_pool/iterator]")
 
   SECTION("accumulate")
   {
-    const auto sum = std::accumulate(iter(pool, head),
-                                     iter(pool),
-                                     std::uint64_t {0},
-                                     [](auto a, auto b) { return a + b; });
+    const auto sum = std::accumulate(
+        iter(pool, head),
+        iter(pool),
+        std::uint64_t {0},
+        [](auto a, auto b)
+        {
+          return a + b;
+        }
+    );
 
     REQUIRE(sum == 0xFF * 0xFE / 2);
   }

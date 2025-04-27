@@ -9,14 +9,19 @@ TEST_CASE("count return type", "[algorithm/count]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(
-      based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                    decltype(based::count(std::begin(arr), std::end(arr), 0))>);
+  SECTION("auto counter")
+  {
+    using res_t = decltype(based::count(std::begin(arr), std::end(arr), 0));
+    REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>, res_t>);
+  }
 
-  REQUIRE(
-      based::SameAs<std::uint8_t,
-                    decltype(based::count(
-                        std::begin(arr), std::end(arr), 0, std::uint8_t {0}))>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count(
+        std::begin(arr), std::end(arr), 0, std::uint8_t {0}
+    ));
+    REQUIRE(based::SameAs<std::uint8_t, res_t>);
+  }
 }
 
 TEST_CASE("count(empty)", "[algorithm/count]")
@@ -34,7 +39,6 @@ TEST_CASE("count(homogeneous)", "[algorithm/count]")
 
   const auto count0 = based::count(std::begin(arr), std::end(arr), 0);
   const auto count1 = based::count(std::begin(arr), std::end(arr), 1);
-
   REQUIRE(count0 == 0);
   REQUIRE(count1 == 6);
 }
@@ -56,14 +60,19 @@ TEST_CASE("count_not return type", "[algorithm/count_not]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                        decltype(based::count_not(
-                            std::begin(arr), std::end(arr), 0))>);
+  SECTION("auto counter")
+  {
+    using res_t = decltype(based::count_not(std::begin(arr), std::end(arr), 0));
+    REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>, res_t>);
+  }
 
-  REQUIRE(
-      based::SameAs<std::uint8_t,
-                    decltype(based::count_not(
-                        std::begin(arr), std::end(arr), 0, std::uint8_t {0}))>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count_not(
+        std::begin(arr), std::end(arr), 0, std::uint8_t {0}
+    ));
+    REQUIRE(based::SameAs<std::uint8_t, res_t>);
+  }
 }
 
 TEST_CASE("count_not(empty)", "[algorithm/count_not]")

@@ -4,8 +4,14 @@
 
 int main()
 {
-  static const auto func = [](int x) { return x != 32 ? 2 * x : 1; };
-  static const auto pred = [](int /* x */) { return true; };
+  static const auto func = [](int x)
+  {
+    return x != 32 ? 2 * x : 1;
+  };
+  static const auto pred = [](int /* x */)
+  {
+    return true;
+  };
 
   std::cout << based::distance(1, 16, func) << '\n';
   std::cout << based::power_unary(1, 2, func) << '\n';

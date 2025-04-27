@@ -221,8 +221,9 @@ concept UnaryPredicate = requires {
 template<typename P, typename... Args>
 concept Operation = requires {
   requires(HomogeneousFunction<P, Args...>);
-  requires(BareSameAs<codomain_t<P, Args...>,
-                      std::tuple_element_t<0, std::tuple<Args...>>>);
+  requires(BareSameAs<
+           codomain_t<P, Args...>,
+           std::tuple_element_t<0, std::tuple<Args...>>>);
 };
 
 template<typename P, typename Arg>

@@ -235,8 +235,9 @@ struct Buffer
 
   template<typename T, typename... Args>
     requires(valid_type<T>() && std::constructible_from<T, Args...>)
-  explicit Buffer(std::in_place_type_t<T> /* t */, Args&&... args) noexcept(
-      std::is_nothrow_constructible_v<T, Args...>)
+  explicit Buffer(
+      std::in_place_type_t<T> /* t */, Args&&... args
+  ) noexcept(std::is_nothrow_constructible_v<T, Args...>)
   {
     static_assert(std::is_trivially_destructible_v<T>);
     static_assert(std::is_trivially_copyable_v<T>);
@@ -245,8 +246,8 @@ struct Buffer
 
   template<typename T, typename... Args>
     requires(valid_type<T>() && std::constructible_from<T, Args...>)
-  T* emplace(Args&&... args) noexcept(
-      std::is_nothrow_constructible_v<T, Args...>)
+  T* emplace(Args&&... args
+  ) noexcept(std::is_nothrow_constructible_v<T, Args...>)
   {
     static_assert(std::is_trivially_destructible_v<T>);
     static_assert(std::is_trivially_copyable_v<T>);
@@ -294,10 +295,11 @@ overload(F&&...) -> overload<F...>;
 template<typename Signature, std::size_t Size = 16, std::size_t Alignment = 8>
 class Function;
 
-template<std::size_t Size,
-         std::size_t Alignment,
-         typename Res,
-         typename... Args>
+template<
+    std::size_t Size,
+    std::size_t Alignment,
+    typename Res,
+    typename... Args>
 class Function<Res(Args...), Size, Alignment>
 {
   Buffer<Size, Alignment> m_space;
@@ -317,7 +319,8 @@ class Function<Res(Args...), Size, Alignment>
   {
     return std::invoke(
         *static_cast<Function*>(func)->m_space.template as<Callable>(),
-        std::forward<Args>(args)...);
+        std::forward<Args>(args)...
+    );
   }
 
 public:
@@ -333,8 +336,9 @@ public:
             })
 
   Function(CallableArg&& callable)  // NOLINT *explicit
-      : m_space(std::in_place_type<Callable>,
-                std::forward<CallableArg>(callable))
+      : m_space(
+            std::in_place_type<Callable>, std::forward<CallableArg>(callable)
+        )
       , m_executor(executor<Callable>)
   {
   }
@@ -342,8 +346,10 @@ public:
   template<typename... CallArgs>
   Res operator()(CallArgs&&... callargs) const
   {
-    return this->m_executor(std::forward<CallArgs>(callargs)...,
-                            const_cast<Function*>(this));  // NOLINT *const_cast
+    return this->m_executor(
+        std::forward<CallArgs>(callargs)...,
+        const_cast<Function*>(this)  // NOLINT *const_cast
+    );
   }
 };
 

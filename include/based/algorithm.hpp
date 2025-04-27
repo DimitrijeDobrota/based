@@ -38,7 +38,8 @@ template<BareRegular T, BareRegular U>
 decltype(auto) min(T&& lhs, U&& rhs)
 {
   return based::min(
-      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
+      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>()
+  );
 }
 
 // returns max element, second if equal
@@ -55,7 +56,8 @@ template<BareRegular T, BareRegular U>
 decltype(auto) max(T&& lhs, U&& rhs)
 {
   return based::max(
-      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>());
+      std::forward<T>(lhs), std::forward<U>(rhs), std::less<bare_t<T>>()
+  );
 }
 
 /* ----- Bounded Range Algorithms ----- */
@@ -342,7 +344,8 @@ auto reduce_nonempty(I f, I d, Op op, F fun)
 
 template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
 auto reduce(
-    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z)
+    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z
+)
 {
   // Precondition: bounded_range(f,d)
   // Precondition: partially_associative(op)
@@ -354,7 +357,8 @@ auto reduce(
 
 template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
 auto reduce_nonzero(
-    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z)
+    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z
+)
 {
   // Precondition: bounded_range(f,d)
   // Precondition: partially_associative(op)
@@ -634,7 +638,8 @@ auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
 template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
   requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
 auto find_mismatch_n_m(
-    I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r)
+    I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r
+)
 {
   // Precondition: readable_weak_range(f0,n0)
   // Precondition: readable_weak_range(f1,n1)
@@ -690,7 +695,8 @@ bool increasing_range_n(I f, iter_dist_t<I> n, R r)
   // Precondition: readable_bounded_range(f,n)
   // Precondition: weak_ordering(r);
   return relation_preserving_n(
-      f, n, complement_of_converse<iter_value_t<I>>(r));
+      f, n, complement_of_converse<iter_value_t<I>>(r)
+  );
 }
 
 /* ----- Sentinel Ranges ----- */

@@ -21,18 +21,26 @@ TEST_CASE("count_if_n return type", "[algorithm/count_if_n]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(
-      based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                    decltype(based::count_if_n(
-                                 std::begin(arr), std::size(arr), predicate {0})
-                                 .second)>);
+  SECTION("auto counter")
+  {
+    using res_t = decltype(based::count_if_n(
+                               std::begin(arr), std::size(arr), predicate {0}
+    )
+                               .second);
+    REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>, res_t>);
+  }
 
-  REQUIRE(based::SameAs<std::uint8_t,
-                        decltype(based::count_if_n(std::begin(arr),
-                                                   std::size(arr),
-                                                   predicate {0},
-                                                   std::uint8_t {0})
-                                     .second)>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count_if_n(
+                               std::begin(arr),
+                               std::size(arr),
+                               predicate {0},
+                               std::uint8_t {0}
+    )
+                               .second);
+    REQUIRE(based::SameAs<std::uint8_t, res_t>);
+  }
 }
 
 TEST_CASE("count_if_n(empty)", "[algorithm/count_if_n]")
@@ -90,18 +98,23 @@ TEST_CASE("count_if_not_n return type", "[algorithm/count_if_not_n]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(
-      based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                    decltype(based::count_if_not_n(
-                                 std::begin(arr), std::size(arr), predicate {0})
-                                 .second)>);
+  SECTION("auto counter")
+  {
+    using res_t = decltype(based::count_if_not_n(
+        std::begin(arr), std::size(arr), predicate {0}
+    ));
+    REQUIRE(based::SameAs<
+            based::iter_dist_t<decltype(arr)::iterator>,
+            res_t::second_type>);
+  }
 
-  REQUIRE(based::SameAs<std::uint8_t,
-                        decltype(based::count_if_not_n(std::begin(arr),
-                                                       std::size(arr),
-                                                       predicate {0},
-                                                       std::uint8_t {0})
-                                     .second)>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count_if_not_n(
+        std::begin(arr), std::size(arr), predicate {0}, std::uint8_t {0}
+    ));
+    REQUIRE(based::SameAs<std::uint8_t, res_t::second_type>);
+  }
 }
 
 TEST_CASE("count_if_not_n(empty)", "[algorithm/count_if_not_n]")

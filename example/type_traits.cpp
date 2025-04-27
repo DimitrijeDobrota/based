@@ -98,20 +98,31 @@ int main()
   static_assert(based::RegularProcedure<md, double*>);
   static_assert(!based::FunctionalProcedure<md>);
 
-  static_assert(
-      based::RegularProcedure<decltype(sub<double, double>), double, double>);
+  static_assert(based::RegularProcedure<
+                decltype(sub<double, double>),
+                double,
+                double>);
 
-  static const auto l1 = [](double a) { return a; };
+  static const auto l1 = [](double a)
+  {
+    return a;
+  };
   static_assert(based::Procedure<decltype(l1), double>);
   static_assert(based::RegularProcedure<decltype(l1), double>);
   static_assert(based::FunctionalProcedure<decltype(l1), double>);
 
-  static const auto l2 = [](irregular /* a */) { return 1; };
+  static const auto l2 = [](irregular /* a */)
+  {
+    return 1;
+  };
   static_assert(!based::Procedure<decltype(l2), irregular>);
   static_assert(!based::RegularProcedure<decltype(l2), irregular>);
   static_assert(!based::FunctionalProcedure<decltype(l2), irregular>);
 
-  static const auto l3 = [](const irregular& /* a */) { return 1; };
+  static const auto l3 = [](const irregular& /* a */)
+  {
+    return 1;
+  };
   static_assert(based::Procedure<decltype(l3), irregular>);
   static_assert(!based::RegularProcedure<decltype(l3), irregular>);
   static_assert(!based::FunctionalProcedure<decltype(l3), irregular>);

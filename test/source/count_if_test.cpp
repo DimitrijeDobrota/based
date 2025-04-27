@@ -21,15 +21,21 @@ TEST_CASE("count_if return type", "[algorithm/count_if]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                        decltype(based::count_if(
-                            std::begin(arr), std::end(arr), predicate {0}))>);
+  SECTION("auto counter")
+  {
+    using res_t =
+        decltype(based::count_if(std::begin(arr), std::end(arr), predicate {0})
+        );
+    REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>, res_t>);
+  }
 
-  REQUIRE(based::SameAs<std::uint8_t,
-                        decltype(based::count_if(std::begin(arr),
-                                                 std::end(arr),
-                                                 predicate {0},
-                                                 std::uint8_t {0}))>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count_if(
+        std::begin(arr), std::end(arr), predicate {0}, std::uint8_t {0}
+    ));
+    REQUIRE(based::SameAs<std::uint8_t, res_t>);
+  }
 }
 
 TEST_CASE("count_if(empty)", "[algorithm/count_if]")
@@ -75,15 +81,21 @@ TEST_CASE("count_if_not return type", "[algorithm/count_if_not]")
 {
   const std::array<int, 0> arr = {};
 
-  REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>,
-                        decltype(based::count_if_not(
-                            std::begin(arr), std::end(arr), predicate {0}))>);
+  SECTION("auto counter")
+  {
+    using res_t = decltype(based::count_if_not(
+        std::begin(arr), std::end(arr), predicate {0}
+    ));
+    REQUIRE(based::SameAs<based::iter_dist_t<decltype(arr)::iterator>, res_t>);
+  }
 
-  REQUIRE(based::SameAs<std::uint8_t,
-                        decltype(based::count_if_not(std::begin(arr),
-                                                     std::end(arr),
-                                                     predicate {0},
-                                                     std::uint8_t {0}))>);
+  SECTION("explicit counter")
+  {
+    using res_t = decltype(based::count_if_not(
+        std::begin(arr), std::end(arr), predicate {0}, std::uint8_t {0}
+    ));
+    REQUIRE(based::SameAs<std::uint8_t, res_t>);
+  }
 }
 
 TEST_CASE("count_if_not(empty)", "[algorithm/count_if_not]")

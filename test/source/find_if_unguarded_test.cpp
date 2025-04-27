@@ -63,8 +63,9 @@ TEST_CASE("find_if_not_unguarded(two)", "[algorithm/find_if_not_unguarded]")
   REQUIRE(idx == 1);
 }
 
-TEST_CASE("find_if_not_unguarded(multiple)",
-          "[algorithm/find_if_not_unguarded]")
+TEST_CASE(
+    "find_if_not_unguarded(multiple)", "[algorithm/find_if_not_unguarded]"
+)
 {
   const std::array arr = {1, 1, 0, 1};
 

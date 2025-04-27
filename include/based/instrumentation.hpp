@@ -74,18 +74,20 @@ inline auto normalize_nlogn1(double x, double n)
 
 struct instrumented_base
 {
-  BASED_ENUM(op,
-             std::uint8_t,
-             n,
-             ctor_default,
-             ctor_value,
-             ctor_copy,
-             ctor_move,
-             asgn_copy,
-             asgn_move,
-             destructor,
-             equality,
-             comparison)
+  BASED_ENUM(
+      op,
+      std::uint8_t,
+      n,
+      ctor_default,
+      ctor_value,
+      ctor_copy,
+      ctor_move,
+      asgn_copy,
+      asgn_move,
+      destructor,
+      equality,
+      comparison
+  )
 
   static constexpr std::array<const char*, op::size> names = {
       "n",
@@ -257,10 +259,12 @@ template<typename D>
 D* registry<D>::head(nullptr);
 
 template<typename Function>
-void count_operations(size_t i,
-                      size_t j,
-                      Function fun,
-                      double (*norm)(double, double) = dont_normalize)
+void count_operations(
+    size_t i,
+    size_t j,
+    Function fun,
+    double (*norm)(double, double) = dont_normalize
+)
 {
   using instrumented = based::instrumented<double>;
 
@@ -270,8 +274,9 @@ void count_operations(size_t i,
   std::array<double, cols> values = {0};
 
   table tbl(12);
-  tbl.print_header(std::begin(instrumented::names),
-                   std::end(instrumented::names));
+  tbl.print_header(
+      std::begin(instrumented::names), std::end(instrumented::names)
+  );
 
   std::mt19937 rng(0);  // NOLINT cert-msc32-c cert-msc51-cpp
   while (i <= j) {
