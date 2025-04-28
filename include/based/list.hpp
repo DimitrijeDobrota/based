@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <functional>
 #include <utility>
 #include <vector>
 
@@ -104,13 +103,72 @@ public:
     list_pool::list_type m_node;
   };
 
+  struct const_iterator
+  {
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = list_pool::list_type;
+    using value_type = list_pool::value_type;
+    using reference = const value_type&;
+    using pointer = const value_type*;
+
+    const_iterator() = default;
+
+    explicit const_iterator(const list_pool& pool)
+        : const_iterator(pool, pool.node_empty())
+    {
+    }
+
+    const_iterator(const list_pool& pool, list_pool::list_type node)
+        : m_pool(&pool)
+        , m_node(node)
+    {
+    }
+
+    reference operator*() const { return m_pool->value(m_node); }
+    pointer operator->() const { return &**this; }
+
+    const_iterator& operator++()
+    {
+      m_node = m_pool->next(m_node);
+      return *this;
+    }
+
+    const_iterator operator++(int)
+    {
+      const_iterator tmp(*this);
+      ++*this;
+      return tmp;
+    }
+
+    friend bool operator==(const const_iterator& x, const const_iterator& y)
+    {
+      assert(x.m_pool == y.m_pool);
+      return x.m_node == y.m_node;
+    }
+
+    friend bool operator!=(const const_iterator& x, const const_iterator& y)
+    {
+      return !(x == y);
+    }
+
+  private:
+    const list_pool* m_pool;
+    list_pool::list_type m_node;
+  };
+
   [[nodiscard]] bool is_empty(list_type x) const { return x == node_empty(); }
   [[nodiscard]] list_type node_empty() const { return list_type(0); }
 
-  [[nodiscard]] const value_type& value(list_type x) const { return node(x).value; }
+  [[nodiscard]] const value_type& value(list_type x) const
+  {
+    return node(x).value;
+  }
   [[nodiscard]] value_type& value(list_type x) { return node(x).value; }
 
-  [[nodiscard]] const list_type& next(list_type x) const { return node(x).next; }
+  [[nodiscard]] const list_type& next(list_type x) const
+  {
+    return node(x).next;
+  }
   [[nodiscard]] list_type& next(list_type x) { return node(x).next; }
 
   list_type free(list_type x)
@@ -153,7 +211,10 @@ public:
 
   using queue_t = std::pair<list_type, list_type>;
 
-  [[nodiscard]] bool is_empty(const queue_t& queue) const { return is_empty(queue.first); }
+  [[nodiscard]] bool is_empty(const queue_t& queue) const
+  {
+    return is_empty(queue.first);
+  }
   [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
 
   [[nodiscard]] queue_t push_front(const queue_t& queue, const value_type& val)

@@ -4,6 +4,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+template class based::list_pool<std::uint8_t, std::uint8_t>;
+
 TEST_CASE("list_pool", "[list/list_pool]")
 {
   using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
@@ -58,10 +60,9 @@ TEST_CASE("list_pool", "[list/list_pool]")
   REQUIRE(pool.node_empty() == head);
 }
 
-TEST_CASE("list_pool iterator", "[list/list_pool/iterator]")
+TEST_CASE("list_pool iterator", "[list/list_pool]")
 {
   using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
-  using iter = list_pool::iterator;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
@@ -73,20 +74,25 @@ TEST_CASE("list_pool iterator", "[list/list_pool/iterator]")
 
   SECTION("for-loop")
   {
-    std::uint64_t sum = 0;
-    for (auto it = iter(pool, head); it != iter(pool); ++it) {
+    using iter = list_pool::iterator;
+
+    std::uint32_t sum = 0;
+    for (auto it = iter(pool, head); it != iter(pool); it++) {
+      sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 0xFF * 0xFE / 2);
+    REQUIRE(sum == 0xFF * 0xFE);
   }
 
   SECTION("accumulate")
   {
+    using iter = list_pool::iterator;
+
     const auto sum = std::accumulate(
         iter(pool, head),
         iter(pool),
-        std::uint64_t {0},
+        std::uint32_t {0},
         [](auto a, auto b)
         {
           return a + b;
@@ -94,6 +100,55 @@ TEST_CASE("list_pool iterator", "[list/list_pool/iterator]")
     );
 
     REQUIRE(sum == 0xFF * 0xFE / 2);
+  }
+
+  based::free_list(pool, head);
+}
+
+TEST_CASE("list_pool const iterator", "[list/list_pool]")
+{
+  using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
+
+  auto pool = list_pool();
+  auto head = pool.node_empty();
+
+  static constexpr std::size_t iter_count = 0xFF;
+  for (std::uint8_t i = 0; i < iter_count; i++) {
+    head = pool.allocate(i, head);
+  }
+
+  SECTION("const for-loop")
+  {
+    using iter = list_pool::const_iterator;
+
+    std::uint32_t sum = 0;
+    for (auto it = iter(pool, head); it != iter(pool); it++) {
+      sum += *it.operator->();
+      sum += *it;
+    }
+
+    REQUIRE(sum == 0xFF * 0xFE);
+  }
+
+  SECTION("const accumulate")
+  {
+    using iter = list_pool::const_iterator;
+
+    static const auto sum =
+        [](const list_pool& lpool, const list_pool::list_type& lhead)
+    {
+      return std::accumulate(
+          iter(lpool, lhead),
+          iter(lpool),
+          std::uint32_t {0},
+          [](auto a, auto b)
+          {
+            return a + b;
+          }
+      );
+    };
+
+    REQUIRE(sum(pool, head) == 0xFF * 0xFE / 2);
   }
 
   based::free_list(pool, head);
