@@ -159,10 +159,10 @@ template<typename P, typename... Args>
   requires Procedure<P, Args...>
 inline constexpr auto arity_v = std::tuple_size<std::tuple<Args...>>::value;
 
-template<typename P, std::size_t Idx, typename... Args>
-  requires Procedure<P, Args...> && requires { Idx < arity_v<Args...>; }
+template<typename P, std::size_t idx, typename... Args>
+  requires Procedure<P, Args...> && requires { idx < arity_v<Args...>; }
 using domain_elem_t =
-    std::decay_t<std::tuple_element_t<Idx, std::tuple<Args...>>>;
+    std::decay_t<std::tuple_element_t<idx, std::tuple<Args...>>>;
 
 template<typename P, typename... Args>
   requires Procedure<P, Args...>

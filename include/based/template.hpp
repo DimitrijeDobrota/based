@@ -7,6 +7,9 @@
 #include <type_traits>
 #include <utility>
 
+#include "based/type_traits.hpp"
+#include "based/utility.hpp"
+
 namespace based
 {
 
@@ -23,8 +26,8 @@ struct signature<Ret(Args...)>
   using ret_type = Ret;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -36,11 +39,11 @@ struct signature<Ret (Obj::*)(Args...) noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) & noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) & noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -52,11 +55,11 @@ struct signature<Ret (Obj::*)(Args...) & noexcept(Ne)>
   using lvalref_val = std::true_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) && noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) && noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -68,11 +71,11 @@ struct signature<Ret (Obj::*)(Args...) && noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::true_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -84,11 +87,11 @@ struct signature<Ret (Obj::*)(Args...) const noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const & noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const & noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -100,11 +103,11 @@ struct signature<Ret (Obj::*)(Args...) const & noexcept(Ne)>
   using lvalref_val = std::true_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const && noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const && noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -116,11 +119,11 @@ struct signature<Ret (Obj::*)(Args...) const && noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::true_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -132,11 +135,11 @@ struct signature<Ret (Obj::*)(Args...) volatile noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile & noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile & noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -148,11 +151,11 @@ struct signature<Ret (Obj::*)(Args...) volatile & noexcept(Ne)>
   using lvalref_val = std::true_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile && noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile && noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -164,11 +167,11 @@ struct signature<Ret (Obj::*)(Args...) volatile && noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::true_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -180,11 +183,11 @@ struct signature<Ret (Obj::*)(Args...) const volatile noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -196,11 +199,11 @@ struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(Ne)>
   using lvalref_val = std::true_type;
   using rvalref_val = std::false_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
-template<typename Ret, typename Obj, bool Ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(Ne)>
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
@@ -212,30 +215,27 @@ struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(Ne)>
   using lvalref_val = std::false_type;
   using rvalref_val = std::true_type;
 
-  using noexcept_val = std::integral_constant<bool, Ne>;
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
 /* ----- Buffer used for Local Buffer Optimization ----- */
 
-template<size_t S, size_t A = alignof(void*)>
-struct Buffer
+template<size_t size, size_t alignment = alignof(void*)>
+struct buffer
 {
-  static constexpr auto size = S;
-  static constexpr auto alignment = A;
-
   template<typename T>
   static constexpr bool valid_type()
   {
-    return sizeof(T) <= S && (A % sizeof(T)) == 0;
+    return sizeof(T) <= size && (alignment % sizeof(T)) == 0;
   }
 
   alignas(alignment) char m_space[size] = {0};  // NOLINT array
 
-  Buffer() = default;
+  buffer() = default;
 
   template<typename T, typename... Args>
     requires(valid_type<T>() && std::constructible_from<T, Args...>)
-  explicit Buffer(
+  explicit buffer(
       std::in_place_type_t<T> /* t */, Args&&... args
   ) noexcept(std::is_nothrow_constructible_v<T, Args...>)
   {
@@ -267,10 +267,10 @@ struct Buffer
     requires(valid_type<T>())
   const T* as() const noexcept
   {
-    return const_cast<Buffer*>(this)->as<T>();  // NOLINT const_cast
+    return const_cast<buffer*>(this)->as<T>();  // NOLINT const_cast
   }
 
-  void swap(Buffer& that) noexcept
+  void swap(buffer& that) noexcept
   {
     alignas(alignment) char tmp[size];  // NOLINT array
     ::memcpy(tmp, this->m_space, size);
@@ -282,7 +282,7 @@ struct Buffer
 /* ----- Overload Lambdas ----- */
 
 template<typename... F>
-struct overload : public F...
+struct overload : public F...  // NOLINT multiple-inheritance
 {
   using F::operator()...;
 };
@@ -292,17 +292,17 @@ overload(F&&...) -> overload<F...>;
 
 /* ----- Function Wrapper with type erasure ----- */
 
-template<typename Signature, std::size_t Size = 16, std::size_t Alignment = 8>
+template<typename Signature, std::size_t size = 16, std::size_t alignment = 8>
 class Function;
 
 template<
-    std::size_t Size,
-    std::size_t Alignment,
+    std::size_t size,
+    std::size_t alignment,
     typename Res,
     typename... Args>
-class Function<Res(Args...), Size, Alignment>
+class Function<Res(Args...), size, alignment>
 {
-  Buffer<Size, Alignment> m_space;
+  buffer<size, alignment> m_space;
 
   using executor_t = Res (*)(Args..., void*);
 
@@ -329,13 +329,13 @@ public:
   template<typename CallableArg, typename Callable = std::decay_t<CallableArg>>
     requires(requires {
               !std::same_as<Function, Callable>;
-              sizeof(Callable) <= Size;
-              alignof(Callable) <= Alignment;
+              sizeof(Callable) <= size;
+              alignof(Callable) <= alignment;
               std::is_trivially_destructible_v<Callable>;
               std::is_trivially_copyable_v<Callable>;
             })
 
-  Function(CallableArg&& callable)  // NOLINT *explicit
+  Function(CallableArg&& callable)  // NOLINT explicit
       : m_space(
             std::in_place_type<Callable>, std::forward<CallableArg>(callable)
         )
@@ -348,7 +348,7 @@ public:
   {
     return this->m_executor(
         std::forward<CallArgs>(callargs)...,
-        const_cast<Function*>(this)  // NOLINT *const_cast
+        const_cast<Function*>(this)  // NOLINT const_cast
     );
   }
 };

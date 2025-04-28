@@ -16,10 +16,10 @@ int main()
       }
   };
 
-  int i = 5;
+  const int i = 5;
   l(&i);
 
-  double d = 7.3;
+  const double d = 7.3;
   l(&d);
 
   {
