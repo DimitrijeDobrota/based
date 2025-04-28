@@ -10,9 +10,8 @@ set(
     ${LCOV} -c -q
     -o "${PROJECT_BINARY_DIR}/coverage.info"
     -d "${PROJECT_BINARY_DIR}"
-    --exclude "${PROJECT_BINARY_DIR}/vcpkg_installed"
-    --exclude "${PROJECT_SOURCE_DIR}/example"
     --include "${PROJECT_SOURCE_DIR}/*"
+    --exclude "${PROJECT_SOURCE_DIR}/example"
     --capture
     --all
     CACHE STRING
