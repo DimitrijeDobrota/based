@@ -356,4 +356,76 @@ public:
 template<typename T>
 Function(T) -> Function<typename signature<decltype(&T::operator())>::sig_type>;
 
+template<Procedure Func, bool on_success = false, bool on_failure = false>
+class scopeguard
+{
+  uncaught_exception_detector m_detector;
+  Func m_func;
+
+public:
+  explicit scopeguard(Func&& func)
+      : m_func(std::move(func))
+  {
+  }
+
+  explicit scopeguard(const Func& func)
+      : m_func(func)
+  {
+  }
+
+  scopeguard(const scopeguard&) = delete;
+  scopeguard& operator=(const scopeguard&) = delete;
+
+  scopeguard(scopeguard&&) = default;
+  scopeguard& operator=(scopeguard&&) = default;
+
+  ~scopeguard()
+  {
+    if ((on_success && !m_detector) || (on_failure && m_detector)) {
+      m_func();
+    }
+  }
+};
+
+template<Procedure Func>
+class scopeguard<Func, false, false>
+{
+  bool m_commit = false;
+  Func m_func;
+
+public:
+  explicit scopeguard(Func&& func)
+      : m_func(std::move(func))
+  {
+  }
+
+  explicit scopeguard(const Func& func)
+      : m_func(func)
+  {
+  }
+
+  scopeguard(const scopeguard&) = delete;
+  scopeguard& operator=(const scopeguard&) = delete;
+
+  scopeguard(scopeguard&&) = default;
+  scopeguard& operator=(scopeguard&&) = default;
+
+  ~scopeguard()
+  {
+    if (m_commit) {
+      m_func();
+    }
+  }
+  void commit() { m_commit = true; }
+};
+
+template<Procedure Func>
+using scopeguard_exit = scopeguard<Func, true, true>;
+
+template<Procedure Func>
+using scopeguard_success = scopeguard<Func, true, false>;
+
+template<Procedure Func>
+using scopeguard_failure = scopeguard<Func, false, true>;
+
 }  // namespace based
