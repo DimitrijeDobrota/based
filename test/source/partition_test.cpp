@@ -117,11 +117,11 @@ TEST_CASE("lower_bound(one nonequal)", "[algorithm/lower_bound]")
 
 TEST_CASE("lower_bound(sequence)", "[algorithm/lower_bound]")
 {
-  std::array arr = {0, 1, 2, 3, 4, 4, 5, 5};
+  std::array arr = {0, 1, 2, 3, 3, 4};
 
   const auto* itr =
-      based::lower_bound(std::begin(arr), std::end(arr), 4, std::less<int> {});
-  REQUIRE(itr == std::next(std::begin(arr), 4));
+      based::lower_bound(std::begin(arr), std::end(arr), 3, std::less<int> {});
+  REQUIRE(itr == std::next(std::begin(arr), 3));
 }
 
 TEST_CASE("upper_bound(empty)", "[algorithm/lower_bound]")
@@ -153,9 +153,9 @@ TEST_CASE("upper_bound(one nonequal)", "[algorithm/lower_bound]")
 
 TEST_CASE("upper_bound(sequence)", "[algorithm/lower_bound]")
 {
-  std::array arr = {0, 1, 2, 3, 4, 4, 5, 5};
+  std::array arr = {0, 1, 2, 3, 3, 4};
 
   const auto* itr =
-      based::upper_bound(std::begin(arr), std::end(arr), 4, std::less<int> {});
-  REQUIRE(itr == std::next(std::begin(arr), 6));
+      based::upper_bound(std::begin(arr), std::end(arr), 3, std::less<int> {});
+  REQUIRE(itr == std::next(std::begin(arr), 5));
 }

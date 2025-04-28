@@ -7,12 +7,12 @@
 
 struct op
 {
-  auto operator()(const auto& a, const auto& b) { return a + b; }
+  auto operator()(const auto& lhs, const auto& rhs) { return lhs + rhs; }
 };
 
 struct fun
 {
-  auto operator()(based::Iterator auto it) { return *it; }
+  auto operator()(based::Iterator auto itr) { return *itr; }
 };
 
 TEST_CASE("reduce(empty)", "[algorithm/reduce]")

@@ -82,24 +82,24 @@ template<typename T>
 using iter_ref_t = detail::iterator_traits<T>::reference;
 
 template<typename T>
-concept Readable = requires(T t) {
+concept Readable = requires(T val) {
   requires(Regular<T>);
   typename iter_value_t<T>;
-  { *t } -> BareSameAs<iter_value_t<T>>;
+  { *val } -> BareSameAs<iter_value_t<T>>;
 };
 
 template<typename T>
-concept Iterator = requires(T t) {
+concept Iterator = requires(T val) {
     requires(Regular<T>);
     typename iter_dist_t<T>;
     // requires(Integer<iter_dist_t<T>>);
-    { ++t } -> BareSameAs<T>;
+    { ++val } -> BareSameAs<T>;
     // successor is not necessarily regular
 
 };
 
 template<typename T>
-concept ForwardIterator = requires(T t) {
+concept ForwardIterator = requires {
     requires(Iterator<T>);
     // successor is regular
 };

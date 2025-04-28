@@ -25,11 +25,11 @@ concept NoninputRelation = requires {
 }  // namespace detail
 
 // returns min element, first if equal
-template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
+template<BareRegular T, BareRegular U, detail::NoninputRelation<T> Rel>
   requires BareSameAs<T, U>
-decltype(auto) min(T&& lhs, U&& rhs, R r)
+decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 {
-  return r(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
+  return rel(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
 }
 
 // returns min element, first if equal
@@ -43,11 +43,11 @@ decltype(auto) min(T&& lhs, U&& rhs)
 }
 
 // returns max element, second if equal
-template<BareRegular T, BareRegular U, detail::NoninputRelation<T> R>
+template<BareRegular T, BareRegular U, detail::NoninputRelation<T> Rel>
   requires BareSameAs<T, U>
-decltype(auto) max(T&& lhs, U&& rhs, R r)
+decltype(auto) max(T&& lhs, U&& rhs, Rel rel)
 {
-  return r(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
+  return rel(rhs, lhs) ? std::forward<T>(lhs) : std::forward<U>(rhs);
 }
 
 // returns max element, second if equal
@@ -63,8 +63,8 @@ decltype(auto) max(T&& lhs, U&& rhs)
 /* ----- Bounded Range Algorithms ----- */
 
 // return first min element
-template<Iterator I, IterRelation<I> R>
-I min_element(I first, I last, R r)
+template<Iterator I, IterRelation<I> Rel>
+I min_element(I first, I last, Rel rel)
 {
   if (first == last) {
     return last;
@@ -72,7 +72,7 @@ I min_element(I first, I last, R r)
 
   I mini = first++;
   while (first != last) {
-    if (r(*first, *mini)) {
+    if (rel(*first, *mini)) {
       mini = first;
     }
     first++;
@@ -87,8 +87,8 @@ I min_element(I first, I last)
 }
 
 // return last max element
-template<Iterator I, IterRelation<I> R>
-I max_element(I first, I last, R r)
+template<Iterator I, IterRelation<I> Rel>
+I max_element(I first, I last, Rel rel)
 {
   if (first == last) {
     return last;
@@ -96,7 +96,7 @@ I max_element(I first, I last, R r)
 
   I maxi = first++;
   while (first != last) {
-    if (!r(*first, *maxi)) {
+    if (!rel(*first, *maxi)) {
       maxi = first;
     }
     first++;
@@ -111,8 +111,8 @@ I max_element(I first, I last)
 }
 
 // return first min and last max element
-template<Iterator I, IterRelation<I> R>
-std::pair<I, I> minmax_element(I first, I last, R r)
+template<Iterator I, IterRelation<I> Rel>
+std::pair<I, I> minmax_element(I first, I last, Rel rel)
 {
   if (first == last) {
     return {last, last};
@@ -124,7 +124,7 @@ std::pair<I, I> minmax_element(I first, I last, R r)
   }
 
   I maxi = first++;
-  if (r(*maxi, *mini)) {
+  if (rel(*maxi, *mini)) {
     std::swap(mini, maxi);
   }
 
@@ -133,15 +133,15 @@ std::pair<I, I> minmax_element(I first, I last, R r)
     I pmini = first;
     I pmaxi = next;
 
-    if (r(*pmaxi, *pmini)) {
+    if (rel(*pmaxi, *pmini)) {
       std::swap(pmini, pmaxi);
     }
 
-    if (r(*pmini, *mini)) {
+    if (rel(*pmini, *mini)) {
       mini = pmini;
     }
 
-    if (!r(*pmaxi, *maxi)) {
+    if (!rel(*pmaxi, *maxi)) {
       maxi = pmaxi;
     }
 
@@ -151,9 +151,9 @@ std::pair<I, I> minmax_element(I first, I last, R r)
   }
 
   if (first != last) {
-    if (r(*first, *mini)) {
+    if (rel(*first, *mini)) {
       mini = first;
-    } else if (!r(*first, *maxi)) {
+    } else if (!rel(*first, *maxi)) {
       maxi = first;
     }
   }
@@ -168,654 +168,674 @@ std::pair<I, I> minmax_element(I first, I last)
 }
 
 template<ReadableIterator I, IterUnaryProcedure<I> Proc>
-Proc for_each(I f, I d, Proc proc)
+Proc for_each(I first, I last, Proc proc)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    proc(*f);
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last) {
+    proc(*first);
+    first = successor(first);
   }
   return proc;
 }
 
 template<ReadableIterator I>
-I find(I f, I d, const iter_value_t<I>& x)
+I find(I first, I lst, const iter_value_t<I>& val)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d && *f != x) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last);
+  while (first != lst && *first != val) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
 template<ReadableIterator I>
-I find_not(I f, I d, const iter_value_t<I>& x)
+I find_not(I first, I last, const iter_value_t<I>& val)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d && *f == x) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last && *first == val) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-I find_if(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+I find_if(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d && !p(*f)) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last && !pred(*first)) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-I find_if_not(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+I find_if_not(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d && p(*f)) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last && pred(*first)) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool all(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool all(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return find_if_not(f, d, p) == d;
+  // Precondition: readable_bounded_range(first, last);
+  return find_if_not(first, last, pred) == last;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool none(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool none(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return find_if(f, d, p) == d;
+  // Precondition: readable_bounded_range(first, last);
+  return find_if(first, last, pred) == last;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool not_all(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool not_all(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return f == d || find_if_not(f, d, p) != d;
+  // Precondition: readable_bounded_range(first, last);
+  return first == last || find_if_not(first, last, pred) != last;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool some(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool some(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return find_if(f, d, p) != d;
+  // Precondition: readable_bounded_range(first, last);
+  return find_if(first, last, pred) != last;
 }
 
 template<ReadableIterator I, Iterator J>
-J count(I f, I d, const iter_value_t<I>& x, J j)
+J count(I first, I last, const iter_value_t<I>& val, J cnt)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (*f == x) {
-      j++;
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last) {
+    if (*first == val) {
+      cnt++;
     }
-    f = successor(f);
+    first = successor(first);
   }
-  return j;
+  return cnt;
 }
 
 template<ReadableIterator I>
-iter_dist_t<I> count(I f, I d, const iter_value_t<I>& x)
+iter_dist_t<I> count(I first, I last, const iter_value_t<I>& val)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return count(f, d, x, iter_dist_t<I> {0});
+  // Precondition: readable_bounded_range(first, last);
+  return count(first, last, val, iter_dist_t<I> {0});
 }
 
 template<ReadableIterator I, Iterator J>
-J count_not(I f, I d, const iter_value_t<I>& x, J j)
+J count_not(I first, I last, const iter_value_t<I>& val, J cnt)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (*f != x) {
-      j++;
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last) {
+    if (*first != val) {
+      cnt++;
     }
-    f = successor(f);
+    first = successor(first);
   }
-  return j;
+  return cnt;
 }
 
 template<ReadableIterator I>
-iter_dist_t<I> count_not(I f, I d, const iter_value_t<I>& x)
+iter_dist_t<I> count_not(I first, I last, const iter_value_t<I>& val)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return count_not(f, d, x, iter_dist_t<I> {0});
+  // Precondition: readable_bounded_range(first, last);
+  return count_not(first, last, val, iter_dist_t<I> {0});
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
-J count_if(I f, I d, P p, J j)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred, Iterator J>
+J count_if(I first, I last, Pred pred, J cnt)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (p(*f)) {
-      j++;
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last) {
+    if (pred(*first)) {
+      cnt++;
     }
-    f = successor(f);
+    first = successor(first);
   }
-  return j;
+  return cnt;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-iter_dist_t<I> count_if(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+iter_dist_t<I> count_if(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return count_if(f, d, p, iter_dist_t<I> {0});
+  // Precondition: readable_bounded_range(first, last);
+  return count_if(first, last, pred, iter_dist_t<I> {0});
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
-J count_if_not(I f, I d, P p, J j)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred, Iterator J>
+J count_if_not(I first, I last, Pred pred, J cnt)
 {
-  // Precondition: readable_bounded_range(f, d);
-  while (f != d) {
-    if (!p(*f)) {
-      j++;
+  // Precondition: readable_bounded_range(first, last);
+  while (first != last) {
+    if (!pred(*first)) {
+      cnt++;
     }
-    f = successor(f);
+    first = successor(first);
   }
-  return j;
+  return cnt;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-iter_dist_t<I> count_if_not(I f, I d, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+iter_dist_t<I> count_if_not(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d);
-  return count_if_not(f, d, p, iter_dist_t<I> {0});
+  // Precondition: readable_bounded_range(first, last);
+  return count_if_not(first, last, pred, iter_dist_t<I> {0});
 }
 
 template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
-auto reduce_nonempty(I f, I d, Op op, F fun)
+auto reduce_nonempty(I first, I last, Op opr, F fun)
 {
-  assert(f != d);
-  // Precondition: bounded_range(f,d)
-  // Precondition: partially_associative(op)
+  assert(first != last);
+  // Precondition: bounded_range(first, last)
+  // Precondition: partially_associative(opr)
 
-  auto r = fun(f);
-  f = successor(f);
-  while (f != d) {
-    r = op(r, fun(f));
-    f = successor(f);
+  auto res = fun(first);
+  first = successor(first);
+  while (first != last) {
+    res = opr(res, fun(first));
+    first = successor(first);
   }
-  return r;
+  return res;
 }
 
 template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
 auto reduce(
-    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z
+    I first,
+    I last,
+    Op opr,
+    F fun,
+    const decltype(reduce_nonempty(first, last, opr, fun))& zero
 )
 {
-  // Precondition: bounded_range(f,d)
-  // Precondition: partially_associative(op)
-  if (f == d) {
-    return z;
+  // Precondition: bounded_range(first, last)
+  // Precondition: partially_associative(opr)
+  if (first == last) {
+    return zero;
   }
-  return reduce_nonempty(f, d, op, fun);
+  return reduce_nonempty(first, last, opr, fun);
 }
 
 template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
 auto reduce_nonzero(
-    I f, I d, Op op, F fun, const decltype(reduce_nonempty(f, d, op, fun))& z
+    I first,
+    I last,
+    Op opr,
+    F fun,
+    const decltype(reduce_nonempty(first, last, opr, fun))& zero
 )
 {
-  // Precondition: bounded_range(f,d)
-  // Precondition: partially_associative(op)
-  codomain_t<F, I> x;
+  // Precondition: bounded_range(first, last)
+  // Precondition: partially_associative(opr)
+  codomain_t<F, I> res;
   do {
-    if (f == d) {
-      return z;
+    if (first == last) {
+      return zero;
     }
-    x = fun(f);
-    f = successor(f);
-  } while (x == z);
+    res = fun(first);
+    first = successor(first);
+  } while (res == zero);
 
-  while (f != d) {
-    auto y = fun(f);
-    if (y != z) {
-      x = op(x, y);
+  while (first != last) {
+    auto crnt = fun(first);
+    if (crnt != zero) {
+      res = opr(res, crnt);
     }
-    f = successor(f);
+    first = successor(first);
   }
-  return x;
+  return res;
 }
 
-template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> Rel>
   requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
-auto find_mismatch(I0 f0, I0 d0, I1 f1, I1 d1, R r)
+auto find_mismatch(I0 first0, I0 last0, I1 first1, I1 last1, Rel rel)
 {
-  // Precondition: readable_bounded_range(f0,d0)
-  // Precondition: readable_bounded_range(f1,d1)
-  while (f0 != d0 && f1 != d1 && r(*f0, *f1)) {
-    f0 = successor(f0);
-    f1 = successor(f1);
+  // Precondition: readable_bounded_range(first0, last0)
+  // Precondition: readable_bounded_range(first1, last1)
+  while (first0 != last0 && first1 != last1 && rel(*first0, *first1)) {
+    first0 = successor(first0);
+    first1 = successor(first1);
   }
-  return std::make_pair(f0, f1);
+  return std::make_pair(first0, first1);
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-I find_adjacent_mismatch(I f, I d, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+I find_adjacent_mismatch(I first, I last, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,d)
+  // Precondition: readable_bounded_range(first, last)
 
-  if (f == d) {
-    return d;
-  }
-
-  auto x = *f;
-  f = successor(f);
-  while (f != d && r(x, *f)) {
-    x = *f;
-    f = successor(f);
+  if (first == last) {
+    return last;
   }
 
-  return f;
+  auto crnt = *first;
+  first = successor(first);
+  while (first != last && rel(crnt, *first)) {
+    crnt = *first;
+    first = successor(first);
+  }
+
+  return first;
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool relation_preserving(I f, I d, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool relation_preserving(I first, I last, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,d)
-  // Precondition: weak_ordering(r);
-  return find_adjacent_mismatch(f, d, r) == d;
+  // Precondition: readable_bounded_range(first, last)
+  // Precondition: weak_ordering(rel);
+  return find_adjacent_mismatch(first, last, rel) == last;
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool strictly_increasing_range(I f, I d, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool strictly_increasing_range(I first, I last, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,d)
-  // Precondition: weak_ordering(r);
-  return relation_preserving(f, d, r);
+  // Precondition: readable_bounded_range(first, last)
+  // Precondition: weak_ordering(rel);
+  return relation_preserving(first, last, rel);
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool increasing_range(I f, I d, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool increasing_range(I first, I last, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,d)
-  // Precondition: weak_ordering(r);
-  return relation_preserving(f, d, complement_of_converse<iter_value_t<I>>(r));
+  // Precondition: readable_bounded_range(first, last)
+  // Precondition: weak_ordering(rel);
+  return relation_preserving(
+      first, last, complement_of_converse<iter_value_t<I>>(rel)
+  );
 }
 
 /* ----- Counted Range Algorithms ----- */
 
 template<ReadableIterator I, IterUnaryProcedure<I> Proc>
-auto for_each_n(I f, iter_dist_t<I> n, Proc proc)
+auto for_each_n(I first, iter_dist_t<I> size, Proc proc)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n)) {
-    n = predecessor(n);
-    proc(*f);
-    f = successor(f);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size)) {
+    size = predecessor(size);
+    proc(*first);
+    first = successor(first);
   }
-  return std::make_pair(proc, f);
+  return std::make_pair(proc, first);
 }
 
 template<ReadableIterator I>
-auto find_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+auto find_n(I first, iter_dist_t<I> size, const iter_value_t<I>& val)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n) && *f != x) {
-    n = predecessor(n);
-    f = successor(f);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size) && *first != val) {
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_pair(f, n);
+  return std::make_pair(first, size);
 }
 
 template<ReadableIterator I>
-auto find_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+auto find_not_n(I first, iter_dist_t<I> size, const iter_value_t<I>& val)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n) && *f == x) {
-    n = predecessor(n);
-    f = successor(f);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size) && *first == val) {
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_pair(f, n);
+  return std::make_pair(first, size);
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-auto find_if_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+auto find_if_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n) && !p(*f)) {
-    n = predecessor(n);
-    f = successor(f);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size) && !pred(*first)) {
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_pair(f, n);
+  return std::make_pair(first, size);
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-auto find_if_not_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+auto find_if_not_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n) && p(*f)) {
-    n = predecessor(n);
-    f = successor(f);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size) && pred(*first)) {
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_pair(f, n);
+  return std::make_pair(first, size);
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool all_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool all_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, d);
-  return find_if_not_n(f, n, p).second == 0;
+  // Precondition: readable_weak_range(first, last);
+  return find_if_not_n(first, size, pred).second == 0;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool none_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool none_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, n);
-  return find_if_n(f, n, p).second == 0;
+  // Precondition: readable_weak_range(first, size);
+  return find_if_n(first, size, pred).second == 0;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool not_all_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool not_all_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, n);
-  return n == 0 || find_if_not_n(f, n, p).second != 0;
+  // Precondition: readable_weak_range(first, size);
+  return size == 0 || find_if_not_n(first, size, pred).second != 0;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-bool some_n(I f, iter_dist_t<I> n, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+bool some_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_weak_range(f, n);
-  return find_if_n(f, n, p).second != 0;
+  // Precondition: readable_weak_range(first, size);
+  return find_if_n(first, size, pred).second != 0;
 }
 
 template<ReadableIterator I, Iterator J>
-auto count_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x, J j)
+auto count_n(I first, iter_dist_t<I> size, const iter_value_t<I>& val, J cnt)
 {
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n)) {
-    if (*f == x) {
-      j++;
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size)) {
+    if (*first == val) {
+      cnt++;
     }
-    n = predecessor(n);
-    f = successor(f);
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_pair(f, j);
+  return std::make_pair(first, cnt);
 }
 
 template<ReadableIterator I>
-auto count_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
+auto count_n(I first, iter_dist_t<I> size, const iter_value_t<I>& val)
 {
-  // Precondition: readable_weak_range(f, n);
-  return count_n(f, n, x, iter_dist_t<I> {0});
+  // Precondition: readable_weak_range(first, size);
+  return count_n(first, size, val, iter_dist_t<I> {0});
 }
 
 template<ReadableIterator I, Iterator J>
-auto count_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x, J j)
-{
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n)) {
-    if (*f != x) {
-      j++;
-    }
-    n = predecessor(n);
-    f = successor(f);
-  }
-  return std::make_pair(f, j);
-}
-
-template<ReadableIterator I>
-auto count_not_n(I f, iter_dist_t<I> n, const iter_value_t<I>& x)
-{
-  // Precondition: readable_weak_range(f, n);
-  return count_not_n(f, n, x, iter_dist_t<I> {0});
-}
-
-template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
-auto count_if_n(I f, iter_dist_t<I> n, P p, J j)
-{
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n)) {
-    if (p(*f)) {
-      j++;
-    }
-    n = predecessor(n);
-    f = successor(f);
-  }
-  return std::make_pair(f, j);
-}
-
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-auto count_if_n(I f, iter_dist_t<I> n, P p)
-{
-  // Precondition: readable_weak_range(f, n);
-  return count_if_n(f, n, p, iter_dist_t<I> {0});
-}
-
-template<ReadableIterator I, IterUnaryPredicate<I> P, Iterator J>
-auto count_if_not_n(I f, iter_dist_t<I> n, P p, J j)
-{
-  // Precondition: readable_weak_range(f, n);
-  while (!zero(n)) {
-    if (!p(*f)) {
-      j++;
-    }
-    n = predecessor(n);
-    f = successor(f);
-  }
-  return std::make_pair(f, j);
-}
-
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-auto count_if_not_n(I f, iter_dist_t<I> n, P p)
-{
-  // Precondition: readable_weak_range(f, n);
-  return count_if_not_n(f, n, p, iter_dist_t<I> {0});
-}
-
-template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
-auto find_mismatch_n(I0 f0, iter_dist_t<I0> n0, I1 f1, I1 d1, R r)
-{
-  // Precondition: readable_weak_range(f0,n0)
-  // Precondition: readable_bounded_range(f1,d1)
-  while (!zero(n0) && f1 != d1 && r(*f0, *f1)) {
-    n0 = predecessor(n0);
-    f0 = successor(f0);
-    f1 = successor(f1);
-  }
-  return std::make_tuple(f0, n0, f1);
-}
-
-template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
-auto find_mismatch_m(I0 f0, I0 d0, I1 f1, iter_dist_t<I1> n1, R r)
-{
-  // Precondition: readable_bounded_range(f0,d0)
-  // Precondition: readable_weak_range(f1,n1)
-  while (f0 != d0 && !zero(n1) && r(*f0, *f1)) {
-    n1 = predecessor(n1);
-    f0 = successor(f0);
-    f1 = successor(f1);
-  }
-  return std::make_tuple(f0, f1, n1);
-}
-
-template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> R>
-  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
-auto find_mismatch_n_m(
-    I0 f0, iter_dist_t<I0> n0, I1 f1, iter_dist_t<I1> n1, R r
+auto count_not_n(
+    I first, iter_dist_t<I> size, const iter_value_t<I>& val, J cnt
 )
 {
-  // Precondition: readable_weak_range(f0,n0)
-  // Precondition: readable_weak_range(f1,n1)
-  while (!zero(n0) && !zero(n1) && r(*f0, *f1)) {
-    n0 = predecessor(n0);
-    n1 = predecessor(n1);
-    f0 = successor(f0);
-    f1 = successor(f1);
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size)) {
+    if (*first != val) {
+      cnt++;
+    }
+    size = predecessor(size);
+    first = successor(first);
   }
-  return std::make_tuple(f0, n0, f1, n1);
+  return std::make_pair(first, cnt);
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-auto find_adjacent_mismatch_n(I f, iter_dist_t<I> n, R r)
+template<ReadableIterator I>
+auto count_not_n(I first, iter_dist_t<I> size, const iter_value_t<I>& val)
 {
-  // Precondition: readable_bounded_range(f,d)
+  // Precondition: readable_weak_range(first, size);
+  return count_not_n(first, size, val, iter_dist_t<I> {0});
+}
 
-  if (zero(n)) {
-    return std::make_pair(f, n);
+template<ReadableIterator I, IterUnaryPredicate<I> Pred, Iterator J>
+auto count_if_n(I first, iter_dist_t<I> size, Pred pred, J cnt)
+{
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size)) {
+    if (pred(*first)) {
+      cnt++;
+    }
+    size = predecessor(size);
+    first = successor(first);
+  }
+  return std::make_pair(first, cnt);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+auto count_if_n(I first, iter_dist_t<I> size, Pred pred)
+{
+  // Precondition: readable_weak_range(first, size);
+  return count_if_n(first, size, pred, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> Pred, Iterator J>
+auto count_if_not_n(I first, iter_dist_t<I> size, Pred pred, J cnt)
+{
+  // Precondition: readable_weak_range(first, size);
+  while (!zero(size)) {
+    if (!pred(*first)) {
+      cnt++;
+    }
+    size = predecessor(size);
+    first = successor(first);
+  }
+  return std::make_pair(first, cnt);
+}
+
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+auto count_if_not_n(I first, iter_dist_t<I> size, Pred pred)
+{
+  // Precondition: readable_weak_range(first, size);
+  return count_if_not_n(first, size, pred, iter_dist_t<I> {0});
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> Rel>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_n(
+    I0 first0, iter_dist_t<I0> size0, I1 first1, I1 last1, Rel rel
+)
+{
+  // Precondition: readable_weak_range(first0, size0)
+  // Precondition: readable_bounded_range(first1,last1)
+  while (!zero(size0) && first1 != last1 && rel(*first0, *first1)) {
+    size0 = predecessor(size0);
+    first0 = successor(first0);
+    first1 = successor(first1);
+  }
+  return std::make_tuple(first0, size0, first1);
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> Rel>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_m(
+    I0 first0, I0 last0, I1 first1, iter_dist_t<I1> size1, Rel rel
+)
+{
+  // Precondition: readable_bounded_range(first0,last0)
+  // Precondition: readable_weak_range(first1, size1)
+  while (first0 != last0 && !zero(size1) && rel(*first0, *first1)) {
+    size1 = predecessor(size1);
+    first0 = successor(first0);
+    first1 = successor(first1);
+  }
+  return std::make_tuple(first0, first1, size1);
+}
+
+template<ReadableIterator I0, ReadableIterator I1, IterRelation<I0> Rel>
+  requires BareSameAs<iter_value_t<I0>, iter_value_t<I1>>
+auto find_mismatch_n_m(
+    I0 first0, iter_dist_t<I0> size0, I1 first1, iter_dist_t<I1> size1, Rel rel
+)
+{
+  // Precondition: readable_weak_range(first0, size0)
+  // Precondition: readable_weak_range(first1, size1)
+  while (!zero(size0) && !zero(size1) && rel(*first0, *first1)) {
+    size0 = predecessor(size0);
+    size1 = predecessor(size1);
+    first0 = successor(first0);
+    first1 = successor(first1);
+  }
+  return std::make_tuple(first0, size0, first1, size1);
+}
+
+template<ReadableIterator I, IterRelation<I> Rel>
+auto find_adjacent_mismatch_n(I first, iter_dist_t<I> size, Rel rel)
+{
+  // Precondition: readable_bounded_range(first, last)
+
+  if (zero(size)) {
+    return std::make_pair(first, size);
   }
 
-  auto x = *f;
-  f = successor(f);
-  n = predecessor(n);
-  while (!zero(n) && r(x, *f)) {
-    x = *f;
-    n = predecessor(n);
-    f = successor(f);
+  auto crnt = *first;
+  first = successor(first);
+  size = predecessor(size);
+  while (!zero(size) && rel(crnt, *first)) {
+    crnt = *first;
+    size = predecessor(size);
+    first = successor(first);
   }
 
-  return std::make_pair(f, n);
+  return std::make_pair(first, size);
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool relation_preserving_n(I f, iter_dist_t<I> n, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool relation_preserving_n(I first, iter_dist_t<I> size, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,n)
-  // Precondition: weak_ordering(r);
-  return find_adjacent_mismatch_n(f, n, r).second == 0;
+  // Precondition: readable_bounded_range(first, size)
+  // Precondition: weak_ordering(rel);
+  return find_adjacent_mismatch_n(first, size, rel).second == 0;
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool strictly_increasing_range_n(I f, iter_dist_t<I> n, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool strictly_increasing_range_n(I first, iter_dist_t<I> size, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,n)
-  // Precondition: weak_ordering(r);
-  return relation_preserving_n(f, n, r);
+  // Precondition: readable_bounded_range(first, size)
+  // Precondition: weak_ordering(rel);
+  return relation_preserving_n(first, size, rel);
 }
 
-template<ReadableIterator I, IterRelation<I> R>
-bool increasing_range_n(I f, iter_dist_t<I> n, R r)
+template<ReadableIterator I, IterRelation<I> Rel>
+bool increasing_range_n(I first, iter_dist_t<I> size, Rel rel)
 {
-  // Precondition: readable_bounded_range(f,n)
-  // Precondition: weak_ordering(r);
+  // Precondition: readable_bounded_range(first, size)
+  // Precondition: weak_ordering(rel);
   return relation_preserving_n(
-      f, n, complement_of_converse<iter_value_t<I>>(r)
+      first, size, complement_of_converse<iter_value_t<I>>(rel)
   );
 }
 
 /* ----- Sentinel Ranges ----- */
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-I find_if_unguarded(I f, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+I find_if_unguarded(I first, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d) && some(f, d, p);
-  while (!p(*f)) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last) && some(f, d, p);
+  while (!pred(*first)) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
-template<ReadableIterator I, IterUnaryPredicate<I> P>
-I find_if_not_unguarded(I f, P p)
+template<ReadableIterator I, IterUnaryPredicate<I> Pred>
+I find_if_not_unguarded(I first, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d) && not_all(f, d, p);
-  while (p(*f)) {
-    f = successor(f);
+  // Precondition: readable_bounded_range(first, last) && not_all(f, d, p);
+  while (pred(*first)) {
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
-template<ReadableForwardIterator I, IterRelation<I> R>
-I find_adjacent_mismatch_forward(I f, I d, R r)
+template<ReadableForwardIterator I, IterRelation<I> Rel>
+I find_adjacent_mismatch_forward(I first, I last, Rel rel)
 {
-  // Precondition: readable_bounded_range(f, d)
+  // Precondition: readable_bounded_range(first, last)
 
-  if (f == d) {
-    return d;
+  if (first == last) {
+    return last;
   }
 
-  I t;
+  I tmp;
   do {
-    t = f;
-    f = successor(f);
-  } while (f != d && r(*t, *f));
+    tmp = first;
+    first = successor(first);
+  } while (first != last && rel(*tmp, *first));
 
-  return f;
+  return first;
 }
 
-template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
-bool partitioned_n(I f, iter_dist_t<I> n, P p)
+template<ReadableForwardIterator I, IterUnaryPredicate<I> Pred>
+bool partitioned_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, n)
-  std::tie(f, n) = find_if_n(f, n, p);
-  return find_if_not_n(f, n, p).second == 0;
+  // Precondition: readable_bounded_range(first, size)
+  std::tie(first, size) = find_if_n(first, size, pred);
+  return find_if_not_n(first, size, pred).second == 0;
 }
 
-template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
-I partition_point_n(I f, iter_dist_t<I> n, P p)
+template<ReadableForwardIterator I, IterUnaryPredicate<I> Pred>
+I partition_point_n(I first, iter_dist_t<I> size, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, n)
-  assert(partitioned_n(f, n, p));
+  // Precondition: readable_bounded_range(first, size)
+  assert(partitioned_n(first, size, pred));
 
-  while (!zero(n)) {
-    const auto h = half(n);
-    I m = f + h;
-    if (p(*m)) {
-      n = h;
+  while (!zero(size)) {
+    const auto hlf = half(size);
+    I mid = first + hlf;
+    if (pred(*mid)) {
+      size = hlf;
     } else {
-      n -= successor(h);
-      f = successor(m);
+      size -= successor(hlf);
+      first = successor(mid);
     }
   }
-  return f;
+  return first;
 }
 
-template<ReadableForwardIterator I, IterRelation<I> R>
-I lower_bound_n(I f, iter_dist_t<I> n, const iter_value_t<I>& a, R r)
+template<ReadableForwardIterator I, IterRelation<I> Rel>
+I lower_bound_n(
+    I first, iter_dist_t<I> size, const iter_value_t<I>& val, Rel rel
+)
 {
-  // Precondition: weak_ordering(r)
-  assert(increasing_range_n(f, n, r));
+  // Precondition: weak_ordering(rel)
+  assert(increasing_range_n(first, size, rel));
 
-  return partition_point_n(f, n, lower_bound_predicate(a, r));
+  return partition_point_n(first, size, lower_bound_predicate(val, rel));
 }
 
-template<ReadableForwardIterator I, IterRelation<I> R>
-I upper_bound_n(I f, iter_dist_t<I> n, const iter_value_t<I>& a, R r)
+template<ReadableForwardIterator I, IterRelation<I> Rel>
+I upper_bound_n(
+    I first, iter_dist_t<I> size, const iter_value_t<I>& val, Rel rel
+)
 {
-  // Precondition: weak_ordering(r)
-  assert(increasing_range_n(f, n, r));
+  // Precondition: weak_ordering(rel)
+  assert(increasing_range_n(first, size, rel));
 
-  return partition_point_n(f, n, upper_bound_predicate(a, r));
+  return partition_point_n(first, size, upper_bound_predicate(val, rel));
 }
 
-template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
-bool partitioned(I f, I d, P p)
+template<ReadableForwardIterator I, IterUnaryPredicate<I> Pred>
+bool partitioned(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d)
-  return find_if_not(find_if(f, d, p), d, p) == d;
+  // Precondition: readable_bounded_range(first, last)
+  return find_if_not(find_if(first, last, pred), last, pred) == last;
 }
 
-template<ReadableForwardIterator I, IterUnaryPredicate<I> P>
-I partition_point(I f, I d, P p)
+template<ReadableForwardIterator I, IterUnaryPredicate<I> Pred>
+I partition_point(I first, I last, Pred pred)
 {
-  // Precondition: readable_bounded_range(f, d)
-  assert(partitioned(f, d, p));
+  // Precondition: readable_bounded_range(first, last)
+  assert(partitioned(first, last, pred));
 
-  return partition_point_n(f, d - f, p);
+  return partition_point_n(first, last - first, pred);
 }
 
-template<ReadableForwardIterator I, IterRelation<I> R>
-I lower_bound(I f, I d, const iter_value_t<I>& a, R r)
+template<ReadableForwardIterator I, IterRelation<I> Rel>
+I lower_bound(I first, I last, const iter_value_t<I>& val, Rel rel)
 {
-  // Precondition: weak_ordering(r)
-  assert(increasing_range(f, d, r));
+  // Precondition: weak_ordering(rel)
+  assert(increasing_range(first, last, rel));
 
-  return based::lower_bound_n(f, d - f, a, r);
+  return based::lower_bound_n(first, last - first, val, rel);
 }
 
-template<ReadableForwardIterator I, IterRelation<I> R>
-I upper_bound(I f, I d, const iter_value_t<I>& a, R r)
+template<ReadableForwardIterator I, IterRelation<I> Rel>
+I upper_bound(I first, I last, const iter_value_t<I>& val, Rel rel)
 {
-  // Precondition: weak_ordering(r)
-  assert(increasing_range(f, d, r));
+  // Precondition: weak_ordering(rel)
+  assert(increasing_range(first, last, rel));
 
-  return based::upper_bound_n(f, d - f, a, r);
+  return based::upper_bound_n(first, last - first, val, rel);
 }
 
 }  // namespace based

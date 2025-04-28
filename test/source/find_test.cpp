@@ -7,9 +7,9 @@
 TEST_CASE("find(empty)", "[algorithm/find]")
 {
   const std::array<int, 0> arr = {};
-  const auto* it = based::find(std::begin(arr), std::end(arr), 0);
+  const auto* itr = based::find(std::begin(arr), std::end(arr), 0);
 
-  REQUIRE(it == std::end(arr));
+  REQUIRE(itr == std::end(arr));
 }
 
 TEST_CASE("find(one) = found", "[algorithm/find]")
@@ -79,9 +79,9 @@ TEST_CASE("find(multiple) = found", "[algorithm/find]")
 TEST_CASE("find_not(empty)", "[algorithm/find_not]")
 {
   const std::array<int, 0> arr = {};
-  const auto* it = based::find_not(std::begin(arr), std::end(arr), 0);
+  const auto* itr = based::find_not(std::begin(arr), std::end(arr), 0);
 
-  REQUIRE(it == std::end(arr));
+  REQUIRE(itr == std::end(arr));
 }
 
 TEST_CASE("find_not(one) = found", "[algorithm/find_not]")

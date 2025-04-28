@@ -5,37 +5,39 @@
 
 int main()
 {
-  const auto l = based::overload {
-      [](const int* i)
-      {
-        std::cout << "i=" << *i << '\n';
-      },
-      [](const double* d)
-      {
-        std::cout << "d=" << *d << '\n';
-      }
-  };
-
-  const int i = 5;
-  l(&i);
-
-  const double d = 7.3;
-  l(&d);
-
   {
-    const based::Function f = [](int a)
-    {
-      return a + 1;
+    const auto func = based::overload {
+        [](const int* integer)
+        {
+          std::cout << "i=" << *integer << '\n';
+        },
+        [](const double* dbl)
+        {
+          std::cout << "d=" << *dbl << '\n';
+        }
     };
-    std::cout << f(3) << '\n';
+
+    const int integer = 5;
+    func(&integer);
+
+    const double dbl = 7.3;
+    func(&dbl);
   }
 
   {
-    const std::function f = [](int a)
+    const based::Function func = [](int val)
     {
-      return a + 1;
+      return val + 1;
     };
-    std::cout << f(3) << '\n';
+    std::cout << func(3) << '\n';
+  }
+
+  {
+    const std::function func = [](int val)
+    {
+      return val + 1;
+    };
+    std::cout << func(3) << '\n';
   }
 
   return 0;

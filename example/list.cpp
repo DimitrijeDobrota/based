@@ -10,10 +10,12 @@ int main()
   using list_pool = based::list_pool<instrumented, std::uint8_t>;
   using iter = list_pool::iterator;
 
+  static constexpr std::size_t iter_count = 0xFF;
+
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  for (std::size_t i = 0; i < 0xFF; i++) {
+  for (std::size_t i = 0; i < iter_count; i++) {
     head = pool.allocate(static_cast<double>(i), head);
   }
 
@@ -25,7 +27,7 @@ int main()
   based::free_list(pool, head);
 
   auto queue = pool.queue_empty();
-  for (std::size_t i = 0; i < 0xFF; i++) {
+  for (std::size_t i = 0; i < iter_count; i++) {
     if (i % 2 == 0) {
       queue = pool.push_front(queue, static_cast<double>(i));
     } else {

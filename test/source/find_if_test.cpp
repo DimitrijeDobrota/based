@@ -19,10 +19,10 @@ struct predicate
 TEST_CASE("find_if(empty)", "[algorithm/find_if]")
 {
   const std::array<int, 0> arr = {};
-  const auto* it =
+  const auto* itr =
       based::find_if(std::begin(arr), std::end(arr), predicate {0});
 
-  REQUIRE(it == std::end(arr));
+  REQUIRE(itr == std::end(arr));
 }
 
 TEST_CASE("find_if(one)", "[algorithm/find_if]")
@@ -99,10 +99,10 @@ TEST_CASE("find_if(multiple)", "[algorithm/find_if]")
 TEST_CASE("find_if_not(empty)", "[algorithm/find_if_not]")
 {
   const std::array<int, 0> arr = {};
-  const auto* it =
+  const auto* itr =
       based::find_if_not(std::begin(arr), std::end(arr), predicate {0});
 
-  REQUIRE(it == std::end(arr));
+  REQUIRE(itr == std::end(arr));
 }
 
 TEST_CASE("find_if_not(one)", "[algorithm/find_if_not]")

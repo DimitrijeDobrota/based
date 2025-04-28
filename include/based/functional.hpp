@@ -7,48 +7,48 @@
 namespace based
 {
 
-template<typename T, Relation<T> R>
-auto complement(R r)
+template<typename T, Relation<T> Rel>
+auto complement(Rel rel)
 {
-  return [=](const T& a, const T& b)
+  return [=](const T& lhs, const T& rhs)
   {
-    return !r(a, b);
+    return !rel(lhs, rhs);
   };
 }
 
-template<typename T, Relation<T> R>
-auto converse(R r)
+template<typename T, Relation<T> Rel>
+auto converse(Rel rel)
 {
-  return [=](const T& a, const T& b)
+  return [=](const T& lhs, const T& rhs)
   {
-    return r(b, a);
+    return rel(rhs, lhs);
   };
 }
 
-template<typename T, Relation<T> R>
-auto complement_of_converse(R r)
+template<typename T, Relation<T> Rel>
+auto complement_of_converse(Rel rel)
 {
-  return [=](const T& a, const T& b)
+  return [=](const T& lhs, const T& rhs)
   {
-    return !r(b, a);
+    return !rel(rhs, lhs);
   };
 }
 
-template<typename T, Relation<T> R>
-auto lower_bound_predicate(const T& a, R r)
+template<typename T, Relation<T> Rel>
+auto lower_bound_predicate(const T& goal, Rel rel)
 {
-  return [=](const T& x)
+  return [=](const T& val)
   {
-    return !r(x, a);
+    return !rel(val, goal);
   };
 }
 
-template<typename T, Relation<T> R>
-auto upper_bound_predicate(const T& a, R r)
+template<typename T, Relation<T> Rel>
+auto upper_bound_predicate(const T& goal, Rel rel)
 {
-  return [=](const T& x)
+  return [=](const T& val)
   {
-    return r(a, x);
+    return rel(goal, val);
   };
 }
 

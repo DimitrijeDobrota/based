@@ -5,39 +5,39 @@ namespace based
 {
 
 template<Iterator I>
-I successor(I i)
+I successor(I itr)
 {
-  return ++i;
+  return ++itr;
 }
 
 template<Iterator I>
-void increment(I& x)
+void increment(I& itr)
 {
-  // Precondition: next(x) is defined
-  x = next(x);
+  // Precondition: next(itr) is defined
+  itr = next(itr);
 }
 
 template<Iterator I>
-I operator+(I f, distance_t<I> n)
+I operator+(I first, distance_t<I> size)
 {
-  // Precondition: n >= 0 & weak_range(f, n)
-  while (!zero(n)) {
-    n = predecessor(n);
-    f = successor(f);
+  // Precondition: size >= 0 & weak_range(first, size)
+  while (!zero(size)) {
+    size = predecessor(size);
+    first = successor(first);
   }
-  return f;
+  return first;
 }
 
 template<Iterator I>
-distance_t<I> operator-(I d, I f)
+distance_t<I> operator-(I last, I first)
 {
-  // Precondition: bounded_range(f, d)
-  distance_t<I> n {0};
-  while (f != d) {
-    n = successor(n);
-    f = successor(f);
+  // Precondition: bounded_range(first, last)
+  distance_t<I> cnt {0};
+  while (first != last) {
+    cnt = successor(cnt);
+    first = successor(first);
   }
-  return n;
+  return cnt;
 }
 
 }  // namespace based

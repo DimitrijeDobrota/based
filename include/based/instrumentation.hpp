@@ -260,8 +260,8 @@ D* registry<D>::head(nullptr);
 
 template<typename Function>
 void count_operations(
-    size_t i,
-    size_t j,
+    size_t first,
+    size_t last,
     Function fun,
     double (*norm)(double, double) = dont_normalize
 )
@@ -273,21 +273,22 @@ void count_operations(
 
   std::array<double, cols> values = {0};
 
-  table tbl(12);
+  static constexpr int width = 12;
+  table tbl(width);
   tbl.print_header(
       std::begin(instrumented::names), std::end(instrumented::names)
   );
 
   std::mt19937 rng(0);  // NOLINT cert-msc32-c cert-msc51-cpp
-  while (i <= j) {
-    std::vector<instrumented> vec(i);
+  while (first <= last) {
+    std::vector<instrumented> vec(first);
     std::iota(std::begin(vec), std::end(vec), 0.0);
     std::shuffle(std::begin(vec), std::end(vec), rng);
 
-    instrumented::initialize(i);
+    instrumented::initialize(first);
     fun(std::begin(vec), std::end(vec));
 
-    const auto dbl = static_cast<double>(i);
+    const auto dbl = static_cast<double>(first);
 
     values[0] = dbl;
     for (size_t k = 1; k < cols; ++k) {
@@ -296,7 +297,7 @@ void count_operations(
 
     tbl.print_row(std::begin(values), std::end(values), decimals);
 
-    i <<= 1U;
+    first <<= 1U;
   }
 }
 
@@ -337,9 +338,9 @@ public:
     const auto end = count(endp);
 
     const auto duration = end - start;
-    const auto ms = static_cast<double>(duration) * 0.001;
+    const auto msec = static_cast<double>(duration) * 0.001;
 
-    std::cout << std::format("{}us ({}ms)\n", duration, ms);
+    std::cout << std::format("{}us ({}ms)\n", duration, msec);
   }
 
 private:

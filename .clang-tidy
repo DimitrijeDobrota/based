@@ -3,22 +3,21 @@
 # misc-non-private-member-variables-in-classes: the options don't do anything
 # modernize-use-nodiscard: too aggressive, attribute is situationally useful
 Checks: "*,\
-  -google-readability-todo,\
   -altera-*,\
+  -boost*,\
+  -cppcoreguidelines-avoid-do-while,\
+  -cppcoreguidelines-pro-bounds-constant-array-index,\
   -fuchsia-*,\
-  fuchsia-multiple-inheritance,\
+  -google-readability-todo,\
   -llvm-header-guard,\
   -llvm-include-order,\
   -llvmlibc-*,\
-  -cppcoreguidelines-avoid-do-while,\
-  -cppcoreguidelines-pro-bounds-constant-array-index,\
   -misc-include-cleaner,\
   -misc-non-private-member-variables-in-classes,\
-  -modernize-use-nodiscard,\
+  -misc-no-recursion,\
   -modernize-use-trailing-return-type,\
-  -readability-identifier-length,\
-  -*-magic-numbers,\
-  -*-use-ranges,\
+  -readability-suspicious-call-argument,\
+  -*-ranges,\
 "
 WarningsAsErrors: ''
 CheckOptions:
@@ -162,4 +161,8 @@ CheckOptions:
     value: 'lower_case'
   - key: 'readability-identifier-naming.VirtualMethodCase'
     value: 'lower_case'
+  - key: 'readability-identifier-length.IgnoredVariableNames'
+    value: "^[abcdxyznm]$"
+  - key: 'readability-identifier-length.IgnoredParameterNames'
+    value: "^[abcdxyznm]$"
 ...

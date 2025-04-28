@@ -66,7 +66,8 @@ TEST_CASE("list_pool iterator", "[list/list_pool/iterator]")
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  for (std::uint8_t i = 0; i < 0xFF; i++) {
+  static constexpr std::size_t iter_count = 0xFF;
+  for (std::uint8_t i = 0; i < iter_count; i++) {
     head = pool.allocate(i, head);
   }
 
@@ -116,7 +117,8 @@ TEST_CASE("list_pool queue", "[list/list_pool/queue]")
     REQUIRE(pool.pop_front(queue) == queue);
   }
 
-  for (std::uint8_t i = 0; i < 0xFF; i++) {
+  static constexpr std::size_t iter_count = 0xFF;
+  for (std::uint8_t i = 0; i < iter_count; i++) {
     if (i % 2 == 0) {
       queue = pool.push_front(queue, i);
     } else {

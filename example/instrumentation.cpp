@@ -6,22 +6,25 @@
 class reg : public based::registry<reg>
 {
 public:
-  explicit reg(int i)
-      : m_i(i)
+  explicit reg(int val)
+      : m_val(val)
   {
   }
 
-  int m_i;
+  int m_val;
 };
 
 int main()
 {
+  static constexpr std::size_t size = 16;
+  static constexpr std::size_t mega = 1024;
+
   {
     const based::timer time;
 
     based::count_operations(
-        16UL,
-        16UL * 1024 * 1024,
+        size,
+        size * mega * mega,
         [](const auto& a, const auto& b)
         {
           std::sort(a, b);
@@ -34,8 +37,8 @@ int main()
     const based::timer time;
 
     based::count_operations(
-        16UL,
-        16UL * 1024 * 1024,
+        size,
+        size * mega * mega,
         [](const auto& a, const auto& b)
         {
           std::stable_sort(a, b);

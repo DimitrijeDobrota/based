@@ -258,14 +258,14 @@ struct buffer
 
   template<typename T>
     requires(valid_type<T>())
-  T* as() noexcept
+  [[nodiscard]] T* as() noexcept
   {
     return reinterpret_cast<T*>(&m_space);  // NOLINT reinterpret_cast
   }
 
   template<typename T>
     requires(valid_type<T>())
-  const T* as() const noexcept
+  [[nodiscard]] const T* as() const noexcept
   {
     return const_cast<buffer*>(this)->as<T>();  // NOLINT const_cast
   }
@@ -282,7 +282,7 @@ struct buffer
 /* ----- Overload Lambdas ----- */
 
 template<typename... F>
-struct overload : public F...  // NOLINT multiple-inheritance
+struct overload : public F...
 {
   using F::operator()...;
 };
@@ -292,7 +292,10 @@ overload(F&&...) -> overload<F...>;
 
 /* ----- Function Wrapper with type erasure ----- */
 
-template<typename Signature, std::size_t size = 16, std::size_t alignment = 8>
+template<
+    typename Signature,
+    std::size_t size = sizeof(void*),
+    std::size_t alignment = alignof(void*)>
 class Function;
 
 template<

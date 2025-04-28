@@ -20,13 +20,14 @@ TEST_CASE("nonempty", "[string/string_literal]")
 
 TEST_CASE("template", "[string/string_literal]")
 {
-  const auto data = []<based::string_literal L>()
+  const auto data = []<based::string_literal l>()
   {
-    return L.data();
+    return l.data();
   };
-  const auto size = []<based::string_literal L>()
+
+  const auto size = []<based::string_literal l>()
   {
-    return L.size();
+    return l.size();
   };
 
   REQUIRE(size.operator()<"">() == 1);

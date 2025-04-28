@@ -27,19 +27,19 @@ private:
   std::vector<node_t> m_pool;
   list_type m_free_list;
 
-  const node_t& node(list_type x) const
+  [[nodiscard]] const node_t& node(list_type x) const
   {
     assert(x != 0);
     return m_pool[x - 1];
   }
 
-  node_t& node(list_type x)
+  [[nodiscard]] node_t& node(list_type x)
   {
     assert(x != 0);
     return m_pool[x - 1];
   }
 
-  list_type new_node()
+  [[nodiscard]] list_type new_node()
   {
     m_pool.push_back(node_t());
     return list_type(m_pool.size());
@@ -104,14 +104,14 @@ public:
     list_pool::list_type m_node;
   };
 
-  bool is_empty(list_type x) const { return x == node_empty(); }
-  list_type node_empty() const { return list_type(0); }
+  [[nodiscard]] bool is_empty(list_type x) const { return x == node_empty(); }
+  [[nodiscard]] list_type node_empty() const { return list_type(0); }
 
-  const value_type& value(list_type x) const { return node(x).value; }
-  value_type& value(list_type x) { return node(x).value; }
+  [[nodiscard]] const value_type& value(list_type x) const { return node(x).value; }
+  [[nodiscard]] value_type& value(list_type x) { return node(x).value; }
 
-  const list_type& next(list_type x) const { return node(x).next; }
-  list_type& next(list_type x) { return node(x).next; }
+  [[nodiscard]] const list_type& next(list_type x) const { return node(x).next; }
+  [[nodiscard]] list_type& next(list_type x) { return node(x).next; }
 
   list_type free(list_type x)
   {
@@ -136,7 +136,7 @@ public:
     return ret;
   }
 
-  list_type allocate(const value_type& val, list_type tail)
+  [[nodiscard]] list_type allocate(const value_type& val, list_type tail)
   {
     list_type new_list = m_free_list;
 
@@ -153,10 +153,10 @@ public:
 
   using queue_t = std::pair<list_type, list_type>;
 
-  bool is_empty(const queue_t& queue) const { return is_empty(queue.first); }
-  queue_t queue_empty() { return {node_empty(), node_empty()}; }
+  [[nodiscard]] bool is_empty(const queue_t& queue) const { return is_empty(queue.first); }
+  [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
 
-  queue_t push_front(const queue_t& queue, const value_type& val)
+  [[nodiscard]] queue_t push_front(const queue_t& queue, const value_type& val)
   {
     auto new_node = allocate(val, queue.first);
     if (is_empty(queue)) {
@@ -165,7 +165,7 @@ public:
     return {new_node, queue.second};
   }
 
-  queue_t push_back(const queue_t& queue, const value_type& val)
+  [[nodiscard]] queue_t push_back(const queue_t& queue, const value_type& val)
   {
     auto new_node = allocate(val, node_empty());
     if (is_empty(queue)) {
@@ -175,7 +175,7 @@ public:
     return {queue.first, new_node};
   }
 
-  queue_t pop_front(const queue_t& queue)
+  [[nodiscard]] queue_t pop_front(const queue_t& queue)
   {
     if (is_empty(queue)) {
       return queue;

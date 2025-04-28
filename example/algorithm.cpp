@@ -4,12 +4,15 @@
 
 int main()
 {
+  static constexpr std::size_t size = 16;
+  static constexpr std::size_t mega = 1024;
+
   {
     const based::timer time;
 
     based::count_operations(
-        16UL,
-        16UL * 1024 * 1024,
+        size,
+        size * mega * mega,
         [](const auto& a, const auto& b)
         {
           based::min_element(a, b);
@@ -22,8 +25,8 @@ int main()
     const based::timer time;
 
     based::count_operations(
-        16UL,
-        16UL * 1024 * 1024,
+        size,
+        size * mega * mega,
         [](const auto& a, const auto& b)
         {
           based::max_element(a, b);
@@ -36,8 +39,8 @@ int main()
     const based::timer time;
 
     based::count_operations(
-        16UL,
-        16UL * 1024 * 1024,
+        size,
+        size * mega * mega,
         [](const auto& a, const auto& b)
         {
           based::minmax_element(a, b);

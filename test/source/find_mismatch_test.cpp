@@ -6,7 +6,7 @@
 
 struct equal
 {
-  auto operator()(int a, int b) const { return a == b; }
+  auto operator()(int lhs, int rhs) const { return lhs == rhs; }
 };
 
 TEST_CASE("find_mismatch(empty)", "[algorithm/find_mismatch]")
