@@ -61,6 +61,9 @@ add_test(list_test)
 # ---- String ----
 add_test(string_literal_test)
 
+# ---- Template ----
+add_test(signature_test)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)

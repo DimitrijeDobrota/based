@@ -18,12 +18,14 @@ namespace based
 template<typename>
 struct signature;
 
-template<typename Ret, typename... Args>
-struct signature<Ret(Args...)>
+template<typename Ret, bool ne, typename... Args>
+struct signature<Ret(Args...) noexcept(ne)>
 {
   using sig_type = Ret(Args...);
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
