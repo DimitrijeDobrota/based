@@ -25,7 +25,7 @@ int main()
   }
 
   {
-    const based::Function func = [](int val)
+    const based::function func = [](int val)
     {
       return val + 1;
     };

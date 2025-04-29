@@ -298,14 +298,14 @@ template<
     typename Signature,
     std::size_t size = sizeof(void*),
     std::size_t alignment = alignof(void*)>
-class Function;
+class function;
 
 template<
     std::size_t size,
     std::size_t alignment,
     typename Res,
     typename... Args>
-class Function<Res(Args...), size, alignment>
+class function<Res(Args...), size, alignment>
 {
   buffer<size, alignment> m_space;
 
@@ -323,24 +323,24 @@ class Function<Res(Args...), size, alignment>
   static Res executor(Args... args, void* func)
   {
     return std::invoke(
-        *static_cast<Function*>(func)->m_space.template as<Callable>(),
+        *static_cast<function*>(func)->m_space.template as<Callable>(),
         std::forward<Args>(args)...
     );
   }
 
 public:
-  Function() = default;
+  function() = default;
 
   template<typename CallableArg, typename Callable = std::decay_t<CallableArg>>
     requires(requires {
-              !std::same_as<Function, Callable>;
+              !std::same_as<function, Callable>;
               sizeof(Callable) <= size;
               alignof(Callable) <= alignment;
               std::is_trivially_destructible_v<Callable>;
               std::is_trivially_copyable_v<Callable>;
             })
 
-  Function(CallableArg&& callable)  // NOLINT explicit
+  function(CallableArg&& callable)  // NOLINT explicit
       : m_space(
             std::in_place_type<Callable>, std::forward<CallableArg>(callable)
         )
@@ -353,13 +353,24 @@ public:
   {
     return this->m_executor(
         std::forward<CallArgs>(callargs)...,
-        const_cast<Function*>(this)  // NOLINT const_cast
+        const_cast<function*>(this)  // NOLINT const_cast
     );
   }
 };
 
+// operator()
 template<typename T>
-Function(T) -> Function<typename signature<decltype(&T::operator())>::sig_type>;
+function(T) -> function<typename signature<decltype(&T::operator())>::sig_type>;
+
+// free function
+template<typename T>
+function(T) -> function<typename signature<std::remove_pointer_t<T>>::sig_type>;
+
+/*
+// member procedure
+template<typename T>
+function(T) -> function<typename signature<std::decay_t<T>>::sig_type>;
+*/
 
 template<Procedure Func, bool on_success = false, bool on_failure = false>
 class scopeguard

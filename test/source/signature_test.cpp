@@ -4,17 +4,20 @@
 
 #include "based/template.hpp"
 
+// NOLINTBEGIN cognitive-complexity
+
 namespace
 {
 
-int free_func(const double& a, int&& b) noexcept(false)  // NOLINT
+int free_func(const double& a, int&& b) noexcept(false)  // NOLINT needed
 {
-  return static_cast<int>(a + std::move(b));  // NOLINT
+  return static_cast<int>(a + std::move(b));  // NOLINT move
 }
 
-int free_func_noexcept(const double& a, int&& b) noexcept(true)  // NOLINT
+int free_func_noexcept(const double& a, int&& b) noexcept(true
+)  // NOLINT needed
 {
-  return static_cast<int>(a + std::move(b));  // NOLINT
+  return static_cast<int>(a + std::move(b));  // NOLINT move
 }
 
 }  // namespace
@@ -468,3 +471,5 @@ TEST_CASE("const volatile noexcept rvalref", "[template/signature]")
   STATIC_REQUIRE(std::same_as<std::true_type, sig::rvalref_val>);
   STATIC_REQUIRE(std::same_as<std::true_type, sig::noexcept_val>);
 }
+
+// NOLINTEND cognitive-complexity
