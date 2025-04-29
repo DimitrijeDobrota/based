@@ -56,13 +56,17 @@ add_test(find_mismatch_n_test)
 add_test(find_if_unguarded_test)
 
 # ---- List ----
+
 add_test(list_test)
 
 # ---- String ----
+
 add_test(string_literal_test)
 
 # ---- Template ----
+
 add_test(signature_test)
+add_test(buffer_test)
 
 # ---- End-of-file commands ----
 

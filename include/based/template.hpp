@@ -275,9 +275,9 @@ struct buffer
   void swap(buffer& that) noexcept
   {
     alignas(alignment) char tmp[size];  // NOLINT array
-    ::memcpy(tmp, this->m_space, size);
-    ::memcpy(this->m_space, that.m_space, size);
-    ::memcpy(that.m_space, tmp, size);
+    ::memcpy(tmp, this->m_space, size);  // NOLINT array
+    ::memcpy(this->m_space, that.m_space, size);  // NOLINT array
+    ::memcpy(that.m_space, tmp, size);  // NOLINT array
   }
 };
 
