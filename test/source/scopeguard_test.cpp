@@ -55,10 +55,8 @@ TEST_CASE("on success", "[template/scopeguard]")
   SECTION("success")
   {
     int test = 0;
-    auto func = set(test);
-
     try {
-      const based::scopeguard_success guard = func;
+      const based::scopeguard_success guard = set(test);
     } catch (...) {
       test *= 1;
     }
@@ -69,10 +67,8 @@ TEST_CASE("on success", "[template/scopeguard]")
   SECTION("failure")
   {
     int test = 0;
-    auto func = set(test);
-
     try {
-      const based::scopeguard_success guard = func;
+      const based::scopeguard_success guard = set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       test *= 1;

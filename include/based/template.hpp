@@ -383,10 +383,12 @@ public:
   {
   }
 
+  /*
   scopeguard(const Func& func)  // NOLINT explicit
       : m_func(func)
   {
   }
+  */
 
   scopeguard(const scopeguard&) = delete;
   scopeguard& operator=(const scopeguard&) = delete;
@@ -414,10 +416,12 @@ public:
   {
   }
 
+  /*
   scopeguard(const Func& func)  // NOLINT explicit
       : m_func(func)
   {
   }
+  */
 
   scopeguard(const scopeguard&) = delete;
   scopeguard& operator=(const scopeguard&) = delete;
