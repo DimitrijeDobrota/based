@@ -7,7 +7,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "based/type_traits.hpp"
 #include "based/utility.hpp"
 
 namespace based
@@ -372,19 +371,19 @@ template<typename T>
 function(T) -> function<typename signature<std::decay_t<T>>::sig_type>;
 */
 
-template<Procedure Func, bool on_success = false, bool on_failure = false>
+template<typename Func, bool on_success = false, bool on_failure = false>
 class scopeguard
 {
   uncaught_exception_detector m_detector;
   Func m_func;
 
 public:
-  explicit scopeguard(Func&& func)
+  scopeguard(Func&& func)  // NOLINT explicit
       : m_func(std::move(func))
   {
   }
 
-  explicit scopeguard(const Func& func)
+  scopeguard(const Func& func)  // NOLINT explicit
       : m_func(func)
   {
   }
@@ -392,8 +391,8 @@ public:
   scopeguard(const scopeguard&) = delete;
   scopeguard& operator=(const scopeguard&) = delete;
 
-  scopeguard(scopeguard&&) = default;
-  scopeguard& operator=(scopeguard&&) = default;
+  scopeguard(scopeguard&&) = delete;
+  scopeguard& operator=(scopeguard&&) = delete;
 
   ~scopeguard()
   {
@@ -403,19 +402,19 @@ public:
   }
 };
 
-template<Procedure Func>
+template<typename Func>
 class scopeguard<Func, false, false>
 {
   bool m_commit = false;
   Func m_func;
 
 public:
-  explicit scopeguard(Func&& func)
+  scopeguard(Func&& func)  // NOLINT explicit
       : m_func(std::move(func))
   {
   }
 
-  explicit scopeguard(const Func& func)
+  scopeguard(const Func& func)  // NOLINT explicit
       : m_func(func)
   {
   }
@@ -423,8 +422,8 @@ public:
   scopeguard(const scopeguard&) = delete;
   scopeguard& operator=(const scopeguard&) = delete;
 
-  scopeguard(scopeguard&&) = default;
-  scopeguard& operator=(scopeguard&&) = default;
+  scopeguard(scopeguard&&) = delete;
+  scopeguard& operator=(scopeguard&&) = delete;
 
   ~scopeguard()
   {
@@ -435,13 +434,13 @@ public:
   void commit() { m_commit = true; }
 };
 
-template<Procedure Func>
+template<typename Func>
 using scopeguard_exit = scopeguard<Func, true, true>;
 
-template<Procedure Func>
+template<typename Func>
 using scopeguard_success = scopeguard<Func, true, false>;
 
-template<Procedure Func>
+template<typename Func>
 using scopeguard_failure = scopeguard<Func, false, true>;
 
 }  // namespace based

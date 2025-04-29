@@ -68,6 +68,7 @@ add_test(string_literal_test)
 add_test(signature_test)
 add_test(buffer_test)
 add_test(function_test)
+add_test(scopeguard_test)
 
 # ---- End-of-file commands ----
 
