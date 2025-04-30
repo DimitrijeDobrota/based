@@ -139,6 +139,10 @@ struct is_homogeneous_domain<Head, Args...> : std::true_type
 
 }  // namespace detail
 
+template<std::size_t idx, typename... Args>
+  requires(idx < sizeof...(Args))
+using elem_t = std::tuple_element_t<idx, std::tuple<Args...>>;
+
 template<typename... Args>
 concept RegularDomain =
     requires { requires(Regular<std::remove_cvref_t<Args>> && ...); };
@@ -147,121 +151,91 @@ template<typename... Args>
 concept InputDomain = requires { requires(Input<Args> && ...); };
 
 template<typename... Args>
-concept HomogenousDomain = detail::is_homogeneous_domain<Args...>::value;
+concept HomogeneousDomain = detail::is_homogeneous_domain<Args...>::value;
 
 template<typename T>
 using distance_t = std::uint64_t;
 
-template<typename P, typename... Args>
-concept Procedure = std::invocable<P, Args...>;
-
-template<typename P, typename... Args>
-  requires Procedure<P, Args...>
-inline constexpr auto arity_v = std::tuple_size<std::tuple<Args...>>::value;
-
-template<typename P, std::size_t idx, typename... Args>
-  requires Procedure<P, Args...> && requires { idx < arity_v<Args...>; }
-using domain_elem_t =
-    std::decay_t<std::tuple_element_t<idx, std::tuple<Args...>>>;
-
-template<typename P, typename... Args>
-  requires Procedure<P, Args...>
-using codomain_t = std::invoke_result_t<P, Args...>;
-
-template<typename P, typename Arg>
-concept UnaryProcedure = requires {
-  requires(Procedure<P, Arg>);
-  requires(arity_v<P, Arg> == 1);
+template<typename P, typename Ret, typename... Args>
+concept Procedure = requires {
+  requires(std::invocable<P, Args...>);
+  requires(std::same_as<void, Ret> || std::same_as<Ret, std::invoke_result_t<P, Args...>>);
 };
 
-template<typename P, typename... Args>
+template<typename P, typename Ret, typename Arg>
+concept UnaryProcedure = Procedure<P, Ret, Arg>;
+
+template<typename P, typename Ret, typename... Args>
 concept RegularProcedure = requires {
-  requires(Procedure<P, Args...>);
+  requires(Procedure<P, Ret, Args...>);
   requires(RegularDomain<Args...>);
-  requires(Regular<codomain_t<P, Args...>>);
+  requires(Regular<Ret>);
 };
 
-template<typename P, typename... Args>
+template<typename P, typename Ret, typename... Args>
 concept FunctionalProcedure = requires {
-  requires(RegularProcedure<P, Args...>);
+  requires(RegularProcedure<P, Ret, Args...>);
   requires(InputDomain<Args...>);
 };
 
-template<typename P, typename Arg>
+template<typename P, typename Ret, typename Arg>
 concept UnaryFunction = requires {
-  requires(FunctionalProcedure<P, Arg>);
-  requires(UnaryProcedure<P, Arg>);
+  requires(FunctionalProcedure<P, Ret, Arg>);
+  requires(UnaryProcedure<P, Ret, Arg>);
 };
 
-template<typename P, typename... Args>
+template<typename P, typename Ret, typename... Args>
 concept HomogeneousFunction = requires {
-  requires(FunctionalProcedure<P, Args...>);
-  requires(arity_v<P, Args...> > 0);
-  requires(HomogenousDomain<Args...>);
+  requires(FunctionalProcedure<P, Ret, Args...>);
+  requires(sizeof...(Args) > 0);
+  requires(HomogeneousDomain<Args...>);
 };
 
 template<typename P, typename... Args>
-concept Predicate = requires {
-  requires(FunctionalProcedure<P, Args...>);
-  requires(std::same_as<bool, codomain_t<P, Args...>>);
-};
+concept Predicate = FunctionalProcedure<P, bool, Args...>;
 
 template<typename P, typename... Args>
 concept HomogeneousPredicate = requires {
   requires(Predicate<P, Args...>);
-  requires(HomogeneousFunction<P, Args...>);
+  requires(HomogeneousFunction<P, bool, Args...>);
 };
 
 template<typename P, typename Arg>
 concept UnaryPredicate = requires {
   requires(Predicate<P, Arg>);
-  requires(UnaryFunction<P, Arg>);
+  requires(UnaryFunction<P, bool, Arg>);
 };
 
 template<typename P, typename... Args>
-concept Operation = requires {
-  requires(HomogeneousFunction<P, Args...>);
-  requires(BareSameAs<
-           codomain_t<P, Args...>,
-           std::tuple_element_t<0, std::tuple<Args...>>>);
-};
+concept Operation = HomogeneousFunction<P, elem_t<0, Args...>, Args...>;
 
-template<typename P, typename Arg>
+template<typename P, typename Ret, typename Arg>
 concept Transformation = requires {
-  requires(Operation<P, Arg>);
-  requires(UnaryFunction<P, Arg>);
+  requires(Operation<P, Ret, Arg>);
+  requires(UnaryFunction<P, Ret, Arg>);
 };
 
 template<typename P, typename Arg>
-concept BinaryOperation = requires {
-  requires(Operation<P, Arg, Arg>);
-  requires(arity_v<P, Arg, Arg> == 2);
-};
+concept BinaryOperation = Operation<P, Arg, Arg>;
 
 template<typename P, typename Arg>
-concept AssociativeBinaryOperation = requires {
-  requires(Operation<P, Arg, Arg>);
-  requires(arity_v<P, Arg, Arg> == 2);
-};
+concept AssociativeBinaryOperation = Operation<P, Arg, Arg>;
 
 template<typename P, typename Arg>
-concept Relation = requires {
-  requires(HomogeneousPredicate<P, Arg, Arg>);
-  requires(arity_v<P, Arg, Arg> == 2);
-};
+concept Relation = HomogeneousPredicate<P, Arg, Arg>;
 
 /* ----- Iterator variants ----- */
 
-template<typename P, typename I>
+template<typename P, typename Ret, typename I>
 concept IterUnaryProcedure = requires {
   requires(Iterator<I>);
-  requires(UnaryProcedure<P, iter_value_t<I>>);
+  requires(UnaryProcedure<P, Ret, iter_value_t<I>>);
 };
 
-template<typename P, typename I>
+template<typename P, typename Ret, typename I>
 concept IterUnaryFunction = requires {
   requires(Iterator<I>);
-  requires(UnaryFunction<P, iter_value_t<I>>);
+  requires(UnaryFunction<P, Ret, iter_value_t<I>>);
 };
 
 template<typename P, typename... I>
@@ -276,13 +250,13 @@ concept IterUnaryPredicate = requires {
   requires(UnaryPredicate<P, iter_value_t<I>>);
 };
 
-template<typename P, typename... I>
+template<typename P, typename Ret, typename... I>
 concept IterOperation = requires {
   requires(Iterator<I> && ...);
   requires(Operation<P, iter_value_t<I>...>);
 };
 
-template<typename P, typename I>
+template<typename P, typename Ret, typename I>
 concept IterBinaryOperation = requires {
   requires(Iterator<I>);
   requires(BinaryOperation<P, iter_value_t<I>>);

@@ -16,11 +16,7 @@ namespace detail
 /* ----- Min and Max ----- */
 
 template<typename P, typename Arg>
-concept NoninputRelation = requires {
-  requires(RegularProcedure<P, Arg, Arg>);
-  requires(std::same_as<bool, codomain_t<P, Arg, Arg>>);
-  requires(arity_v<P, Arg, Arg> == 2);
-};
+concept NoninputRelation = RegularProcedure<P, bool, Arg, Arg>;
 
 }  // namespace detail
 
@@ -167,7 +163,7 @@ std::pair<I, I> minmax_element(I first, I last)
   return based::minmax_element(first, last, std::less<iter_value_t<I>>());
 }
 
-template<ReadableIterator I, IterUnaryProcedure<I> Proc>
+template<ReadableIterator I, IterUnaryProcedure<void, I> Proc>
 Proc for_each(I first, I last, Proc proc)
 {
   // Precondition: readable_bounded_range(first, last);
@@ -326,7 +322,11 @@ iter_dist_t<I> count_if_not(I first, I last, Pred pred)
   return count_if_not(first, last, pred, iter_dist_t<I> {0});
 }
 
-template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+template<
+    typename Ret,
+    Iterator I,
+    UnaryFunction<Ret, I> F,
+    BinaryOperation<Ret> Op>
 auto reduce_nonempty(I first, I last, Op opr, F fun)
 {
   assert(first != last);
@@ -342,7 +342,11 @@ auto reduce_nonempty(I first, I last, Op opr, F fun)
   return res;
 }
 
-template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+template<
+    typename Ret,
+    Iterator I,
+    UnaryFunction<Ret, I> F,
+    BinaryOperation<Ret> Op>
 auto reduce(
     I first,
     I last,
@@ -359,7 +363,11 @@ auto reduce(
   return reduce_nonempty(first, last, opr, fun);
 }
 
-template<Iterator I, UnaryFunction<I> F, BinaryOperation<codomain_t<F, I>> Op>
+template<
+    typename Ret,
+    Iterator I,
+    UnaryFunction<Ret, I> F,
+    BinaryOperation<Ret> Op>
 auto reduce_nonzero(
     I first,
     I last,
@@ -370,7 +378,7 @@ auto reduce_nonzero(
 {
   // Precondition: bounded_range(first, last)
   // Precondition: partially_associative(opr)
-  codomain_t<F, I> res;
+  Ret res;
   do {
     if (first == last) {
       return zero;
@@ -449,7 +457,7 @@ bool increasing_range(I first, I last, Rel rel)
 
 /* ----- Counted Range Algorithms ----- */
 
-template<ReadableIterator I, IterUnaryProcedure<I> Proc>
+template<ReadableIterator I, IterUnaryProcedure<void, I> Proc>
 auto for_each_n(I first, iter_dist_t<I> size, Proc proc)
 {
   // Precondition: readable_weak_range(first, size);
