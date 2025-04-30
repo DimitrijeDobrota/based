@@ -18,7 +18,7 @@ void increment(I& itr)
 }
 
 template<Iterator I>
-I operator+(I first, distance_t<I> size)
+I operator+(I first, iter_dist_t<I> size)
 {
   // Precondition: size >= 0 & weak_range(first, size)
   while (!zero(size)) {
@@ -29,10 +29,10 @@ I operator+(I first, distance_t<I> size)
 }
 
 template<Iterator I>
-distance_t<I> operator-(I last, I first)
+iter_dist_t<I> operator-(I last, I first)
 {
   // Precondition: bounded_range(first, last)
-  distance_t<I> cnt {0};
+  iter_dist_t<I> cnt {0};
   while (first != last) {
     cnt = successor(cnt);
     first = successor(first);

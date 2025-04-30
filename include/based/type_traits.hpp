@@ -51,8 +51,7 @@ namespace detail {
     template<typename I>
     struct iterator_traits {
         using value_type = I;
-        using distance_type = std::uint64_t;
-        using pointer_type = I&;
+        using distance_type = std::uint64_t; using pointer_type = I&;
         using reference_type = I*;
     };
 
@@ -152,9 +151,6 @@ concept InputDomain = requires { requires(Input<Args> && ...); };
 
 template<typename... Args>
 concept HomogeneousDomain = detail::is_homogeneous_domain<Args...>::value;
-
-template<typename T>
-using distance_t = std::uint64_t;
 
 template<typename P, typename Ret, typename... Args>
 concept Procedure = requires {
