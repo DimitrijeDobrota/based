@@ -2,12 +2,17 @@
 
 #include "based/functional.hpp"
 
-// NOLINTBEGIN congnitive-complexity magic-number
+// NOLINTBEGIN(*cognitive-complexity*, *magic*)
+
+namespace
+{
 
 auto free_func(int a, double b, int c, double d)
 {
   return static_cast<int>(a + b + c + d);
-};
+}
+
+}  // namespace
 
 TEST_CASE("free function", "[functional/curry]")
 {
@@ -42,29 +47,31 @@ TEST_CASE("member function", "[functional/curry]")
 {
   struct test
   {
-    auto func(int a, double b, int c, double d) const
+    [[nodiscard]] auto func(int a, double b, int c, double d) const
     {
-      return static_cast<int>(a + b + c + d);
+      return static_cast<int>(m_x + a + b + c + d);
     }
+
+    int m_x = 0;
   };
 
   const based::curried curried = &test::func;
-  test t;
+  test tmp;
 
-  REQUIRE(curried(std::ref(t))(1)(2.0)(3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1)(2.0)(3, 4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1)(2.0, 3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1)(2.0, 3, 4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1, 2.0)(3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1, 2.0)(3, 4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1, 2.0, 3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t))(1, 2.0, 3, 4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1)(2.0)(3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1)(2.0, 3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1, 2.0)(3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1, 2.0, 3)(4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1, 2.0, 3, 4.0) == 10);
-  REQUIRE(curried(std::ref(t), 1, 2.0, 3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1)(2.0)(3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1)(2.0)(3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1)(2.0, 3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1)(2.0, 3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1, 2.0)(3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1, 2.0)(3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1, 2.0, 3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp))(1, 2.0, 3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1)(2.0)(3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1)(2.0, 3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1, 2.0)(3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1, 2.0, 3)(4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1, 2.0, 3, 4.0) == 10);
+  REQUIRE(curried(std::ref(tmp), 1, 2.0, 3, 4.0) == 10);
 }
 
-// NOLINTEND congnitive-complexity magic-number
+// NOLINTEND(*cognitive-complexity*, *magic*)

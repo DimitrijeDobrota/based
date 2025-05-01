@@ -117,13 +117,13 @@ struct instrumented : instrumented_base
 
   value_type value;
 
-  instrumented(const value_type& val)  // NOLINT *-explicit-constructor
+  instrumented(const value_type& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
     ++counts[op::ctor_value];
   }
 
-  instrumented(value_type&& val)  // NOLINT *-explicit-constructor
+  instrumented(value_type&& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
     ++counts[op::ctor_value];
@@ -145,7 +145,7 @@ struct instrumented : instrumented_base
   }
 
   // self assign should be handled by the value_type
-  instrumented& operator=(const instrumented& val)  // NOLINT cert-oop54-cpp
+  instrumented& operator=(const instrumented& val)  // NOLINT(*cert-oop54-cpp*)
   {
     ++counts[op::asgn_copy];
     value = val.value;
@@ -153,7 +153,8 @@ struct instrumented : instrumented_base
   }
 
   // self assign should be handled by the value_type
-  instrumented& operator=(instrumented&& val) noexcept  // NOLINT cert-oop54-cpp
+  instrumented& operator=(instrumented&& val
+  ) noexcept  // NOLINT(*cert-oop54-cpp*)
   {
     ++counts[op::asgn_move];
     value = std::move(val.value);
@@ -279,7 +280,7 @@ void count_operations(
       std::begin(instrumented::names), std::end(instrumented::names)
   );
 
-  std::mt19937 rng(0);  // NOLINT cert-msc32-c cert-msc51-cpp
+  std::mt19937 rng(0);  // NOLINT(*cert-msc32-c*, *cert-msc51-cpp*)
   while (first <= last) {
     std::vector<instrumented> vec(first);
     std::iota(std::begin(vec), std::end(vec), 0.0);

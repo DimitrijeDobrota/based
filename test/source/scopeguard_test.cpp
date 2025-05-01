@@ -6,11 +6,11 @@
 
 #include "based/template.hpp"
 
-// NOLINTBEGIN cognitive-complexity
+// NOLINTBEGIN(*cognitive-complexity*)
 
 struct set
 {
-  set(int& val)
+  explicit set(int& val)
       : m_val(&val)
   {
   }
@@ -42,7 +42,7 @@ TEST_CASE("manual", "[template/scopeguard]")
   {
     int test = 0;
     try {
-      based::scopeguard guard = set(test);
+      based::scopeguard guard = set(test); // NOLINT(*const*)
     } catch (...) {
       test *= 1;
     }
@@ -131,4 +131,4 @@ TEST_CASE("exit", "[template/scopeguard]")
   }
 }
 
-// NOLINTEND cognitive-complexity
+// NOLINTEND(*cognitive-complexity*)

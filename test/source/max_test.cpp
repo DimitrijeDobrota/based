@@ -3,6 +3,8 @@
 #include "based/type_traits.hpp"
 #include "based/algorithm.hpp"
 
+// NOLINTBEGIN(*const-arg*,*const-correctness*,*after-move, *access-moved)
+
 TEST_CASE("max(literal, literal) = right", "[algorithm/max]")
 {
   using res_t = decltype(based::max(3, 4));
@@ -19,7 +21,7 @@ TEST_CASE("max(literal, literal) = left", "[algorithm/max]")
 
 TEST_CASE("max(value, literal) = right", "[algorithm/max]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
 
   using res_t = decltype(based::max(a, 4));
   REQUIRE(based::SameAs<int, res_t>);
@@ -28,7 +30,7 @@ TEST_CASE("max(value, literal) = right", "[algorithm/max]")
 
 TEST_CASE("max(value, literal) = left", "[algorithm/max]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
 
   using res_t = decltype(based::max(a, 3));
   REQUIRE(based::SameAs<int, res_t>);
@@ -37,7 +39,7 @@ TEST_CASE("max(value, literal) = left", "[algorithm/max]")
 
 TEST_CASE("max(literal, value) = right", "[algorithm/max]")
 {
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::max(3, b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -46,7 +48,7 @@ TEST_CASE("max(literal, value) = right", "[algorithm/max]")
 
 TEST_CASE("max(literal, value) = left", "[algorithm/max]")
 {
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::max(4, b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -131,7 +133,7 @@ TEST_CASE("max(const value, const value) = left", "[algorithm/max]")
 
 TEST_CASE("max(value, const value) = right", "[algorithm/max]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
   const int b = 4;
 
   using res_t = decltype(based::max(a, b));
@@ -141,7 +143,7 @@ TEST_CASE("max(value, const value) = right", "[algorithm/max]")
 
 TEST_CASE("max(value, const value) = left", "[algorithm/max]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
   const int b = 3;
 
   using res_t = decltype(based::max(a, b));
@@ -152,7 +154,7 @@ TEST_CASE("max(value, const value) = left", "[algorithm/max]")
 TEST_CASE("max(const value, value) = right", "[algorithm/max]")
 {
   const int a = 3;
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::max(a, b));
   REQUIRE(based::SameAs<const int&, res_t>);
@@ -162,14 +164,12 @@ TEST_CASE("max(const value, value) = right", "[algorithm/max]")
 TEST_CASE("max(const value, value) = left", "[algorithm/max]")
 {
   const int a = 4;
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::max(a, b));
   REQUIRE(based::SameAs<const int&, res_t>);
   REQUIRE(based::max(a, b) == 4);
 }
-
-// NOLINTBEGIN move-const-arg
 
 TEST_CASE("max(move, literal) = right", "[algorithm/max]")
 {
@@ -192,7 +192,7 @@ TEST_CASE("max(move, literal) = left", "[algorithm/max]")
 TEST_CASE("max(move, value) = right", "[algorithm/max]")
 {
   int a = 3;
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::max(std::move(a), b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -202,7 +202,7 @@ TEST_CASE("max(move, value) = right", "[algorithm/max]")
 TEST_CASE("max(move, value) = left", "[algorithm/max]")
 {
   int a = 4;
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::max(std::move(a), b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -249,7 +249,7 @@ TEST_CASE("max(literal, move) = left", "[algorithm/max]")
 
 TEST_CASE("max(value, move) = right", "[algorithm/max]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
   int b = 4;
 
   using res_t = decltype(based::max(a, std::move(b)));
@@ -259,7 +259,7 @@ TEST_CASE("max(value, move) = right", "[algorithm/max]")
 
 TEST_CASE("max(value, move) = left", "[algorithm/max]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
   int b = 3;
 
   using res_t = decltype(based::max(a, std::move(b)));
@@ -307,7 +307,7 @@ TEST_CASE("max(move, move) = left", "[algorithm/max]")
   REQUIRE(based::max(std::move(a), std::move(b)) == 4);
 }
 
-// NOLINTEND move-const-arg
+// NOLINTEND(*const-arg*,*const-correctness*,*after-move, *access-moved)
 
 TEST_CASE("max-stability", "[algorithm/max]")
 {

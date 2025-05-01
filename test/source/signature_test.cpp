@@ -4,20 +4,21 @@
 
 #include "based/type_traits.hpp"
 
-// NOLINTBEGIN cognitive-complexity
+// NOLINTBEGIN(*cognitive-complexity*)
 
 namespace
 {
 
-int free_func(const double& a, int&& b) noexcept(false)  // NOLINT needed
+// NOLINTNEXTLINE (*needed*)
+int free_func(const double& a, int&& b) noexcept(false)
 {
-  return static_cast<int>(a + std::move(b));  // NOLINT move
+  return static_cast<int>(a + b);
 }
 
-int free_func_noexcept(const double& a, int&& b) noexcept(true
-)  // NOLINT needed
+// NOLINTNEXTLINE (*needed*)
+int free_func_noexcept(const double& a, int&& b) noexcept(true)
 {
-  return static_cast<int>(a + std::move(b));  // NOLINT move
+  return static_cast<int>(a + b);
 }
 
 }  // namespace
@@ -474,4 +475,4 @@ TEST_CASE("const volatile noexcept rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-// NOLINTEND cognitive-complexity
+// NOLINTEND(*cognitive-complexity*)

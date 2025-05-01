@@ -15,7 +15,7 @@ public:
   {
   }
 
-  operator bool() const noexcept  // NOLINT explicit
+  operator bool() const noexcept  // NOLINT(*explicit*)
   {
     return std::uncaught_exceptions() > m_count;
   }

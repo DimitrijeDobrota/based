@@ -27,7 +27,7 @@ struct buffer
     return sizeof(T) <= size && (alignment % sizeof(T)) == 0;
   }
 
-  alignas(alignment) char m_space[size] = {0};  // NOLINT array
+  alignas(alignment) char m_space[size] = {0};  // NOLINT(*array*)
 
   buffer() = default;
 
@@ -50,7 +50,7 @@ struct buffer
     static_assert(std::is_trivially_destructible_v<T>);
     static_assert(std::is_trivially_copyable_v<T>);
 
-    // NOLINTNEXTLINE owning-memory
+    // NOLINTNEXTLINE(*owning-memory*)
     return ::new (static_cast<void*>(as<T>())) T(std::forward<Args>(args)...);
   }
 
@@ -58,22 +58,24 @@ struct buffer
     requires(valid_type<T>())
   [[nodiscard]] T* as() noexcept
   {
-    return reinterpret_cast<T*>(&m_space);  // NOLINT reinterpret_cast
+    return reinterpret_cast<T*>(&m_space);  // NOLINT(*reinterpret-cast*)
   }
 
   template<typename T>
     requires(valid_type<T>())
   [[nodiscard]] const T* as() const noexcept
   {
-    return const_cast<buffer*>(this)->as<T>();  // NOLINT const_cast
+    return const_cast<buffer*>(this)->as<T>();  // NOLINT(*const-cast*)
   }
 
   void swap(buffer& that) noexcept
   {
-    alignas(alignment) char tmp[size];  // NOLINT array
-    ::memcpy(tmp, this->m_space, size);  // NOLINT array
-    ::memcpy(this->m_space, that.m_space, size);  // NOLINT array
-    ::memcpy(that.m_space, tmp, size);  // NOLINT array
+    // NOLINTBEGIN(*array*)
+    alignas(alignment) char tmp[size];
+    ::memcpy(tmp, this->m_space, size);
+    ::memcpy(this->m_space, that.m_space, size);
+    ::memcpy(that.m_space, tmp, size);
+    // NOLINTEND(*array*)
   }
 };
 
@@ -136,7 +138,7 @@ public:
               std::is_trivially_copyable_v<Callable>;
             })
 
-  function(CallableArg&& callable)  // NOLINT explicit
+  function(CallableArg&& callable)  // NOLINT(*explicit*)
       : m_space(
             std::in_place_type<Callable>, std::forward<CallableArg>(callable)
         )
@@ -149,7 +151,7 @@ public:
   {
     return this->m_executor(
         std::forward<CallArgs>(callargs)...,
-        const_cast<function*>(this)  // NOLINT const_cast
+        const_cast<function*>(this)  // NOLINT(*const-cast*)
     );
   }
 };
@@ -167,13 +169,13 @@ class scopeguard
   Func m_func;
 
 public:
-  scopeguard(Func&& func)  // NOLINT explicit
+  scopeguard(Func&& func)  // NOLINT(*explicit*)
       : m_func(std::move(func))
   {
   }
 
   /*
-  scopeguard(const Func& func)  // NOLINT explicit
+  scopeguard(const Func& func)  // NOLINT(*explicit*)
       : m_func(func)
   {
   }
@@ -200,13 +202,13 @@ class scopeguard<Func, false, false>
   Func m_func;
 
 public:
-  scopeguard(Func&& func)  // NOLINT explicit
+  scopeguard(Func&& func)  // NOLINT(*explicit*)
       : m_func(std::move(func))
   {
   }
 
   /*
-  scopeguard(const Func& func)  // NOLINT explicit
+  scopeguard(const Func& func)  // NOLINT(*explicit*)
       : m_func(func)
   {
   }

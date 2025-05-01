@@ -9,7 +9,7 @@ namespace based
 template<std::size_t n>
 struct string_literal
 {
-  // NOLINTNEXTLINE *-explicit-constructor *-avoid-c-arrays
+  // NOLINTNEXTLINE(*explicit*, *array*)
   constexpr string_literal(const char (&str)[n])
       : m_value(std::to_array(str))
   {

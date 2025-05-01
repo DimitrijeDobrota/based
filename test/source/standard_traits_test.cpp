@@ -4,7 +4,7 @@
 
 #include "based/type_traits.hpp"
 
-// NOLINTBEGIN array
+// NOLINTBEGIN(*array*)
 
 using based::SameAs;
 
@@ -155,4 +155,4 @@ TEST_CASE("remove_pointer", "[type_traits/remove_pointer]")
   // clang-format on
 }
 
-// NOLINTEND array
+// NOLINTEND(*array*)

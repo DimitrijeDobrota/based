@@ -23,7 +23,7 @@ class curried
   }
 
 public:
-  curried(Function function, CapturedArgs&&... args)  // NOLINT explicit
+  curried(Function function, CapturedArgs&&... args)  // NOLINT(*explicit*)
       : m_function(function)
       , m_captured(std::forward<CapturedArgs>(args)...)
   {

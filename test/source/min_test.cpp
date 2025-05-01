@@ -3,6 +3,8 @@
 #include "based/algorithm.hpp"
 #include "based/type_traits.hpp"
 
+// NOLINTBEGIN(*const-arg*,*const-correctness*,*after-move, *access-moved)
+
 TEST_CASE("min(literal, literal) = left", "[algorithm/min]")
 {
   using res_t = decltype(based::min(3, 4));
@@ -19,7 +21,7 @@ TEST_CASE("min(literal, literal) = right", "[algorithm/min]")
 
 TEST_CASE("min(value, literal) = left", "[algorithm/min]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
 
   using res_t = decltype(based::min(a, 4));
   REQUIRE(based::SameAs<int, res_t>);
@@ -28,7 +30,7 @@ TEST_CASE("min(value, literal) = left", "[algorithm/min]")
 
 TEST_CASE("min(value, literal) = right", "[algorithm/min]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
 
   using res_t = decltype(based::min(a, 3));
   REQUIRE(based::SameAs<int, res_t>);
@@ -37,7 +39,7 @@ TEST_CASE("min(value, literal) = right", "[algorithm/min]")
 
 TEST_CASE("min(literal, value) = left", "[algorithm/min]")
 {
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::min(3, b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -46,7 +48,7 @@ TEST_CASE("min(literal, value) = left", "[algorithm/min]")
 
 TEST_CASE("min(literal, value) = right", "[algorithm/min]")
 {
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::min(4, b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -131,7 +133,7 @@ TEST_CASE("min(const value, const value) = right", "[algorithm/min]")
 
 TEST_CASE("min(value, const value) = left", "[algorithm/min]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
   const int b = 4;
 
   using res_t = decltype(based::min(a, b));
@@ -141,7 +143,7 @@ TEST_CASE("min(value, const value) = left", "[algorithm/min]")
 
 TEST_CASE("min(value, const value) = right", "[algorithm/min]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
   const int b = 3;
 
   using res_t = decltype(based::min(a, b));
@@ -152,7 +154,7 @@ TEST_CASE("min(value, const value) = right", "[algorithm/min]")
 TEST_CASE("min(const value, value) = left", "[algorithm/min]")
 {
   const int a = 3;
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::min(a, b));
   REQUIRE(based::SameAs<const int&, res_t>);
@@ -162,14 +164,12 @@ TEST_CASE("min(const value, value) = left", "[algorithm/min]")
 TEST_CASE("min(const value, value) = right", "[algorithm/min]")
 {
   const int a = 4;
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::min(a, b));
   REQUIRE(based::SameAs<const int&, res_t>);
   REQUIRE(based::min(a, b) == 3);
 }
-
-// NOLINTBEGIN move-const-arg
 
 TEST_CASE("min(move, literal) = left", "[algorithm/min]")
 {
@@ -192,7 +192,7 @@ TEST_CASE("min(move, literal) = right", "[algorithm/min]")
 TEST_CASE("min(move, value) = left", "[algorithm/min]")
 {
   int a = 3;
-  int b = 4;  // NOLINT misc-const-correctness
+  int b = 4;
 
   using res_t = decltype(based::min(std::move(a), b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -202,7 +202,7 @@ TEST_CASE("min(move, value) = left", "[algorithm/min]")
 TEST_CASE("min(move, value) = right", "[algorithm/min]")
 {
   int a = 4;
-  int b = 3;  // NOLINT misc-const-correctness
+  int b = 3;
 
   using res_t = decltype(based::min(std::move(a), b));
   REQUIRE(based::SameAs<int, res_t>);
@@ -249,7 +249,7 @@ TEST_CASE("min(literal, move) = right", "[algorithm/min]")
 
 TEST_CASE("min(value, move) = left", "[algorithm/min]")
 {
-  int a = 3;  // NOLINT misc-const-correctness
+  int a = 3;
   int b = 4;
 
   using res_t = decltype(based::min(a, std::move(b)));
@@ -259,7 +259,7 @@ TEST_CASE("min(value, move) = left", "[algorithm/min]")
 
 TEST_CASE("min(value, move) = right", "[algorithm/min]")
 {
-  int a = 4;  // NOLINT misc-const-correctness
+  int a = 4;
   int b = 3;
 
   using res_t = decltype(based::min(a, std::move(b)));
@@ -307,7 +307,7 @@ TEST_CASE("min(move, move) = right", "[algorithm/min]")
   REQUIRE(based::min(std::move(a), std::move(b)) == 3);
 }
 
-// NOLINTEND move-const-arg
+// NOLINTEND(*const-arg*,*const-correctness*,*after-move, *access-moved)
 
 TEST_CASE("min-stability", "[algorithm/min]")
 {

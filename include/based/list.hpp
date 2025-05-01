@@ -180,7 +180,7 @@ public:
   }
 
   list_type free(
-      list_type front,  // NOLINT bugprone-easily-swappable-parameters
+      list_type front,  // NOLINT(*swappable*)
       list_type back
   )
   {

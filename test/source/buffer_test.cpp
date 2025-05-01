@@ -14,7 +14,7 @@ TEST_CASE("valid type", "[template/buffer]")
     STATIC_REQUIRE(buffer::valid_type<std::uint8_t>());
     STATIC_REQUIRE_FALSE(buffer::valid_type<std::size_t>());
 
-    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT array
+    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT(*array*)
   }
 
   SECTION("big buffer")
@@ -23,7 +23,7 @@ TEST_CASE("valid type", "[template/buffer]")
     STATIC_REQUIRE(buffer::valid_type<std::uint8_t>());
     STATIC_REQUIRE(buffer::valid_type<std::size_t>());
 
-    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT array
+    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT(*array*)
   }
 }
 
