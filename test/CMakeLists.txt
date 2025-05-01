@@ -74,6 +74,10 @@ add_test(buffer_test)
 add_test(function_test)
 add_test(scopeguard_test)
 
+# ----- Functional -----
+
+add_test(curry_test)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)
