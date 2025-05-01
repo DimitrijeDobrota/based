@@ -45,28 +45,28 @@ concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;
 
 /* ----- Iterator ----- */
 
-// clang-format off
+namespace detail
+{
+template<typename I>
+struct iterator_traits
+{
+  using value_type = I;
+  using distance_type = std::uint64_t;
+  using pointer_type = I&;
+  using reference_type = I*;
+};
 
-namespace detail {
-    template<typename I>
-    struct iterator_traits {
-        using value_type = I;
-        using distance_type = std::uint64_t; using pointer_type = I&;
-        using reference_type = I*;
-    };
+template<typename I>
+  requires std::input_or_output_iterator<I>
+struct iterator_traits<I>
+{
+  using value_type = std::iterator_traits<I>::value_type;
+  using distance_type = std::iterator_traits<I>::difference_type;
+  using pointer_type = std::iterator_traits<I>::pointer;
+  using reference_type = std::iterator_traits<I>::reference;
+};
 
-    template<typename I>
-     requires   std::input_or_output_iterator<I>
-    struct iterator_traits<I> {
-        using value_type = std::iterator_traits<I>::value_type;
-        using distance_type = std::iterator_traits<I>::difference_type;
-        using pointer_type = std::iterator_traits<I>::pointer;
-        using reference_type = std::iterator_traits<I>::reference;
-    };
-
-
-} // namespace detail
-
+}  // namespace detail
 
 template<typename T>
 using iter_value_t = detail::iterator_traits<T>::value_type;
@@ -84,73 +84,298 @@ template<typename T>
 concept Readable = requires(T val) {
   requires(Regular<T>);
   typename iter_value_t<T>;
-  { *val } -> BareSameAs<iter_value_t<T>>;
+  {
+    *val
+  } -> BareSameAs<iter_value_t<T>>;
 };
 
 template<typename T>
 concept Iterator = requires(T val) {
-    requires(Regular<T>);
-    typename iter_dist_t<T>;
-    // requires(Integer<iter_dist_t<T>>);
-    { ++val } -> BareSameAs<T>;
-    // successor is not necessarily regular
-
+  requires(Regular<T>);
+  typename iter_dist_t<T>;
+  // requires(Integer<iter_dist_t<T>>);
+  {
+    ++val
+  } -> BareSameAs<T>;
+  // successor is not necessarily regular
 };
 
 template<typename T>
 concept ForwardIterator = requires {
-    requires(Iterator<T>);
-    // successor is regular
+  requires(Iterator<T>);
+  // successor is regular
 };
 
 template<typename T>
 concept ReadableIterator = requires {
-    requires(Iterator<T>);
-    requires(Readable<T>);
+  requires(Iterator<T>);
+  requires(Readable<T>);
 };
 
 template<typename T>
 concept ReadableForwardIterator = requires {
-    requires(ForwardIterator<T>);
-    requires(Readable<T>);
+  requires(ForwardIterator<T>);
+  requires(Readable<T>);
 };
 
-// clang-format on
+/* ----- Function Signature ----- */
+
+template<typename>
+struct signature;
+
+template<typename Ret, bool ne, typename... Args>
+struct signature<Ret(Args...) noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) & noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) && noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const & noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const && noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::false_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile & noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) volatile && noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::false_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::true_type;
+  using rvalref_val = std::false_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename Ret, typename Obj, bool ne, typename... Args>
+struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using const_val = std::true_type;
+  using volatile_val = std::true_type;
+
+  using lvalref_val = std::false_type;
+  using rvalref_val = std::true_type;
+
+  using noexcept_val = std::integral_constant<bool, ne>;
+};
+
+template<typename StaticCallOp>
+struct signature_static
+{
+};
+
+template<typename Ret, bool ne, typename... Args>
+struct signature_static<Ret (*)(Args...) noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+};
+
+template<typename F, typename Op>
+using signature_t = typename std::conditional_t<requires(F& func) {
+  (void)func.operator();
+}, signature_static<Op>, signature<Op>>::sig_type;
+
+/*
+template<typename Sig>
+class function;
+
+template<typename Ret, typename... Args>
+class function<Ret(Args...)>
+{
+};
+
+template<typename Ret, typename... Args>
+function(Ret (*)(Args...)) -> function<Ret(Args...)>;
+
+template<typename F, typename Sig = signature_t<F, decltype(&F::operator())>>
+function(F) -> function<Sig>;
+*/
+
+/* ----- Function Concepts ----- */
 
 template<typename T>
 concept Input = std::is_same_v<T, std::remove_cvref_t<std::remove_pointer_t<T>>>
     || std::is_const_v<std::remove_reference_t<T>>
     || std::is_const_v<std::remove_pointer_t<T>>;
 
-namespace detail
-{
-
-template<typename... Args>
-struct is_homogeneous_domain : std::false_type
-{
-};
-
-template<typename Head, typename... Args>
-  requires(std::same_as<Head, Args> && ...)
-struct is_homogeneous_domain<Head, Args...> : std::true_type
-{
-};
-
-}  // namespace detail
-
 template<std::size_t idx, typename... Args>
   requires(idx < sizeof...(Args))
 using elem_t = std::tuple_element_t<idx, std::tuple<Args...>>;
 
 template<typename... Args>
-concept RegularDomain =
-    requires { requires(Regular<std::remove_cvref_t<Args>> && ...); };
+concept RegularDomain = (Regular<std::remove_cvref_t<Args>> && ...);
 
 template<typename... Args>
-concept InputDomain = requires { requires(Input<Args> && ...); };
+concept InputDomain = (Input<Args> && ...);
 
 template<typename... Args>
-concept HomogeneousDomain = detail::is_homogeneous_domain<Args...>::value;
+concept HomogeneousDomain = (std::same_as<elem_t<0, Args...>, Args> && ...);
 
 template<typename P, typename Ret, typename... Args>
 concept Procedure = requires {

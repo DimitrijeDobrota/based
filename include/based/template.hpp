@@ -7,217 +7,11 @@
 #include <type_traits>
 #include <utility>
 
+#include "based/type_traits.hpp"
 #include "based/utility.hpp"
 
 namespace based
 {
-
-/* ----- Function Signature ----- */
-
-template<typename>
-struct signature;
-
-template<typename Ret, bool ne, typename... Args>
-struct signature<Ret(Args...) noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) & noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) && noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const & noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const && noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile & noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) volatile && noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
-
-template<typename Ret, typename Obj, bool ne, typename... Args>
-struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(ne)>
-{
-  using sig_type = Ret(Args...);
-  using arg_type = std::tuple<Args...>;
-  using ret_type = Ret;
-
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
-
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
-
-  using noexcept_val = std::integral_constant<bool, ne>;
-};
 
 /* ----- Buffer used for Local Buffer Optimization ----- */
 
@@ -302,15 +96,15 @@ class function;
 template<
     std::size_t size,
     std::size_t alignment,
-    typename Res,
+    typename Ret,
     typename... Args>
-class function<Res(Args...), size, alignment>
+class function<Ret(Args...), size, alignment>
 {
   buffer<size, alignment> m_space;
 
-  using executor_t = Res (*)(Args..., void*);
+  using executor_t = Ret (*)(Args..., void*);
 
-  static constexpr Res default_executor(Args... /* args */, void* /* func */)
+  static constexpr Ret default_executor(Args... /* args */, void* /* func */)
   {
     throw std::bad_function_call();
   }
@@ -319,7 +113,7 @@ class function<Res(Args...), size, alignment>
   executor_t m_executor = m_default_executor;
 
   template<typename Callable>
-  static Res executor(Args... args, void* func)
+  static Ret executor(Args... args, void* func)
   {
     return std::invoke(
         *static_cast<function*>(func)->m_space.template as<Callable>(),
@@ -348,7 +142,7 @@ public:
   }
 
   template<typename... CallArgs>
-  Res operator()(CallArgs&&... callargs) const
+  Ret operator()(CallArgs&&... callargs) const
   {
     return this->m_executor(
         std::forward<CallArgs>(callargs)...,
@@ -357,19 +151,11 @@ public:
   }
 };
 
-// operator()
-template<typename T>
-function(T) -> function<typename signature<decltype(&T::operator())>::sig_type>;
+template<typename Ret, typename... Args>
+function(Ret (*)(Args...)) -> function<Ret(Args...)>;
 
-// free function
-template<typename T>
-function(T) -> function<typename signature<std::remove_pointer_t<T>>::sig_type>;
-
-/*
-// member procedure
-template<typename T>
-function(T) -> function<typename signature<std::decay_t<T>>::sig_type>;
-*/
+template<typename F, typename Sig = signature_t<F, decltype(&F::operator())>>
+function(F) -> function<Sig>;
 
 template<typename Func, bool on_success = false, bool on_failure = false>
 class scopeguard
