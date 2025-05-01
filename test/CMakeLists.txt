@@ -22,6 +22,11 @@ endfunction()
 
 # ----- Algorithm -----
 
+# ----- Type Traits -----
+
+add_test(standard_traits_test)
+add_test(signature_test)
+
 ## ----- Min and Max -----
 
 add_test(min_test)
@@ -65,7 +70,6 @@ add_test(string_literal_test)
 
 # ---- Template ----
 
-add_test(signature_test)
 add_test(buffer_test)
 add_test(function_test)
 add_test(scopeguard_test)

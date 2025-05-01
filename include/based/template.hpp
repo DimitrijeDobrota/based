@@ -13,6 +13,9 @@
 namespace based
 {
 
+template<typename T>
+class error_template;
+
 /* ----- Buffer used for Local Buffer Optimization ----- */
 
 template<size_t size, size_t alignment = alignof(void*)>

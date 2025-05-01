@@ -10,6 +10,64 @@
 namespace based
 {
 
+/* ----- Standard Traits ----- */
+
+template<typename...>
+using void_t = void;
+
+template<class T, T v>
+struct integral_constant
+{
+  static constexpr T value = v;
+
+  using value_type = T;
+  using type = integral_constant;
+
+  // NOLINTNEXTLINE explicit
+  constexpr operator value_type() const noexcept { return value; }
+  constexpr value_type operator()() const noexcept { return value; }
+};
+
+using true_type = integral_constant<bool, true>;
+using false_type = integral_constant<bool, false>;
+
+// clang-format off
+
+template<class T, class U> struct is_same : false_type { };
+template<class T> struct is_same<T, T> : true_type { };
+template<class T, class U> constexpr bool is_same_v = is_same<T, U>::value;
+
+template<class T> struct remove_reference { using type = T; };
+template<class T> struct remove_reference<T&> { using type = T; };
+template<class T> struct remove_reference<T&&> { using type = T; };
+template<class T> using remove_reference_t = typename remove_reference<T>::type;
+
+template<class T> struct remove_cv { using type = T; };
+template<class T> struct remove_cv<const T> { using type = T; };
+template<class T> struct remove_cv<volatile T> { using type = T; };
+template<class T> struct remove_cv<const volatile T> { using type = T; };
+template<class T> using remove_cv_t = typename remove_cv<T>::type;
+
+template<class T> struct remove_const { using type = T; };
+template<class T> struct remove_const<const T> { using type = T; };
+template<class T> using remove_const_t = typename remove_const<T>::type;
+
+template<class T> struct remove_volatile { using type = T; };
+template<class T> struct remove_volatile<volatile T> { using type = T; };
+template<class T> using remove_volatile_t = typename remove_volatile<T>::type;
+
+template<class T> struct remove_cvref { using type = remove_cv_t<remove_reference_t<T>>; };
+template<class T> using remove_cvref_t = typename remove_cvref<T>::type;
+
+template<class T> struct remove_pointer { using type = T; };
+template<class T> struct remove_pointer<T*> { using type = T; };
+template<class T> struct remove_pointer<T* const> { using type = T; };
+template<class T> struct remove_pointer<T* volatile> { using type = T; };
+template<class T> struct remove_pointer<T* const volatile> { using type = T; };
+template<class T> using remove_pointer_t = typename remove_pointer<T>::type;
+
+// clang-format on
+
 /* ----- Integer ----- */
 
 template<typename T>
@@ -29,7 +87,7 @@ concept Integer = requires(T n) {
 /* ----- Regular ----- */
 
 template<typename T>
-using bare_t = std::remove_cvref_t<T>;
+using bare_t = remove_cvref_t<T>;
 
 template<typename T>
 concept Regular = std::regular<T>;
@@ -38,7 +96,7 @@ template<typename T>
 concept BareRegular = std::regular<bare_t<T>>;
 
 template<typename T, typename U>
-concept SameAs = std::is_same_v<T, U> && std::is_same_v<U, T>;
+concept SameAs = is_same_v<T, U> && is_same_v<U, T>;
 
 template<typename T, typename U>
 concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;
@@ -130,7 +188,17 @@ struct signature<Ret(Args...) noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
+};
+
+template<typename Ret, bool ne, typename... Args>
+struct signature<Ret (*)(Args...) noexcept(ne)>
+{
+  using sig_type = Ret(Args...);
+  using arg_type = std::tuple<Args...>;
+  using ret_type = Ret;
+
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -140,13 +208,13 @@ struct signature<Ret (Obj::*)(Args...) noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
+  using const_val = false_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = false_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -156,13 +224,13 @@ struct signature<Ret (Obj::*)(Args...) & noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
+  using const_val = false_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = true_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -172,13 +240,13 @@ struct signature<Ret (Obj::*)(Args...) && noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::false_type;
+  using const_val = false_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
+  using lvalref_val = false_type;
+  using rvalref_val = true_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -188,13 +256,13 @@ struct signature<Ret (Obj::*)(Args...) const noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
+  using const_val = true_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = false_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -204,13 +272,13 @@ struct signature<Ret (Obj::*)(Args...) const & noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
+  using const_val = true_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = true_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -220,13 +288,13 @@ struct signature<Ret (Obj::*)(Args...) const && noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::false_type;
+  using const_val = true_type;
+  using volatile_val = false_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
+  using lvalref_val = false_type;
+  using rvalref_val = true_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -236,13 +304,13 @@ struct signature<Ret (Obj::*)(Args...) volatile noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
+  using const_val = false_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = false_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -252,13 +320,13 @@ struct signature<Ret (Obj::*)(Args...) volatile & noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
+  using const_val = false_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = true_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -268,13 +336,13 @@ struct signature<Ret (Obj::*)(Args...) volatile && noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::false_type;
-  using volatile_val = std::true_type;
+  using const_val = false_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
+  using lvalref_val = false_type;
+  using rvalref_val = true_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -284,13 +352,13 @@ struct signature<Ret (Obj::*)(Args...) const volatile noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
+  using const_val = true_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = false_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -300,13 +368,13 @@ struct signature<Ret (Obj::*)(Args...) const volatile & noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
+  using const_val = true_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::true_type;
-  using rvalref_val = std::false_type;
+  using lvalref_val = true_type;
+  using rvalref_val = false_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename Ret, typename Obj, bool ne, typename... Args>
@@ -316,13 +384,13 @@ struct signature<Ret (Obj::*)(Args...) const volatile && noexcept(ne)>
   using arg_type = std::tuple<Args...>;
   using ret_type = Ret;
 
-  using const_val = std::true_type;
-  using volatile_val = std::true_type;
+  using const_val = true_type;
+  using volatile_val = true_type;
 
-  using lvalref_val = std::false_type;
-  using rvalref_val = std::true_type;
+  using lvalref_val = false_type;
+  using rvalref_val = true_type;
 
-  using noexcept_val = std::integral_constant<bool, ne>;
+  using noexcept_val = integral_constant<bool, ne>;
 };
 
 template<typename StaticCallOp>
@@ -360,27 +428,27 @@ function(F) -> function<Sig>;
 /* ----- Function Concepts ----- */
 
 template<typename T>
-concept Input = std::is_same_v<T, std::remove_cvref_t<std::remove_pointer_t<T>>>
-    || std::is_const_v<std::remove_reference_t<T>>
-    || std::is_const_v<std::remove_pointer_t<T>>;
+concept Input = std::is_same_v<T, remove_cvref_t<remove_pointer_t<T>>>
+    || std::is_const_v<remove_reference_t<T>>
+    || std::is_const_v<remove_pointer_t<T>>;
 
 template<std::size_t idx, typename... Args>
   requires(idx < sizeof...(Args))
 using elem_t = std::tuple_element_t<idx, std::tuple<Args...>>;
 
 template<typename... Args>
-concept RegularDomain = (Regular<std::remove_cvref_t<Args>> && ...);
+concept RegularDomain = (Regular<remove_cvref_t<Args>> && ...);
 
 template<typename... Args>
 concept InputDomain = (Input<Args> && ...);
 
 template<typename... Args>
-concept HomogeneousDomain = (std::same_as<elem_t<0, Args...>, Args> && ...);
+concept HomogeneousDomain = (SameAs<elem_t<0, Args...>, Args> && ...);
 
 template<typename P, typename Ret, typename... Args>
 concept Procedure = requires {
   requires(std::invocable<P, Args...>);
-  requires(std::same_as<void, Ret> || std::same_as<Ret, std::invoke_result_t<P, Args...>>);
+  requires(SameAs<void, Ret> || SameAs<Ret, std::invoke_result_t<P, Args...>>);
 };
 
 template<typename P, typename Ret, typename Arg>
