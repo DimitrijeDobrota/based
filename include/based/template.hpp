@@ -129,7 +129,7 @@ public:
 
   template<typename CallableArg, typename Callable = std::decay_t<CallableArg>>
     requires(requires {
-              !std::same_as<function, Callable>;
+              !SameAs<function, Callable>;
               sizeof(Callable) <= size;
               alignof(Callable) <= alignment;
               std::is_trivially_destructible_v<Callable>;
