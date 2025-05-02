@@ -66,6 +66,16 @@ template<class T> struct remove_pointer<T* volatile> { using type = T; };
 template<class T> struct remove_pointer<T* const volatile> { using type = T; };
 template<class T> using remove_pointer_t = typename remove_pointer<T>::type;
 
+
+template<template<class...> class T, class Void, class... Ts>
+struct is_instantiable : false_type {};
+
+template<template<class...> class T, class... Ts>
+struct is_instantiable<T, void_t<T<Ts...>>, Ts...> : true_type {};
+
+template<template<class...> class T, class... Ts>
+inline constexpr auto is_instantiable_v = is_instantiable<T, void, Ts...>::value;
+
 // clang-format on
 
 /* ----- Integer ----- */
@@ -88,6 +98,9 @@ concept Integer = requires(T n) {
 
 template<typename T>
 using bare_t = remove_cvref_t<T>;
+
+template<typename T>
+concept Semiregular = std::semiregular<T>;
 
 template<typename T>
 concept Regular = std::regular<T>;
@@ -425,6 +438,38 @@ template<typename F, typename Sig = signature_t<F, decltype(&F::operator())>>
 function(F) -> function<Sig>;
 */
 
+/* ----- Callable Interface ----- */
+
+template<typename Sig>
+struct callable;
+
+template<typename T>
+  requires(std::is_function_v<T>)
+struct callable<T> : public signature<std::decay_t<T>>
+{
+};
+
+template<typename T>
+  requires(requires { &std::decay_t<T>::operator(); })
+struct callable<T> : public signature<decltype(&T::operator())>
+{
+};
+
+template<typename T>
+  requires(std::is_member_function_pointer_v<std::decay_t<T>>)
+struct callable<T> : public signature<remove_pointer_t<T>>
+{
+};
+
+template<typename T>
+concept Callable = is_instantiable_v<callable, T>;
+
+template<Callable T>
+using sig_t = typename callable<T>::signature::sig_type;
+
+template<Callable T>
+using ret_t = typename callable<T>::signature::ret_type;
+
 /* ----- Function Concepts ----- */
 
 template<typename T>
@@ -437,6 +482,9 @@ template<std::size_t idx, typename... Args>
 using elem_t = std::tuple_element_t<idx, std::tuple<Args...>>;
 
 template<typename... Args>
+concept SemiregularDomain = (Semiregular<remove_cvref_t<Args>> && ...);
+
+template<typename... Args>
 concept RegularDomain = (Regular<remove_cvref_t<Args>> && ...);
 
 template<typename... Args>
@@ -445,9 +493,12 @@ concept InputDomain = (Input<Args> && ...);
 template<typename... Args>
 concept HomogeneousDomain = (SameAs<elem_t<0, Args...>, Args> && ...);
 
+template<typename P, typename... Args>
+concept Invocable = std::invocable<P, Args...>;
+
 template<typename P, typename Ret, typename... Args>
 concept Procedure = requires {
-  requires(std::invocable<P, Args...>);
+  requires(Invocable<P, Args...>);
   requires(SameAs<void, Ret> || SameAs<Ret, std::invoke_result_t<P, Args...>>);
 };
 
@@ -456,7 +507,8 @@ concept UnaryProcedure = Procedure<P, Ret, Arg>;
 
 template<typename P, typename Ret, typename... Args>
 concept RegularProcedure = requires {
-  requires(Procedure<P, Ret, Args...>);
+  requires(Procedure<P, void, Args...>);
+  requires(SameAs<void, Ret> || std::convertible_to<std::invoke_result_t<P, Args...>, Ret>);
   requires(RegularDomain<Args...>);
   requires(Regular<Ret>);
 };

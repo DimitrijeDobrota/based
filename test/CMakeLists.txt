@@ -26,6 +26,7 @@ endfunction()
 
 add_test(standard_traits_test)
 add_test(signature_test)
+add_test(callable_test)
 
 ## ----- Min and Max -----
 

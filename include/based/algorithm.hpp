@@ -163,7 +163,8 @@ std::pair<I, I> minmax_element(I first, I last)
   return based::minmax_element(first, last, std::less<iter_value_t<I>>());
 }
 
-template<ReadableIterator I, IterUnaryProcedure<void, I> Proc>
+template<ReadableIterator I, Callable Proc>
+  requires IterUnaryProcedure<Proc, ret_t<Proc>, I>
 Proc for_each(I first, I last, Proc proc)
 {
   // Precondition: readable_bounded_range(first, last);
@@ -322,11 +323,8 @@ iter_dist_t<I> count_if_not(I first, I last, Pred pred)
   return count_if_not(first, last, pred, iter_dist_t<I> {0});
 }
 
-template<
-    typename Ret,
-    Iterator I,
-    UnaryFunction<Ret, I> F,
-    BinaryOperation<Ret> Op>
+template<Iterator I, Callable F, Callable Op>
+  requires(UnaryFunction<F, ret_t<F>, I> && BinaryOperation<Op, ret_t<F>>)
 auto reduce_nonempty(I first, I last, Op opr, F fun)
 {
   assert(first != last);
@@ -342,11 +340,8 @@ auto reduce_nonempty(I first, I last, Op opr, F fun)
   return res;
 }
 
-template<
-    typename Ret,
-    Iterator I,
-    UnaryFunction<Ret, I> F,
-    BinaryOperation<Ret> Op>
+template<Iterator I, Callable F, Callable Op>
+  requires(UnaryFunction<F, ret_t<F>, I> && BinaryOperation<Op, ret_t<F>>)
 auto reduce(
     I first,
     I last,
@@ -363,11 +358,8 @@ auto reduce(
   return reduce_nonempty(first, last, opr, fun);
 }
 
-template<
-    typename Ret,
-    Iterator I,
-    UnaryFunction<Ret, I> F,
-    BinaryOperation<Ret> Op>
+template<Iterator I, Callable F, Callable Op>
+  requires(UnaryFunction<F, ret_t<F>, I> && BinaryOperation<Op, ret_t<F>>)
 auto reduce_nonzero(
     I first,
     I last,
@@ -378,7 +370,7 @@ auto reduce_nonzero(
 {
   // Precondition: bounded_range(first, last)
   // Precondition: partially_associative(opr)
-  Ret res;
+  ret_t<F> res;
   do {
     if (first == last) {
       return zero;
@@ -457,7 +449,8 @@ bool increasing_range(I first, I last, Rel rel)
 
 /* ----- Counted Range Algorithms ----- */
 
-template<ReadableIterator I, IterUnaryProcedure<void, I> Proc>
+template<ReadableIterator I, Callable Proc>
+  requires IterUnaryProcedure<Proc, ret_t<Proc>, I>
 auto for_each_n(I first, iter_dist_t<I> size, Proc proc)
 {
   // Precondition: readable_weak_range(first, size);
