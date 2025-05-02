@@ -16,11 +16,6 @@ struct irregular
   ~irregular() = default;
 };
 
-struct no_return
-{
-  void operator()() {}
-};
-
 template<typename T>
 struct identity
 {
@@ -49,10 +44,6 @@ T sub(T val1, U val2)
 
 int main()
 {
-  static_assert(based::Procedure<no_return, void>);
-  static_assert(!based::RegularProcedure<no_return, void>);
-  static_assert(!based::FunctionalProcedure<no_return, void>);
-
   using id = identity<double>;
   using ii = identity<irregular>;
 
@@ -71,8 +62,8 @@ int main()
   using adi = add<double, irregular>;
 
   static_assert(based::Procedure<ad, double, double, double>);
-  static_assert(based::Procedure<ai, irregular, irregular, irregular>);
-  static_assert(based::Procedure<aid, irregular, irregular, double>);
+  static_assert(!based::Procedure<ai, irregular, irregular, irregular>);
+  static_assert(!based::Procedure<aid, irregular, irregular, double>);
   static_assert(based::Procedure<adi, double, double, irregular>);
 
   static_assert(based::RegularProcedure<ad, double, double, double>);

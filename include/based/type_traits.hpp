@@ -440,7 +440,10 @@ function(F) -> function<Sig>;
 
 /* ----- Callable Interface ----- */
 
-template<typename Sig>
+template<typename P, typename... Args>
+concept Invocable = std::invocable<P, Args...>;
+
+template<typename T>
 struct callable;
 
 template<typename T>
@@ -465,10 +468,10 @@ template<typename T>
 concept Callable = is_instantiable_v<callable, T>;
 
 template<Callable T>
-using sig_t = typename callable<T>::signature::sig_type;
+using callable_sig_t = typename callable<T>::signature::sig_type;
 
 template<Callable T>
-using ret_t = typename callable<T>::signature::ret_type;
+using callable_ret_t = typename callable<T>::signature::ret_type;
 
 /* ----- Function Concepts ----- */
 
@@ -494,23 +497,41 @@ template<typename... Args>
 concept HomogeneousDomain = (SameAs<elem_t<0, Args...>, Args> && ...);
 
 template<typename P, typename... Args>
-concept Invocable = std::invocable<P, Args...>;
+using ret_t = std::invoke_result_t<P, Args...>;
+
+namespace detail
+{
+
+// clang-format off
+
+template<typename P, typename Sig> struct procedure : public false_type {};
 
 template<typename P, typename Ret, typename... Args>
-concept Procedure = requires {
-  requires(Invocable<P, Args...>);
-  requires(SameAs<void, Ret> || SameAs<Ret, std::invoke_result_t<P, Args...>>);
-};
+requires (Invocable<P, Args...> && std::convertible_to<std::invoke_result_t<P, Args...>, Ret>)
+struct procedure<P, Ret(Args...)> : public true_type {};
+
+template<typename P, typename... Args>
+requires (Invocable<P, Args...>)
+struct procedure<P, void(Args...)> : public true_type {};
+
+template<typename P, typename Ret, typename... Args>
+static constexpr bool procedure_v = procedure<P, Ret(Args...)>::value;
+
+// clang-format on
+
+}  // namespace detail
+
+template<typename P, typename Ret, typename... Args>
+concept Procedure = detail::procedure_v<P, Ret, Args...>;
 
 template<typename P, typename Ret, typename Arg>
 concept UnaryProcedure = Procedure<P, Ret, Arg>;
 
 template<typename P, typename Ret, typename... Args>
 concept RegularProcedure = requires {
-  requires(Procedure<P, void, Args...>);
-  requires(SameAs<void, Ret> || std::convertible_to<std::invoke_result_t<P, Args...>, Ret>);
+  requires(Procedure<P, Ret, Args...>);
   requires(RegularDomain<Args...>);
-  requires(Regular<Ret>);
+  requires(Regular<ret_t<P, Args...>>);
 };
 
 template<typename P, typename Ret, typename... Args>
