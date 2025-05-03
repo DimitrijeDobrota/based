@@ -32,6 +32,10 @@ See the [`BUILDING`](BUILDING.md) document.
 
 ## Version History
 
+* 0.1.1
+	* Enforce return type on all procedure
+	* Lots of utility classes
+	* More consistent naming
 * 0.1
     * Good collection of concepts
     * Algorithms that leverage compile-time safety
