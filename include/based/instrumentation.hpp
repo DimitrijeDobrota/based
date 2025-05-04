@@ -89,17 +89,13 @@ struct instrumented_base
       comparison
   )
 
-  static auto& count(op::type opr) { return counts[opr.value]; }
-  static auto& count(std::size_t idx) { return counts[idx]; }
+  static op::type::array<double> counts;
 
   static void initialize(std::size_t size)
   {
     std::fill(std::begin(counts), std::end(counts), 0.0);
-    count(op::n) = static_cast<double>(size);
+    counts[op::n] = static_cast<double>(size);
   }
-
-private:
-  static std::array<double, op::type::size> counts;
 };
 
 BASED_DEFINE_CLASS_ENUM(
@@ -129,42 +125,42 @@ struct instrumented : instrumented_base
   instrumented(const value_type& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
-    ++count(op::ctor_value);
+    ++counts[op::ctor_value];
     ;
   }
 
   instrumented(value_type&& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
-    ++count(op::ctor_value);
+    ++counts[op::ctor_value];
     ;
   }
 
   // Semiregular:
   instrumented()
   {
-    ++count(op::ctor_default);
+    ++counts[op::ctor_default];
     ;
   }
 
   instrumented(const instrumented& val)
       : value(val.value)
   {
-    ++count(op::ctor_copy);
+    ++counts[op::ctor_copy];
     ;
   }
 
   instrumented(instrumented&& val) noexcept
       : value(std::move(val.value))
   {
-    ++count(op::ctor_move);
+    ++counts[op::ctor_move];
     ;
   }
 
   // self assign should be handled by the value_type
   instrumented& operator=(const instrumented& val)  // NOLINT(*cert-oop54-cpp*)
   {
-    ++count(op::asgn_copy);
+    ++counts[op::asgn_copy];
     ;
     value = val.value;
     return *this;
@@ -174,7 +170,7 @@ struct instrumented : instrumented_base
   instrumented& operator=(instrumented&& val
   ) noexcept  // NOLINT(*cert-oop54-cpp*)
   {
-    ++count(op::asgn_move);
+    ++counts[op::asgn_move];
     ;
     value = std::move(val.value);
     return *this;
@@ -182,7 +178,7 @@ struct instrumented : instrumented_base
 
   ~instrumented()
   {
-    ++count(op::destructor);
+    ++counts[op::destructor];
     ;
   }
 
@@ -190,7 +186,7 @@ struct instrumented : instrumented_base
 
   friend bool operator==(const instrumented& lhs, const instrumented& rhs)
   {
-    ++count(op::equality);
+    ++counts[op::equality];
     ;
     return lhs.value == rhs.value;
   }
@@ -204,7 +200,7 @@ struct instrumented : instrumented_base
 
   friend bool operator<(const instrumented& lhs, const instrumented& rhs)
   {
-    ++count(op::comparison);
+    ++counts[op::comparison];
     ;
     return lhs.value < rhs.value;
   }
@@ -293,6 +289,7 @@ void count_operations(
 )
 {
   using instrumented = based::instrumented<double>;
+  using size_t = instrumented::op::type::size_t;
 
   constexpr size_t cols = instrumented::op::type::size;
   const size_t decimals((norm == dont_normalize) ? 0 : 2);
@@ -319,7 +316,8 @@ void count_operations(
 
     values[0] = dbl;
     for (size_t k = 1; k < cols; ++k) {
-      values[k] = norm(instrumented::count(k), dbl);
+      const auto& val = instrumented::op::type::get(k);
+      values[k] = norm(instrumented::counts[val], dbl);
     }
 
     tbl.print_row(std::begin(values), std::end(values), decimals);

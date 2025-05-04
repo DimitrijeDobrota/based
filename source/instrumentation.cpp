@@ -3,7 +3,6 @@
 namespace based
 {
 
-std::array<double, instrumented_base::op::type::size>
-    instrumented_base::counts = {};
+instrumented_base::op::type::array<double> instrumented_base::counts = {};
 
 }  // namespace based

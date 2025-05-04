@@ -51,7 +51,7 @@ TEST_CASE("safety", "[enum/enum]")
 
 TEST_CASE("names", "[enum/enum]")
 {
-  REQUIRE(std::strcmp(test::var::type::name(test::var::a), "a") == 0);
-  REQUIRE(std::strcmp(test::var::type::name(test::var::b), "b") == 0);
-  REQUIRE(std::strcmp(test::var::type::name(test::var::c), "c") == 0);
+  REQUIRE(std::strcmp(test::var::type::names[test::var::a], "a") == 0);
+  REQUIRE(std::strcmp(test::var::type::names[test::var::b], "b") == 0);
+  REQUIRE(std::strcmp(test::var::type::names[test::var::c], "c") == 0);
 }

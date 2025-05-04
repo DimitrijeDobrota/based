@@ -2,13 +2,7 @@
 
 // NOLINTBEGIN(*macro-usage*)
 
-#define BASED_NAME(Name, Index) NAME
-#define BASED_INDEX(Name, Index) INDEX
-
-#define BASED_SIZE(Name, Index) INDEX
-
-#define BASED_INIT_LIST(Name, Index) Name,
-#define BASED_INIT_LIST_STRING(Name, Index) #Name,
+#define BASED_NUMARGS(...) (std::array{__VA_ARGS__}.size())
 
 // clang-format off
 #define BASED_GET_MACRO(                                                       \
