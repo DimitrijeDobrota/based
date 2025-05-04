@@ -42,7 +42,7 @@ TEST_CASE("manual", "[template/scopeguard]")
   {
     int test = 0;
     try {
-      based::scopeguard guard = set(test); // NOLINT(*const*)
+      based::scopeguard guard = set(test);  // NOLINT(*const*)
     } catch (...) {
       test *= 1;
     }

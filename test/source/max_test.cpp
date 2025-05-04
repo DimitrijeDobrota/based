@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/type_traits.hpp"
 #include "based/algorithm.hpp"
+#include "based/type_traits.hpp"
 
 // NOLINTBEGIN(*const-arg*,*const-correctness*,*after-move, *access-moved)
 

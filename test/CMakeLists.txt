@@ -79,6 +79,10 @@ add_test(scopeguard_test)
 
 add_test(curry_test)
 
+# ------ Enum -----
+
+add_test(enum_test)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)

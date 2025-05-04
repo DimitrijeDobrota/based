@@ -4,7 +4,6 @@
 
 #include "based/type_traits.hpp"
 
-
 namespace
 {
 

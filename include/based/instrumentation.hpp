@@ -74,7 +74,7 @@ inline auto normalize_nlogn1(double x, double n)
 
 struct instrumented_base
 {
-  BASED_ENUM(
+  BASED_DECLARE_ENUM(
       op,
       std::uint8_t,
       n,
@@ -89,25 +89,34 @@ struct instrumented_base
       comparison
   )
 
-  static constexpr std::array<const char*, op::size> names = {
-      "n",
-      "ctor_default",
-      "ctor_value",
-      "ctor_copy",
-      "ctor_move",
-      "asgn_copy",
-      "asgn_move",
-      "destructor",
-      "equality",
-      "comparison",
-  };
+  static auto& count(op::type opr) { return counts[opr.value]; }
+  static auto& count(std::size_t idx) { return counts[idx]; }
 
-  static std::array<double, op::size> counts;
+  static void initialize(std::size_t size)
+  {
+    std::fill(std::begin(counts), std::end(counts), 0.0);
+    count(op::n) = static_cast<double>(size);
+  }
 
-  static constexpr auto op_num = op::size;
-
-  static void initialize(std::size_t size);
+private:
+  static std::array<double, op::type::size> counts;
 };
+
+BASED_DEFINE_CLASS_ENUM(
+    instrumented_base,
+    op,
+    std::uint8_t,
+    n,
+    ctor_default,
+    ctor_value,
+    ctor_copy,
+    ctor_move,
+    asgn_copy,
+    asgn_move,
+    destructor,
+    equality,
+    comparison
+)
 
 template<typename T>
   requires std::semiregular<T>
@@ -120,34 +129,43 @@ struct instrumented : instrumented_base
   instrumented(const value_type& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
-    ++counts[op::ctor_value];
+    ++count(op::ctor_value);
+    ;
   }
 
   instrumented(value_type&& val)  // NOLINT(*explicit*)
       : value(std::move(val))
   {
-    ++counts[op::ctor_value];
+    ++count(op::ctor_value);
+    ;
   }
 
   // Semiregular:
-  instrumented() { ++counts[op::ctor_default]; }
+  instrumented()
+  {
+    ++count(op::ctor_default);
+    ;
+  }
 
   instrumented(const instrumented& val)
       : value(val.value)
   {
-    ++counts[op::ctor_copy];
+    ++count(op::ctor_copy);
+    ;
   }
 
   instrumented(instrumented&& val) noexcept
       : value(std::move(val.value))
   {
-    ++counts[op::ctor_move];
+    ++count(op::ctor_move);
+    ;
   }
 
   // self assign should be handled by the value_type
   instrumented& operator=(const instrumented& val)  // NOLINT(*cert-oop54-cpp*)
   {
-    ++counts[op::asgn_copy];
+    ++count(op::asgn_copy);
+    ;
     value = val.value;
     return *this;
   }
@@ -156,18 +174,24 @@ struct instrumented : instrumented_base
   instrumented& operator=(instrumented&& val
   ) noexcept  // NOLINT(*cert-oop54-cpp*)
   {
-    ++counts[op::asgn_move];
+    ++count(op::asgn_move);
+    ;
     value = std::move(val.value);
     return *this;
   }
 
-  ~instrumented() { ++counts[op::destructor]; }
+  ~instrumented()
+  {
+    ++count(op::destructor);
+    ;
+  }
 
   // Regular
 
   friend bool operator==(const instrumented& lhs, const instrumented& rhs)
   {
-    ++counts[op::equality];
+    ++count(op::equality);
+    ;
     return lhs.value == rhs.value;
   }
 
@@ -180,7 +204,8 @@ struct instrumented : instrumented_base
 
   friend bool operator<(const instrumented& lhs, const instrumented& rhs)
   {
-    ++counts[op::comparison];
+    ++count(op::comparison);
+    ;
     return lhs.value < rhs.value;
   }
 
@@ -269,7 +294,7 @@ void count_operations(
 {
   using instrumented = based::instrumented<double>;
 
-  constexpr size_t cols = instrumented::op_num;
+  constexpr size_t cols = instrumented::op::type::size;
   const size_t decimals((norm == dont_normalize) ? 0 : 2);
 
   std::array<double, cols> values = {0};
@@ -277,7 +302,8 @@ void count_operations(
   static constexpr int width = 12;
   table tbl(width);
   tbl.print_header(
-      std::begin(instrumented::names), std::end(instrumented::names)
+      std::begin(instrumented::op::type::names),
+      std::end(instrumented::op::type::names)
   );
 
   std::mt19937 rng(0);  // NOLINT(*cert-msc32-c*, *cert-msc51-cpp*)
@@ -293,7 +319,7 @@ void count_operations(
 
     values[0] = dbl;
     for (size_t k = 1; k < cols; ++k) {
-      values[k] = norm(instrumented::counts[k], dbl);
+      values[k] = norm(instrumented::count(k), dbl);
     }
 
     tbl.print_row(std::begin(values), std::end(values), decimals);
