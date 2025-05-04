@@ -6,7 +6,7 @@
 
 struct test
 {
-  BASED_DECLARE_ENUM(var, std::uint8_t, a, b, c)
+  BASED_ENUM_DECLARE(var, std::uint8_t, a, b, c)
 
   [[nodiscard]] int get_var(var::type req) const;
 

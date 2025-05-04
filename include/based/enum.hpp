@@ -11,36 +11,45 @@
 
 #define BASED_LIST_STR(...) BASED_FOREACH(BASED_LIST_ELEM_STR, __VA_ARGS__)
 
-#define BASED_DECLARE_ENUM_VAL(Name, Index) static const type Name;
+// NOLINTNEXTLINE(*macro-parentheses*)
+#define BASED_SET(var, val) decltype(var) var = decltype(var) {val};
 
-#define BASED_DECLARE_ENUM_CASE(Qualifier, Name, Index)                        \
+#define BASED_DETAIL_ENUM_DECLARE_VAL(Name, Index) static const type Name;
+
+#define BASED_DETAIL_ENUM_DECLARE_CASE(Qualifier, Name, Index)                 \
   case Qualifier::Name.value:                                                  \
     return Name;
 
-#define BASED_DEFINE_ENUM_VAL(Qualifier, Name, Index)                          \
-  inline constexpr Qualifier::type Qualifier::Name = {                         \
-      Qualifier::type::size - (Index) - 1                                      \
-  };
+#define BASED_DETAIL_ENUM_DEFINE_VAL(Qualifier, Name, Index)                   \
+  inline constexpr BASED_SET(                                                  \
+      Qualifier::Name, Qualifier::type::size - (Index) - 1                     \
+  )
 
-#define BASED_DEFINE_ENUM_VALS(Qualifier, ...)                                 \
-  BASED_FOREACH_1(Qualifier, BASED_DEFINE_ENUM_VAL, __VA_ARGS__)
+#define BASED_DETAIL_ENUM_DEFINE_VALS(Qualifier, ...)                          \
+  BASED_FOREACH_1(Qualifier, BASED_DETAIL_ENUM_DEFINE_VAL, __VA_ARGS__)
 
-#define BASED_DEFINE_ENUM_NAMES(Qualifier, ...)                                \
-  inline constexpr Qualifier::type::array<const char*>                         \
-      Qualifier::type::names = {BASED_LIST_STR(__VA_ARGS__)};
+#define BASED_DETAIL_ENUM_DEFINE_NAMES(Qualifier, ...)                         \
+  inline constexpr BASED_SET(                                                  \
+      Qualifier::type::names, BASED_LIST_STR(__VA_ARGS__)                      \
+  )
 
-#define BASED_DEFINE_ENUM_GET(Qualifier, Type, ...)                            \
+#define BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, ...)                     \
   inline const Qualifier::type& Qualifier::type::get(Type idx)                 \
   {                                                                            \
     switch (idx) {                                                             \
-      BASED_FOREACH_1(Qualifier, BASED_DECLARE_ENUM_CASE, __VA_ARGS__)         \
+      BASED_FOREACH_1(Qualifier, BASED_DETAIL_ENUM_DECLARE_CASE, __VA_ARGS__)  \
       default:                                                                 \
         break;                                                                 \
     }                                                                          \
-    assert(0); /* NOLINT(*assert*,cert-dcl03-c) */                                          \
+    assert(0); /* NOLINT(*assert*,cert-dcl03-c) */                             \
   }
 
-#define BASED_DEFINE_ENUM_ARRAY(Name)                                          \
+#define BASED_DETAIL_ENUM_DEFINE(Qualifier, Type, ...)                         \
+  BASED_DETAIL_ENUM_DEFINE_VALS(Qualifier, __VA_ARGS__)                        \
+  BASED_DETAIL_ENUM_DEFINE_NAMES(Qualifier, __VA_ARGS__)                       \
+  BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, __VA_ARGS__)
+
+#define BASED_ENUM_DEFINE_ARRAY(Name)                                          \
   template<typename T>                                                         \
   class array : public std::array<T, Name::type::size>                         \
   {                                                                            \
@@ -49,14 +58,12 @@
   public:                                                                      \
     constexpr array() = default;                                               \
                                                                                \
-    /* NOLINTBEGIN(*explicit*,*decay*)*/                                       \
     template<class... Args>                                                    \
       requires(sizeof...(Args) == Name::type::size)                            \
-    constexpr array(Args&&... args)                                            \
+    constexpr explicit array(Args&&... args) /* NOLINTNEXTLINE(*decay*) */     \
         : std::array<T, Name::type::size>({std::forward<Args>(args)...})       \
     {                                                                          \
     }                                                                          \
-    /* NOLINTEND(*explicit*,*decay*)*/                                         \
                                                                                \
     const T& operator[](Name::type val) const                                  \
     {                                                                          \
@@ -69,15 +76,14 @@
     }                                                                          \
   };
 
-#define BASED_DECLARE_ENUM(Name, Type, ...)                                    \
+#define BASED_ENUM_DECLARE(Name, Type, ...)                                    \
   struct Name                                                                  \
   {                                                                            \
     class type                                                                 \
     {                                                                          \
       friend Name;                                                             \
                                                                                \
-      /* NOLINTNEXTLINE(*explicit*) */                                         \
-      constexpr type(Type enum_value)                                          \
+      constexpr explicit type(Type enum_value)                                 \
           : value(enum_value)                                                  \
       {                                                                        \
       }                                                                        \
@@ -87,7 +93,7 @@
       static constexpr size_t size =                                           \
           BASED_NUMARGS(BASED_LIST_STR(__VA_ARGS__));                          \
                                                                                \
-      BASED_DEFINE_ENUM_ARRAY(Name)                                            \
+      BASED_ENUM_DEFINE_ARRAY(Name)                                            \
       static const array<const char*> names;                                   \
                                                                                \
       static const type& get(Type idx);                                        \
@@ -95,17 +101,13 @@
       Type value;                                                              \
     };                                                                         \
                                                                                \
-    BASED_FOREACH(BASED_DECLARE_ENUM_VAL, __VA_ARGS__)                         \
+    BASED_FOREACH(BASED_DETAIL_ENUM_DECLARE_VAL, __VA_ARGS__)                  \
   };
 
-#define BASED_DEFINE_ENUM(Name, Type, ...)                                     \
-  BASED_DEFINE_ENUM_VALS(Name, __VA_ARGS__)                                    \
-  BASED_DEFINE_ENUM_NAMES(Name, __VA_ARGS__)                                   \
-  BASED_DEFINE_ENUM_GET(Name, __VA_ARGS__)
+#define BASED_ENUM_DEFINE(Name, Type, ...)                                     \
+  BASED_DETAIL_ENUM_DEFINE(Name, Type, __VA_ARGS__)
 
 #define BASED_DEFINE_CLASS_ENUM(Class, Name, Type, ...)                        \
-  BASED_DEFINE_ENUM_VALS(Class::Name, __VA_ARGS__)                             \
-  BASED_DEFINE_ENUM_NAMES(Class::Name, __VA_ARGS__)                            \
-  BASED_DEFINE_ENUM_GET(Class::Name, Type, __VA_ARGS__)
+  BASED_DETAIL_ENUM_DEFINE(Class::Name, Type, __VA_ARGS__)
 
 // NOLINTEND(*macro-usage*)

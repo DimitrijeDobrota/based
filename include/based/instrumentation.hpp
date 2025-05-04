@@ -74,7 +74,7 @@ inline auto normalize_nlogn1(double x, double n)
 
 struct instrumented_base
 {
-  BASED_DECLARE_ENUM(
+  BASED_ENUM_DECLARE(
       op,
       std::uint8_t,
       n,
