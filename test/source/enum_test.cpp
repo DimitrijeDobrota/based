@@ -1,14 +1,20 @@
 #define CATCH_CONFIG_RUNTIME_STATIC_REQUIRE
 
-#include "based/enum.hpp"
+#include "based/enum/enum.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/type_traits.hpp"
+#include "based/concepts/comparable/equality.hpp"
+#include "based/concepts/comparable/greater.hpp"
+#include "based/concepts/comparable/greater_equal.hpp"
+#include "based/concepts/comparable/less.hpp"
+#include "based/concepts/comparable/less_equal.hpp"
+#include "based/concepts/is/same.hpp"
+#include "based/types/types.hpp"
 
 struct test
 {
-  BASED_ENUM_DECLARE(var, std::uint8_t, a, b, c)
+  BASED_ENUM_DECLARE(var, based::u8, a, b, c)
 
   [[nodiscard]] int get_var(var::type req) const;
 
@@ -18,7 +24,7 @@ private:
   int m_c = 3;
 };
 
-BASED_DEFINE_CLASS_ENUM(test, var, std::uint8_t, a, b, c)
+BASED_DEFINE_CLASS_ENUM(test, var, based::u8, a, b, c)
 
 inline int test::get_var(var::type req) const
 {
@@ -62,9 +68,9 @@ TEST_CASE("operations", "[enum/enum]")
 {
   using based::SameAs;
 
-  STATIC_REQUIRE(based::equality_comparable<test::var::type>);
-  STATIC_REQUIRE(!based::less_comparable<test::var::type>);
-  STATIC_REQUIRE(!based::greater_comparable<test::var::type>);
-  STATIC_REQUIRE(!based::less_equal_comparable<test::var::type>);
-  STATIC_REQUIRE(!based::greater_equal_comparable<test::var::type>);
+  STATIC_REQUIRE(based::EqualityComparable<test::var::type>);
+  STATIC_REQUIRE(!based::LessComparable<test::var::type>);
+  STATIC_REQUIRE(!based::GreaterComparable<test::var::type>);
+  STATIC_REQUIRE(!based::LessEqualComparable<test::var::type>);
+  STATIC_REQUIRE(!based::GreaterEqualComparable<test::var::type>);
 }

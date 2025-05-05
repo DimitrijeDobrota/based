@@ -165,4 +165,8 @@ CheckOptions:
     value: "^[abcdxyznm]$"
   - key: 'readability-identifier-length.IgnoredParameterNames'
     value: "^[abcdxyznm]$"
+  - key: 'google-runtime-int.UnsignedTypePrefix'
+    value: "u"
+  - key: 'google-runtime-int.SignedTypePrefix'
+    value: "i"
 ...

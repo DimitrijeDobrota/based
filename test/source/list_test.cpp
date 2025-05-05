@@ -4,11 +4,13 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-template class based::list_pool<std::uint8_t, std::uint8_t>;
+#include "based/types/types.hpp"
+
+template class based::list_pool<based::u8, based::u8>;
 
 TEST_CASE("list_pool", "[list/list_pool]")
 {
-  using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
+  using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
@@ -62,13 +64,13 @@ TEST_CASE("list_pool", "[list/list_pool]")
 
 TEST_CASE("list_pool iterator", "[list/list_pool]")
 {
-  using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
+  using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  static constexpr std::size_t iter_count = 0xFF;
-  for (std::uint8_t i = 0; i < iter_count; i++) {
+  static constexpr based::size_t iter_count = 0xFF;
+  for (based::u8 i = 0; i < iter_count; i++) {
     head = pool.allocate(i, head);
   }
 
@@ -76,7 +78,7 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
   {
     using iter = list_pool::iterator;
 
-    std::uint32_t sum = 0;
+    based::u32 sum = 0;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
@@ -92,7 +94,7 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
     const auto sum = std::accumulate(
         iter(pool, head),
         iter(pool),
-        std::uint32_t {0},
+        based::u32 {0},
         [](auto a, auto b)
         {
           return a + b;
@@ -107,13 +109,13 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
 
 TEST_CASE("list_pool const iterator", "[list/list_pool]")
 {
-  using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
+  using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  static constexpr std::size_t iter_count = 0xFF;
-  for (std::uint8_t i = 0; i < iter_count; i++) {
+  static constexpr based::size_t iter_count = 0xFF;
+  for (based::u8 i = 0; i < iter_count; i++) {
     head = pool.allocate(i, head);
   }
 
@@ -121,7 +123,7 @@ TEST_CASE("list_pool const iterator", "[list/list_pool]")
   {
     using iter = list_pool::const_iterator;
 
-    std::uint32_t sum = 0;
+    based::u32 sum = 0;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
@@ -140,7 +142,7 @@ TEST_CASE("list_pool const iterator", "[list/list_pool]")
       return std::accumulate(
           iter(lpool, lhead),
           iter(lpool),
-          std::uint32_t {0},
+          based::u32 {0},
           [](auto a, auto b)
           {
             return a + b;
@@ -156,7 +158,7 @@ TEST_CASE("list_pool const iterator", "[list/list_pool]")
 
 TEST_CASE("list_pool queue", "[list/list_pool/queue]")
 {
-  using list_pool = based::list_pool<std::uint8_t, std::uint8_t>;
+  using list_pool = based::list_pool<based::u8, based::u8>;
   using iter = list_pool::iterator;
 
   auto pool = list_pool();
@@ -172,8 +174,8 @@ TEST_CASE("list_pool queue", "[list/list_pool/queue]")
     REQUIRE(pool.pop_front(queue) == queue);
   }
 
-  static constexpr std::size_t iter_count = 0xFF;
-  for (std::uint8_t i = 0; i < iter_count; i++) {
+  static constexpr based::size_t iter_count = 0xFF;
+  for (based::u8 i = 0; i < iter_count; i++) {
     if (i % 2 == 0) {
       queue = pool.push_front(queue, i);
     } else {
@@ -185,7 +187,7 @@ TEST_CASE("list_pool queue", "[list/list_pool/queue]")
     }
   }
 
-  std::uint64_t sum = 0;
+  based::u64 sum = 0;
   for (auto it = iter(pool, queue.first); it != iter(pool); ++it) {
     sum += *it;
   }

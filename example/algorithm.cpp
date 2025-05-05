@@ -1,6 +1,8 @@
-#include "based/algorithm.hpp"
-
-#include "based/instrumentation.hpp"
+#include "based/algorithms/minmax/max_element.hpp"
+#include "based/algorithms/minmax/min_element.hpp"
+#include "based/algorithms/minmax/minmax_element.hpp"
+#include "based/instrumentation/instrumented.hpp"
+#include "based/instrumentation/timer.hpp"
 
 based::instrumented_base::op::type::array<double>
     based::instrumented_base::counts;

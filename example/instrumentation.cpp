@@ -1,7 +1,9 @@
 #include <algorithm>
 #include <iostream>
 
-#include "based/instrumentation.hpp"
+#include "based/instrumentation/instrumented.hpp"
+#include "based/instrumentation/registry.hpp"
+#include "based/instrumentation/timer.hpp"
 
 based::instrumented_base::op::type::array<double>
     based::instrumented_base::counts;

@@ -17,76 +17,78 @@ include(Catch)
 
 # ---- Tests ----
 
-function(add_test NAME)
-  add_executable("${NAME}" "source/${NAME}.cpp")
+function(add_test DIR NAME)
+  add_executable("${NAME}" "source/${DIR}/${NAME}.cpp")
   target_link_libraries("${NAME}" PRIVATE based::based)
   target_link_libraries("${NAME}" PRIVATE Catch2::Catch2WithMain)
   target_compile_features("${NAME}" PRIVATE cxx_std_20)
   catch_discover_tests("${NAME}")
 endfunction()
 
-# ----- Algorithm -----
 
-# ----- Type Traits -----
+## ----- Type Traits -----
 
-add_test(standard_traits_test)
-add_test(signature_test)
-add_test(callable_test)
+add_test(type_traits remove_const)
+add_test(type_traits remove_cv)
+add_test(type_traits remove_cvref)
+add_test(type_traits remove_pointer)
+add_test(type_traits remove_reference)
+add_test(type_traits remove_volatile)
+add_test(type_traits signature_test)
 
-## ----- Min and Max -----
+## ----- Concepts -----
 
-add_test(min_test)
-add_test(max_test)
+add_test(concepts callable_test)
 
-## ----- Bounded Range -----
+## ----- Algorithm -----
 
-add_test(min_element_test)
-add_test(max_element_test)
-add_test(minmax_element_test)
+add_test(algorithms all_test)
+add_test(algorithms count_if_not_test)
+add_test(algorithms count_if_test)
+add_test(algorithms count_not_test)
+add_test(algorithms count_test)
+add_test(algorithms find_adjacent_mismatch_test)
+add_test(algorithms find_if_not_test)
+add_test(algorithms find_if_test)
+add_test(algorithms find_mismatch_test)
+add_test(algorithms find_not_test)
+add_test(algorithms find_test)
+add_test(algorithms foreach_test)
+add_test(algorithms lower_bound_test)
+add_test(algorithms max_element_test)
+add_test(algorithms max_test)
+add_test(algorithms min_element_test)
+add_test(algorithms minmax_element_test)
+add_test(algorithms min_test)
+add_test(algorithms none_test)
+add_test(algorithms not_all_test)
+add_test(algorithms partitioned_test)
+add_test(algorithms partition_point_test)
+add_test(algorithms reduce_test)
+add_test(algorithms some_test)
+add_test(algorithms upper_bound_test)
 
-add_test(for_each_test)
-add_test(find_test)
-add_test(find_if_test)
-add_test(count_test)
-add_test(count_if_test)
-add_test(reduce_test)
-add_test(find_mismatch_test)
-add_test(partition_test)
+## ----- Utility -----
 
-## ----- Counted Range -----
+add_test(utility buffer_test)
+add_test(utility scopeguard_test)
 
-add_test(for_each_n_test)
-add_test(find_n_test)
-add_test(find_if_n_test)
-add_test(count_n_test)
-add_test(count_if_n_test)
-add_test(find_mismatch_n_test)
+## ----- Functional -----
 
-## ----- Unguarded Range -----
+add_test(functional curry_test)
+add_test(functional function_test)
 
-add_test(find_if_unguarded_test)
+## ------ Enum -----
 
-# ---- List ----
+add_test(. enum_test)
 
-add_test(list_test)
+## ----- List -----
 
-# ---- String ----
+add_test(. list_test)
 
-add_test(string_literal_test)
+## ----- String -----
 
-# ---- Template ----
-
-add_test(buffer_test)
-add_test(function_test)
-add_test(scopeguard_test)
-
-# ----- Functional -----
-
-add_test(curry_test)
-
-# ------ Enum -----
-
-add_test(enum_test)
+add_test(. string_literal_test)
 
 # ---- End-of-file commands ----
 

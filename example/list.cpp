@@ -2,7 +2,7 @@
 
 #include "based/list.hpp"
 
-#include "based/instrumentation.hpp"
+#include "based/instrumentation/instrumented.hpp"
 
 based::instrumented_base::op::type::array<double>
     based::instrumented_base::counts;

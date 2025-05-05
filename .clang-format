@@ -20,6 +20,7 @@ AllowShortFunctionsOnASingleLine: Inline
 AllowShortLambdasOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
@@ -50,6 +51,7 @@ BreakBeforeBraces: Custom
 # BreakBeforeInheritanceComma: true
 BreakInheritanceList: BeforeComma
 BreakBeforeTernaryOperators: true
+BreakBeforeConceptDeclarations: Always
 BreakConstructorInitializersBeforeComma: true
 BreakConstructorInitializers: BeforeComma
 BreakAfterJavaFieldAnnotations: true
@@ -91,6 +93,8 @@ IndentPPDirectives: AfterHash
 IndentExternBlock: NoIndent
 IndentWidth: 2
 IndentWrappedFunctionNames: false
+IndentRequiresClause: true
+RequiresClausePosition: OwnLine
 InsertTrailingCommas: Wrapped
 JavaScriptQuotes: Double
 JavaScriptWrapImports: true
@@ -99,6 +103,7 @@ MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
+RequiresExpressionIndentation: OuterScope
 ObjCBinPackProtocolList: Never
 ObjCBlockIndentWidth: 2
 ObjCBreakBeforeNestedBlockParam: true
