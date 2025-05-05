@@ -37,6 +37,9 @@ template<class T, class U> struct is_same : false_type { };
 template<class T> struct is_same<T, T> : true_type { };
 template<class T, class U> constexpr bool is_same_v = is_same<T, U>::value;
 
+template<typename T, typename U>
+concept SameAs = is_same_v<T, U> && is_same_v<U, T>;
+
 template<class T> struct remove_reference { using type = T; };
 template<class T> struct remove_reference<T&> { using type = T; };
 template<class T> struct remove_reference<T&&> { using type = T; };
@@ -76,6 +79,69 @@ struct is_instantiable<T, void_t<T<Ts...>>, Ts...> : true_type {};
 template<template<class...> class T, class... Ts>
 inline constexpr auto is_instantiable_v = is_instantiable<T, void, Ts...>::value;
 
+template<typename T>
+concept equal_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs == rhs} -> SameAs<bool>;
+	{rhs == lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept not_equal_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs != rhs} -> SameAs<bool>;
+	{rhs != lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept less_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs < rhs} -> SameAs<bool>;
+	{rhs < lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept greater_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs > rhs} -> SameAs<bool>;
+	{rhs > lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept less_equal_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs <= rhs} -> SameAs<bool>;
+	{rhs <= lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept greater_equal_comparable = requires
+(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+{
+	{lhs >= rhs} -> SameAs<bool>;
+	{rhs >= lhs} -> SameAs<bool>;
+};
+
+template<typename T>
+concept equality_comparable = requires {
+	requires(equal_comparable<T>);
+    requires(not_equal_comparable<T>);
+};
+
+template<typename T>
+concept totally_ordered = requires {
+	requires(equality_comparable<T>);
+	requires(less_comparable<T>);
+	requires(greater_comparable<T>);
+	requires(less_equal_comparable<T>);
+	requires(greater_equal_comparable<T>);
+};
+
 // clang-format on
 
 /* ----- Integer ----- */
@@ -107,9 +173,6 @@ concept Regular = std::regular<T>;
 
 template<typename T>
 concept BareRegular = std::regular<bare_t<T>>;
-
-template<typename T, typename U>
-concept SameAs = is_same_v<T, U> && is_same_v<U, T>;
 
 template<typename T, typename U>
 concept BareSameAs = SameAs<bare_t<T>, bare_t<U>>;

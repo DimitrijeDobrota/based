@@ -104,6 +104,11 @@
                                                                                \
       static const type& get(Type idx);                                        \
                                                                                \
+      friend bool operator==(type lhs, type rhs)                               \
+      {                                                                        \
+        return lhs.value == rhs.value;                                         \
+      }                                                                        \
+                                                                               \
       Type value;                                                              \
     };                                                                         \
                                                                                \

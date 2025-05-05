@@ -4,6 +4,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "based/type_traits.hpp"
+
 struct test
 {
   BASED_ENUM_DECLARE(var, std::uint8_t, a, b, c)
@@ -54,4 +56,15 @@ TEST_CASE("names", "[enum/enum]")
   REQUIRE(std::strcmp(test::var::type::names[test::var::a], "a") == 0);
   REQUIRE(std::strcmp(test::var::type::names[test::var::b], "b") == 0);
   REQUIRE(std::strcmp(test::var::type::names[test::var::c], "c") == 0);
+}
+
+TEST_CASE("operations", "[enum/enum]")
+{
+  using based::SameAs;
+
+  STATIC_REQUIRE(based::equality_comparable<test::var::type>);
+  STATIC_REQUIRE(!based::less_comparable<test::var::type>);
+  STATIC_REQUIRE(!based::greater_comparable<test::var::type>);
+  STATIC_REQUIRE(!based::less_equal_comparable<test::var::type>);
+  STATIC_REQUIRE(!based::greater_equal_comparable<test::var::type>);
 }
