@@ -6,20 +6,7 @@
 # consumers can trivially build and package the project
 if(PROJECT_IS_TOP_LEVEL)
   option(based_DEVELOPER_MODE "Enable developer mode" OFF)
-  option(BUILD_SHARED_LIBS "Build shared libs." OFF)
 endif()
-
-# ---- Suppress C4251 on Windows ----
-
-# Please see include/based/based.hpp for more details
-set(pragma_suppress_c4251 "
-/* This needs to suppress only for MSVC */
-#if defined(_MSC_VER) && !defined(__ICL)
-#  define BASED_SUPPRESS_C4251 _Pragma(\"warning(suppress:4251)\")
-#else
-#  define BASED_SUPPRESS_C4251
-#endif
-")
 
 # ---- Warning guard ----
 
