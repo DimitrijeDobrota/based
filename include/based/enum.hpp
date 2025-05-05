@@ -36,6 +36,7 @@
 #define BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, ...)                     \
   inline const Qualifier::type& Qualifier::type::get(Type idx)                 \
   {                                                                            \
+    /* NOLINTNEXTLINE(*paths-covered*) */                                      \
     switch (idx) {                                                             \
       BASED_FOREACH_1(Qualifier, BASED_DETAIL_ENUM_DECLARE_CASE, __VA_ARGS__)  \
       default:                                                                 \
@@ -49,30 +50,35 @@
   BASED_DETAIL_ENUM_DEFINE_NAMES(Qualifier, __VA_ARGS__)                       \
   BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, __VA_ARGS__)
 
-#define BASED_ENUM_DEFINE_ARRAY(Name)                                          \
+#define BASED_ENUM_DECLARE_ARRAY(Name)                                         \
   template<typename T>                                                         \
   class array : public std::array<T, Name::type::size>                         \
   {                                                                            \
-    using std::array<T, Name::type::size>::operator[];                         \
+    using base = std::array<T, Name::type::size>;                              \
+    using base::operator[];                                                    \
                                                                                \
   public:                                                                      \
-    constexpr array() = default;                                               \
+    constexpr array() noexcept                                                 \
+        : base()                                                               \
+    {                                                                          \
+    }                                                                          \
                                                                                \
     template<class... Args>                                                    \
       requires(sizeof...(Args) == Name::type::size)                            \
-    constexpr explicit array(Args&&... args) /* NOLINTNEXTLINE(*decay*) */     \
-        : std::array<T, Name::type::size>({std::forward<Args>(args)...})       \
+    constexpr explicit array(Args&&... args                                    \
+    ) noexcept /* NOLINTNEXTLINE(*decay*) */                                   \
+        : base({std::forward<Args>(args)...})                                  \
     {                                                                          \
     }                                                                          \
                                                                                \
     const T& operator[](Name::type val) const                                  \
     {                                                                          \
-      return std::array<T, Name::type::size>::operator[](val.value);           \
+      return base::operator[](val.value);                                      \
     }                                                                          \
                                                                                \
     T& operator[](Name::type val)                                              \
     {                                                                          \
-      return std::array<T, Name::type::size>::operator[](val.value);           \
+      return base::operator[](val.value);                                      \
     }                                                                          \
   };
 
@@ -93,7 +99,7 @@
       static constexpr size_t size =                                           \
           BASED_NUMARGS(BASED_LIST_STR(__VA_ARGS__));                          \
                                                                                \
-      BASED_ENUM_DEFINE_ARRAY(Name)                                            \
+      BASED_ENUM_DECLARE_ARRAY(Name)                                           \
       static const array<const char*> names;                                   \
                                                                                \
       static const type& get(Type idx);                                        \

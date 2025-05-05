@@ -2,7 +2,7 @@
 
 // NOLINTBEGIN(*macro-usage*)
 
-#define BASED_NUMARGS(...) (std::array{__VA_ARGS__}.size())
+#define BASED_NUMARGS(...) (std::array {__VA_ARGS__}.size())
 
 // clang-format off
 #define BASED_GET_MACRO(                                                       \
@@ -55,9 +55,9 @@
 #define BASED_FE_15_1(First, WHAT, X, ...) WHAT(First, X, 14) BASED_FE_14_1(First, WHAT, __VA_ARGS__)
 // clang-format on
 
-#define BASED_FOREACH_1(First, action, ...)                                                                                                                                                                                                                       \
+#define BASED_FOREACH_1(First, action, ...)                                                                                                                                                                                                                               \
   BASED_GET_MACRO(_0, __VA_ARGS__, BASED_FE_15_1, BASED_FE_14_1, BASED_FE_13_1, BASED_FE_12_1, BASED_FE_11_1, BASED_FE_10_1, BASED_FE_9_1, BASED_FE_8_1, BASED_FE_7_1, BASED_FE_6_1, BASED_FE_5_1, BASED_FE_4_1, BASED_FE_3_1, BASED_FE_2_1, BASED_FE_1_1, BASED_FE_0_1)( \
-      First, action, __VA_ARGS__                                                                                                                                                                                                                                  \
+      First, action, __VA_ARGS__                                                                                                                                                                                                                                          \
   )
 
 // clang-format off
