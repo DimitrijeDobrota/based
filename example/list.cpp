@@ -4,6 +4,9 @@
 
 #include "based/instrumentation.hpp"
 
+based::instrumented_base::op::type::array<double>
+    based::instrumented_base::counts;
+
 int main()
 {
   using instrumented = based::instrumented<double>;
