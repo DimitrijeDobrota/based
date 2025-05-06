@@ -5,10 +5,10 @@
 #include "based/concepts/is/regular.hpp"
 #include "based/concepts/is/same.hpp"
 #include "based/concepts/is/semiregular.hpp"
-#include "based/type_traits/is/const.hpp"
-#include "based/type_traits/remove/cvref.hpp"
-#include "based/type_traits/remove/pointer.hpp"
-#include "based/type_traits/remove/reference.hpp"
+#include "based/trait/is/const.hpp"
+#include "based/trait/remove/cvref.hpp"
+#include "based/trait/remove/pointer.hpp"
+#include "based/trait/remove/reference.hpp"
 #include "based/types/types.hpp"
 
 namespace based

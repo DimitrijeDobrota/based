@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-#include "based/type_traits/integral_constant.hpp"
+#include "based/trait/integral_constant.hpp"
 
 namespace based
 {

@@ -1,11 +1,9 @@
 #pragma once
 
-#include <functional>
-
 #include "based/concepts/is/regular.hpp"
 #include "based/concepts/is/same.hpp"
 #include "based/concepts/procedure/procedure.hpp"
-#include "based/type_traits/remove/cvref.hpp"
+#include "based/trait/remove/reference.hpp"
 
 namespace based
 {
@@ -32,7 +30,12 @@ template<BareRegular T, BareRegular U>
 decltype(auto) max(T&& lhs, U&& rhs)
 {
   return based::max(
-      std::forward<T>(lhs), std::forward<U>(rhs), std::less<remove_cvref_t<T>>()
+      std::forward<T>(lhs),
+      std::forward<U>(rhs),
+      [](const remove_reference_t<T>& llhs, const remove_reference_t<U>& lrhs)
+      {
+        return llhs < lrhs;
+      }
   );
 }
 

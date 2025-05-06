@@ -1,7 +1,7 @@
 #pragma once
 
-#include "based/type_traits/remove/cv.hpp"
-#include "based/type_traits/remove/reference.hpp"
+#include "based/trait/remove/cv.hpp"
+#include "based/trait/remove/reference.hpp"
 
 namespace based
 {

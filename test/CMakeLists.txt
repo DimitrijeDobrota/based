@@ -28,13 +28,13 @@ endfunction()
 
 ## ----- Type Traits -----
 
-add_test(type_traits remove_const)
-add_test(type_traits remove_cv)
-add_test(type_traits remove_cvref)
-add_test(type_traits remove_pointer)
-add_test(type_traits remove_reference)
-add_test(type_traits remove_volatile)
-add_test(type_traits signature_test)
+add_test(trait remove_const)
+add_test(trait remove_cv)
+add_test(trait remove_cvref)
+add_test(trait remove_pointer)
+add_test(trait remove_reference)
+add_test(trait remove_volatile)
+add_test(trait signature_test)
 
 ## ----- Concepts -----
 

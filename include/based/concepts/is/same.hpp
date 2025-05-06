@@ -1,7 +1,7 @@
 #pragma once
 
-#include "based/type_traits/is/same.hpp"
-#include "based/type_traits/remove/cvref.hpp"
+#include "based/trait/is/same.hpp"
+#include "based/trait/remove/cvref.hpp"
 
 namespace based
 {

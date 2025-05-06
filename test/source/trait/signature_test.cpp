@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_RUNTIME_STATIC_REQUIRE
 
-#include "based/type_traits/signature.hpp"
+#include "based/trait/signature.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -27,7 +27,7 @@ int free_func_noexcept(const double& a, int&& b) noexcept(true)
 
 using based::SameAs;
 
-TEST_CASE("free function", "[type_traits/signature]")
+TEST_CASE("free function", "[trait/signature]")
 {
   using sig = based::signature<decltype(free_func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
@@ -36,7 +36,7 @@ TEST_CASE("free function", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("free function noexcept", "[type_traits/signature]")
+TEST_CASE("free function noexcept", "[trait/signature]")
 {
   using sig = based::signature<decltype(free_func_noexcept)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
@@ -45,7 +45,7 @@ TEST_CASE("free function noexcept", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("empty", "[type_traits/signature]")
+TEST_CASE("empty", "[trait/signature]")
 {
   struct test
   {
@@ -63,7 +63,7 @@ TEST_CASE("empty", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const", "[type_traits/signature]")
+TEST_CASE("const", "[trait/signature]")
 {
   struct test
   {
@@ -81,7 +81,7 @@ TEST_CASE("const", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile", "[type_traits/signature]")
+TEST_CASE("volatile", "[trait/signature]")
 {
   struct test
   {
@@ -99,7 +99,7 @@ TEST_CASE("volatile", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile", "[type_traits/signature]")
+TEST_CASE("const volatile", "[trait/signature]")
 {
   struct test
   {
@@ -117,7 +117,7 @@ TEST_CASE("const volatile", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept", "[type_traits/signature]")
+TEST_CASE("noexcept", "[trait/signature]")
 {
   struct test
   {
@@ -135,7 +135,7 @@ TEST_CASE("noexcept", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept", "[type_traits/signature]")
+TEST_CASE("const noexcept", "[trait/signature]")
 {
   struct test
   {
@@ -153,7 +153,7 @@ TEST_CASE("const noexcept", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept", "[type_traits/signature]")
+TEST_CASE("volatile noexcept", "[trait/signature]")
 {
   struct test
   {
@@ -171,7 +171,7 @@ TEST_CASE("volatile noexcept", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept", "[type_traits/signature]")
+TEST_CASE("const volatile noexcept", "[trait/signature]")
 {
   struct test
   {
@@ -189,7 +189,7 @@ TEST_CASE("const volatile noexcept", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("lvalref", "[type_traits/signature]")
+TEST_CASE("lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -207,7 +207,7 @@ TEST_CASE("lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const lvalref", "[type_traits/signature]")
+TEST_CASE("const lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -225,7 +225,7 @@ TEST_CASE("const lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile lvalref", "[type_traits/signature]")
+TEST_CASE("volatile lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -243,7 +243,7 @@ TEST_CASE("volatile lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile lvalref", "[type_traits/signature]")
+TEST_CASE("const volatile lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -261,7 +261,7 @@ TEST_CASE("const volatile lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept lvalref", "[type_traits/signature]")
+TEST_CASE("noexcept lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -279,7 +279,7 @@ TEST_CASE("noexcept lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept lvalref", "[type_traits/signature]")
+TEST_CASE("const noexcept lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -297,7 +297,7 @@ TEST_CASE("const noexcept lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept lvalref", "[type_traits/signature]")
+TEST_CASE("volatile noexcept lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -315,7 +315,7 @@ TEST_CASE("volatile noexcept lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept lvalref", "[type_traits/signature]")
+TEST_CASE("const volatile noexcept lvalref", "[trait/signature]")
 {
   struct test
   {
@@ -333,7 +333,7 @@ TEST_CASE("const volatile noexcept lvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("rvalref", "[type_traits/signature]")
+TEST_CASE("rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -351,7 +351,7 @@ TEST_CASE("rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const rvalref", "[type_traits/signature]")
+TEST_CASE("const rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -369,7 +369,7 @@ TEST_CASE("const rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile rvalref", "[type_traits/signature]")
+TEST_CASE("volatile rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -387,7 +387,7 @@ TEST_CASE("volatile rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile rvalref", "[type_traits/signature]")
+TEST_CASE("const volatile rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -405,7 +405,7 @@ TEST_CASE("const volatile rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept rvalref", "[type_traits/signature]")
+TEST_CASE("noexcept rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -423,7 +423,7 @@ TEST_CASE("noexcept rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept rvalref", "[type_traits/signature]")
+TEST_CASE("const noexcept rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -441,7 +441,7 @@ TEST_CASE("const noexcept rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept rvalref", "[type_traits/signature]")
+TEST_CASE("volatile noexcept rvalref", "[trait/signature]")
 {
   struct test
   {
@@ -459,7 +459,7 @@ TEST_CASE("volatile noexcept rvalref", "[type_traits/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept rvalref", "[type_traits/signature]")
+TEST_CASE("const volatile noexcept rvalref", "[trait/signature]")
 {
   struct test
   {

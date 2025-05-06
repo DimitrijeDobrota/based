@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/type_traits/is/convertable.hpp"
+#include "based/trait/is/convertable.hpp"
 #include "based/utility/declvar.hpp"
 
 namespace based

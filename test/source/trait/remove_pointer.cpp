@@ -3,11 +3,11 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "based/concepts/is/same.hpp"
-#include "based/type_traits/remove/pointer.hpp"
+#include "based/trait/remove/pointer.hpp"
 
 using based::SameAs;
 
-TEST_CASE("remove_pointer", "[type_traits/remove_pointer]")
+TEST_CASE("remove_pointer", "[trait/remove_pointer]")
 {
   // NOLINTBEGIN(*array*)
   // clang-format off

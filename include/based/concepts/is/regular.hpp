@@ -2,7 +2,7 @@
 
 #include <concepts>
 
-#include "based/type_traits/remove/cvref.hpp"
+#include "based/trait/remove/cvref.hpp"
 
 namespace based
 {

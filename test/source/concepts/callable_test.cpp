@@ -19,7 +19,7 @@ int free_func(int a, double b)
 
 using based::SameAs;
 
-TEST_CASE("free function", "[type_traits/callable]")
+TEST_CASE("free function", "[trait/callable]")
 {
   using type_t = decltype(free_func);
 
@@ -28,7 +28,7 @@ TEST_CASE("free function", "[type_traits/callable]")
   STATIC_REQUIRE(SameAs<based::callable_ret_t<type_t>, int>);
 }
 
-TEST_CASE("lambda", "[type_traits/callable]")
+TEST_CASE("lambda", "[trait/callable]")
 {
   const auto func = [](int a, double b)
   {
@@ -47,7 +47,7 @@ struct func
   auto operator()(auto a, auto b) { return static_cast<int>(a + b); }
 };
 
-TEST_CASE("member function", "[type_traits/callable]")
+TEST_CASE("member function", "[trait/callable]")
 {
   // [&](auto&&... args) -> decltype(auto) { return
   // f(std::forward<decltype(args)>(args)...); }

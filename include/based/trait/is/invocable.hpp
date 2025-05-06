@@ -6,9 +6,9 @@ namespace based
 {
 
 template<class F, class... Args>
-using invoke_result = std::invoke_result<F, Args...>;
+using is_invocable = std::is_invocable<F, Args...>;
 
 template<class F, class... Args>
-using invoke_result_t = invoke_result<F, Args...>::type;
+constexpr bool is_invocable_v = is_invocable<F, Args...>::value;
 
 }  // namespace based

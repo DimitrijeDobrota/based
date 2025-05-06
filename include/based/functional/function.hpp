@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "based/concepts/is/same.hpp"
-#include "based/type_traits/signature.hpp"
+#include "based/trait/signature.hpp"
 #include "based/types/types.hpp"
 #include "based/utility/buffer.hpp"
 

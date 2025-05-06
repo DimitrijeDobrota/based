@@ -1,7 +1,7 @@
 #pragma once
 
 #include "based/concepts/is/same.hpp"
-#include "based/type_traits/remove/reference.hpp"
+#include "based/trait/remove/reference.hpp"
 
 namespace based
 {

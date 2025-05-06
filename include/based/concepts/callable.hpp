@@ -1,7 +1,7 @@
 #pragma once
 
-#include "based/type_traits/remove/pointer.hpp"
-#include "based/type_traits/signature.hpp"
+#include "based/trait/remove/pointer.hpp"
+#include "based/trait/signature.hpp"
 
 namespace based
 {

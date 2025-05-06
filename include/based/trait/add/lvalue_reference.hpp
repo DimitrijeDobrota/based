@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/type_traits/type_identity.hpp"
+#include "based/trait/type_identity.hpp"
 
 namespace based
 {

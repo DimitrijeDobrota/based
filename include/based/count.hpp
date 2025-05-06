@@ -1,7 +1,7 @@
 #pragma once
 
 #include "based/concepts/iterator.hpp"
-#include "based/type_traits/iterator.hpp"
+#include "based/trait/iterator.hpp"
 
 namespace based
 {

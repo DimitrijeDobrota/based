@@ -2,7 +2,7 @@
 
 #include "based/concepts/is/regular.hpp"
 #include "based/concepts/is/same.hpp"
-#include "based/type_traits/iterator.hpp"
+#include "based/trait/iterator.hpp"
 
 namespace based
 {

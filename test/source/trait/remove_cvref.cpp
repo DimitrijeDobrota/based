@@ -3,11 +3,11 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "based/concepts/is/same.hpp"
-#include "based/type_traits/remove/cvref.hpp"
+#include "based/trait/remove/cvref.hpp"
 
 using based::SameAs;
 
-TEST_CASE("remove_cvref", "[type_traits/remove_cvref]")
+TEST_CASE("remove_cvref", "[trait/remove_cvref]")
 {
   // NOLINTBEGIN(*array*)
   // clang-format off
