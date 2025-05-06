@@ -27,7 +27,7 @@ See the [`BUILDING`](BUILDING.md) document.
 
 ## Usage
 
-> Please reference example folder for relevant usage examples.
+> Please reference test folder for relevant usage examples.
 
 
 ## Version History

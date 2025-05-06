@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_RUNTIME_STATIC_REQUIRE
 
-#include "based/algorithms/minmax/max.hpp"
+#include "based/algorithms/max.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 

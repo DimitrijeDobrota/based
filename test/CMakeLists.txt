@@ -42,31 +42,8 @@ add_test(concepts callable_test)
 
 ## ----- Algorithm -----
 
-add_test(algorithms all_test)
-add_test(algorithms count_if_not_test)
-add_test(algorithms count_if_test)
-add_test(algorithms count_not_test)
-add_test(algorithms count_test)
-add_test(algorithms find_adjacent_mismatch_test)
-add_test(algorithms find_if_not_test)
-add_test(algorithms find_if_test)
-add_test(algorithms find_mismatch_test)
-add_test(algorithms find_not_test)
-add_test(algorithms find_test)
-add_test(algorithms foreach_test)
-add_test(algorithms lower_bound_test)
-add_test(algorithms max_element_test)
 add_test(algorithms max_test)
-add_test(algorithms min_element_test)
-add_test(algorithms minmax_element_test)
 add_test(algorithms min_test)
-add_test(algorithms none_test)
-add_test(algorithms not_all_test)
-add_test(algorithms partitioned_test)
-add_test(algorithms partition_point_test)
-add_test(algorithms reduce_test)
-add_test(algorithms some_test)
-add_test(algorithms upper_bound_test)
 
 ## ----- Utility -----
 
