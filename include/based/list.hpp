@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <utility>
 #include <vector>
 
 namespace based
@@ -213,9 +212,7 @@ public:
 
   [[nodiscard]] bool is_empty(const queue_t& queue) const
   {
-    return is_empty(queue.first);
-  }
-  [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
+    return is_empty(queue.first); } [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
 
   [[nodiscard]] queue_t push_front(const queue_t& queue, const value_type& val)
   {

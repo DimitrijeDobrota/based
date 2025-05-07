@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "based/types/types.hpp"
+#include "based/utility/forward.hpp"
 
 namespace based
 {
@@ -32,7 +33,7 @@ struct buffer
   {
     static_assert(std::is_trivially_destructible_v<T>);
     static_assert(std::is_trivially_copyable_v<T>);
-    ::new (static_cast<void*>(as<T>())) T(std::forward<Args>(args)...);
+    ::new (static_cast<void*>(as<T>())) T(based::forward<Args>(args)...);
   }
 
   template<typename T, typename... Args>
@@ -44,7 +45,7 @@ struct buffer
     static_assert(std::is_trivially_copyable_v<T>);
 
     // NOLINTNEXTLINE(*owning-memory*)
-    return ::new (static_cast<void*>(as<T>())) T(std::forward<Args>(args)...);
+    return ::new (static_cast<void*>(as<T>())) T(based::forward<Args>(args)...);
   }
 
   template<typename T>

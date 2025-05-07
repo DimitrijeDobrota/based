@@ -28,13 +28,24 @@ endfunction()
 
 ## ----- Type Traits -----
 
-add_test(trait remove_const)
-add_test(trait remove_cv)
-add_test(trait remove_cvref)
-add_test(trait remove_pointer)
-add_test(trait remove_reference)
-add_test(trait remove_volatile)
-add_test(trait signature_test)
+
+add_test(trait invoke_result_test)
+add_test(trait is_array_test)
+add_test(trait is_base_of_test)
+add_test(trait is_class_test)
+add_test(trait is_const_test)
+add_test(trait is_enum_test)
+add_test(trait is_lvalue_reference_test)
+add_test(trait is_null_pointer_test)
+add_test(trait is_rvalue_reference_test)
+add_test(trait is_void_test)
+add_test(trait remove_const_test)
+add_test(trait remove_cvref_test)
+add_test(trait remove_cv_test)
+add_test(trait remove_pointer_test)
+add_test(trait remove_reference_test)
+add_test(trait remove_volatile_test)
+add_test(trait signature_test_test)
 
 ## ----- Concepts -----
 

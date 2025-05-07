@@ -50,7 +50,7 @@ struct func
 TEST_CASE("member function", "[trait/callable]")
 {
   // [&](auto&&... args) -> decltype(auto) { return
-  // f(std::forward<decltype(args)>(args)...); }
+  // f(based::forward<decltype(args)>(args)...); }
 
   // based::error_template<decltype(&func::template operator()<int, double>)>();
   STATIC_REQUIRE(based::Callable<func>);

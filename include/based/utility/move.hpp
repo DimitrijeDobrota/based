@@ -7,7 +7,7 @@ namespace based
 
 template<class T>
 // NOLINTNEXTLINE(*forward*)
-constexpr auto move(T&& tmp) noexcept
+constexpr decltype(auto) move(T&& tmp) noexcept
 {
   return static_cast<remove_reference_t<T>&&>(tmp);
 }

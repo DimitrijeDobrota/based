@@ -4,6 +4,7 @@
 #include <cassert>
 
 #include "based/macros.hpp"
+#include "based/utility/forward.hpp"
 
 // NOLINTBEGIN(*macro-usage*)
 
@@ -67,7 +68,7 @@
       requires(sizeof...(Args) == Name::type::size)                            \
     constexpr explicit array(Args&&... args                                    \
     ) noexcept /* NOLINTNEXTLINE(*decay*) */                                   \
-        : base({std::forward<Args>(args)...})                                  \
+        : base({based::forward<Args>(args)...})                                \
     {                                                                          \
     }                                                                          \
                                                                                \

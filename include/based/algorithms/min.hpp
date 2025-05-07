@@ -4,6 +4,7 @@
 #include "based/concepts/is/same.hpp"
 #include "based/concepts/procedure/procedure.hpp"
 #include "based/trait/remove/reference.hpp"
+#include "based/utility/forward.hpp"
 
 namespace based
 {
@@ -20,7 +21,7 @@ template<BareRegular T, BareRegular U, detail::NoninputRelation<T> Rel>
   requires BareSameAs<T, U>
 decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 {
-  return rel(rhs, lhs) ? std::forward<U>(rhs) : std::forward<T>(lhs);
+  return rel(rhs, lhs) ? based::forward<U>(rhs) : based::forward<T>(lhs);
 }
 
 // returns min element, first if equal
@@ -29,8 +30,8 @@ template<BareRegular T, BareRegular U>
 decltype(auto) min(T&& lhs, U&& rhs)
 {
   return based::min(
-      std::forward<T>(lhs),
-      std::forward<U>(rhs),
+      based::forward<T>(lhs),
+      based::forward<U>(rhs),
       [](const remove_reference_t<T>& llhs, const remove_reference_t<U>& lrhs)
       {
         return llhs < lrhs;

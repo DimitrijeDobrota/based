@@ -1,5 +1,12 @@
+cmake_minimum_required(VERSION 3.14)
 
-defaul(FORMAT_COMMAND clang-format)
+macro(default name)
+if(NOT DEFINED "${name}")
+  set("${name}" "${ARGN}")
+endif()
+endmacro()
+
+default(FORMAT_COMMAND clang-format)
 default(
     PATTERNS
     source/*.cpp source/*.hpp

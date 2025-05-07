@@ -1,5 +1,6 @@
 #pragma once
 
+#include "based/utility/move.hpp"
 #include "based/utility/uncaught_exception.hpp"
 
 namespace based
@@ -13,7 +14,7 @@ class scopeguard
 
 public:
   scopeguard(Func&& func)  // NOLINT(*explicit*)
-      : m_func(std::move(func))
+      : m_func(based::move(func))
   {
   }
 
@@ -46,7 +47,7 @@ class scopeguard<Func, false, false>
 
 public:
   scopeguard(Func&& func)  // NOLINT(*explicit*)
-      : m_func(std::move(func))
+      : m_func(based::move(func))
   {
   }
 

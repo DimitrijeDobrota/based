@@ -18,6 +18,8 @@ Checks: "*,\
   -modernize-use-trailing-return-type,\
   -readability-suspicious-call-argument,\
   -*-ranges,\
+  -cppcoreguidelines-missing-std-forward,\
+  -cppcoreguidelines-rvalue-reference-param-not-moved,\
 "
 WarningsAsErrors: ''
 CheckOptions:
@@ -169,4 +171,8 @@ CheckOptions:
     value: "u"
   - key: 'google-runtime-int.SignedTypePrefix'
     value: "i"
+  - key: 'cppcoreguidelines-missing-std-forward.ForwardFunction'
+    value: "::based::forward"
+  - key: 'cppcoreguidelines-rvalue-reference-param-not-moved.MoveFunction'
+    value: "::based::move"
 ...

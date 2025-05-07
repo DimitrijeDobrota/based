@@ -16,7 +16,10 @@ struct integral_constant
   constexpr value_type operator()() const noexcept { return value; }
 };
 
-using true_type = integral_constant<bool, true>;
-using false_type = integral_constant<bool, false>;
+template<bool b>
+using bool_constant = integral_constant<bool, b>;
+
+using true_type = bool_constant<true>;
+using false_type = bool_constant<false>;
 
 }  // namespace based

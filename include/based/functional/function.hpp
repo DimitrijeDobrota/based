@@ -6,6 +6,7 @@
 #include "based/trait/signature.hpp"
 #include "based/types/types.hpp"
 #include "based/utility/buffer.hpp"
+#include "based/utility/forward.hpp"
 
 namespace based
 {
@@ -38,7 +39,7 @@ class function<Ret(Args...), size, alignment>
   {
     return std::invoke(
         *static_cast<function*>(func)->m_space.template as<Callable>(),
-        std::forward<Args>(args)...
+        based::forward<Args>(args)...
     );
   }
 
@@ -55,9 +56,7 @@ public:
             })
 
   function(CallableArg&& callable)  // NOLINT(*explicit*)
-      : m_space(
-            std::in_place_type<Callable>, std::forward<CallableArg>(callable)
-        )
+      : m_space(std::in_place_type<Callable>, based::forward<CallableArg>(callable))
       , m_executor(executor<Callable>)
   {
   }
@@ -66,7 +65,7 @@ public:
   Ret operator()(CallArgs&&... callargs) const
   {
     return this->m_executor(
-        std::forward<CallArgs>(callargs)...,
+        based::forward<CallArgs>(callargs)...,
         const_cast<function*>(this)  // NOLINT(*const-cast*)
     );
   }

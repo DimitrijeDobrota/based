@@ -10,6 +10,7 @@
 #include "based/enum/enum.hpp"
 #include "based/instrumentation/table.hpp"
 #include "based/types/types.hpp"
+#include "based/utility/move.hpp"
 
 namespace based
 {
@@ -65,14 +66,14 @@ struct instrumented : instrumented_base
   value_type value;
 
   instrumented(const value_type& val)  // NOLINT(*explicit*)
-      : value(std::move(val))
+      : value(based::move(val))
   {
     ++counts[op::ctor_value];
     ;
   }
 
   instrumented(value_type&& val)  // NOLINT(*explicit*)
-      : value(std::move(val))
+      : value(based::move(val))
   {
     ++counts[op::ctor_value];
     ;
@@ -93,7 +94,7 @@ struct instrumented : instrumented_base
   }
 
   instrumented(instrumented&& val) noexcept
-      : value(std::move(val.value))
+      : value(based::move(val.value))
   {
     ++counts[op::ctor_move];
     ;
@@ -114,7 +115,7 @@ struct instrumented : instrumented_base
   {
     ++counts[op::asgn_move];
     ;
-    value = std::move(val.value);
+    value = based::move(val.value);
     return *this;
   }
 
