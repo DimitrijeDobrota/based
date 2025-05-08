@@ -127,10 +127,10 @@
     BASED_FOREACH(BASED_DETAIL_ENUM_DECLARE_VAL, __VA_ARGS__)                  \
   };
 
-#define BASED_ENUM_DEFINE(Name, Type, ...)                                     \
+#define BASED_DEFINE_ENUM(Name, Type, ...)                                     \
   BASED_DETAIL_ENUM_DEFINE(Name, Type, __VA_ARGS__)
 
-#define BASED_DEFINE_CLASS_ENUM(Class, Name, Type, ...)                        \
+#define BASED_DEFINE_ENUM_CLASS(Class, Name, Type, ...)                        \
   BASED_DETAIL_ENUM_DEFINE(Class::Name, Type, __VA_ARGS__)
 
 // NOLINTEND(*macro-usage*)

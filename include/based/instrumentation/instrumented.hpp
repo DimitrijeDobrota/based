@@ -41,7 +41,7 @@ struct instrumented_base
   }
 };
 
-BASED_DEFINE_CLASS_ENUM(
+BASED_DEFINE_ENUM_CLASS(
     instrumented_base,
     op,
     u8,
