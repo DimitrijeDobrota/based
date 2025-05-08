@@ -57,6 +57,7 @@
   {                                                                            \
     using base = std::array<T, Name::type::size>;                              \
     using base::operator[];                                                    \
+    using base::at;                                                            \
                                                                                \
   public:                                                                      \
     constexpr array() noexcept                                                 \
@@ -78,6 +79,16 @@
     }                                                                          \
                                                                                \
     T& operator[](Name::type val)                                              \
+    {                                                                          \
+      return base::operator[](val.value);                                      \
+    }                                                                          \
+                                                                               \
+    const T& at(Name::type val) const                                          \
+    {                                                                          \
+      return base::operator[](val.value);                                      \
+    }                                                                          \
+                                                                               \
+    T& at(Name::type val)                                                      \
     {                                                                          \
       return base::operator[](val.value);                                      \
     }                                                                          \

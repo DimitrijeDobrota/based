@@ -9,6 +9,7 @@
 #include "based/concepts/comparable/greater_equal.hpp"
 #include "based/concepts/comparable/less.hpp"
 #include "based/concepts/comparable/less_equal.hpp"
+#include "based/concepts/is/invocable.hpp"
 #include "based/concepts/is/same.hpp"
 #include "based/types/types.hpp"
 
@@ -43,6 +44,7 @@ inline int test::get_var(var::type req) const
 TEST_CASE("types", "[enum/enum]")
 {
   STATIC_REQUIRE(requires { typename test::var; });
+  STATIC_REQUIRE(requires { test::var::type::size == 3; });
   STATIC_REQUIRE(requires { test::var::a; });
   STATIC_REQUIRE(requires { test::var::b; });
   STATIC_REQUIRE(requires { test::var::c; });
@@ -52,9 +54,12 @@ TEST_CASE("safety", "[enum/enum]")
 {
   const test crnt;
 
-  STATIC_REQUIRE(requires { crnt.get_var(test::var::a) == 1; });
-  STATIC_REQUIRE(requires { crnt.get_var(test::var::b) == 2; });
-  STATIC_REQUIRE(requires { crnt.get_var(test::var::c) == 3; });
+  REQUIRE(crnt.get_var(test::var::a) == 1);
+  REQUIRE(crnt.get_var(test::var::b) == 2);
+  REQUIRE(crnt.get_var(test::var::c) == 3);
+
+  REQUIRE(!based::Invocable<decltype(&test::get_var), based::u8>);
+  REQUIRE(!based::Invocable<decltype(&test::get_var), int>);
 }
 
 TEST_CASE("names", "[enum/enum]")
