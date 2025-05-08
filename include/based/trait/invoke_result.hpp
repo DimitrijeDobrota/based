@@ -37,8 +37,9 @@ struct invoke_impl<MT B::*>
   template<class T, class... Args, class MT1>
     requires(is_function_v<MT1>)
   static auto call(MT1 B::* pmf, T&& obj, Args&&... args)
-      -> decltype((invoke_impl::get(based::forward<T>(obj)).*pmf)(based::forward<Args>(args
-      )...));
+      -> decltype((invoke_impl::get(based::forward<T>(obj)).*pmf)(
+          based::forward<Args>(args)...
+      ));
 
   template<class T>
   static auto call(MT B::* pmd, T&& obj)
@@ -71,7 +72,6 @@ struct invoke_result<
 
 }  // namespace detail
 
-/*
 template<class F, class... Args>
 struct invoke_result : detail::invoke_result<void, F, Args...>
 {
@@ -79,12 +79,5 @@ struct invoke_result : detail::invoke_result<void, F, Args...>
 
 template<class F, class... Args>
 using invoke_result_t = typename invoke_result<F, Args...>::type;
-*/
-
-template<class F, class... Args>
-using invoke_result = std::invoke_result<F, Args...>;
-
-template<class F, class... Args>
-using invoke_result_t = std::invoke_result_t<F, Args...>;
 
 }  // namespace based

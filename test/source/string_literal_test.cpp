@@ -1,6 +1,6 @@
-#include "based/string.hpp"
-
 #include <catch2/catch_test_macros.hpp>
+
+#include "based/string/literal.hpp"
 
 TEST_CASE("empty", "[string/string_literal]")
 {

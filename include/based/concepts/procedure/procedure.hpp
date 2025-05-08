@@ -5,7 +5,7 @@
 #include "based/concepts/is/regular.hpp"
 #include "based/concepts/procedure/domain.hpp"
 #include "based/trait/integral_constant.hpp"
-#include "based/trait/invoke/result.hpp"
+#include "based/trait/invoke_result.hpp"
 
 namespace based
 {
