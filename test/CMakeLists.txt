@@ -25,8 +25,11 @@ function(add_test DIR NAME)
   catch_discover_tests("${NAME}")
 endfunction()
 
+## ----- Types -----
 
-## ----- Type Traits -----
+add_test(types strong_type_test)
+
+## ----- Trait -----
 
 
 add_test(trait invoke_result_test)
