@@ -1,5 +1,7 @@
 #pragma once
 
+// NOLINTBEGIN(*macro-usage*)
+
 // clang-format off
 #define BASED_GET_MACRO(                                                  \
     _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, \
@@ -9,3 +11,5 @@
     _58, _59, _60, _61, _62, _63, _64, NAME, ...                          \
 ) NAME
 // clang-format on
+
+// NOLINTEND(*macro-usage*)

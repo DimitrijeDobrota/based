@@ -12,16 +12,21 @@
 #include "based/concepts/is/same.hpp"
 #include "based/types/types.hpp"
 
-BASED_DECLARE_ENUM_FLAG(var, based::u8, a, b, c)
-BASED_DEFINE_ENUM_FLAG(var, based::u8, a, b, c)
+BASED_DECLARE_ENUM_FLAG(var, based::u8, empty, a, b, c)
+BASED_DEFINE_ENUM_FLAG(var, based::u8, empty, a, b, c)
 
 TEST_CASE("types", "[enum/enum]")
 {
   STATIC_REQUIRE(requires { typename var; });
-  STATIC_REQUIRE(requires { var::type::size == 3; });
+  STATIC_REQUIRE(requires { var::empty; });
   STATIC_REQUIRE(requires { var::a; });
   STATIC_REQUIRE(requires { var::b; });
   STATIC_REQUIRE(requires { var::c; });
+  STATIC_REQUIRE(var::type::size == 4);
+  STATIC_REQUIRE(var::empty.value == 0);
+  STATIC_REQUIRE(var::a.value == 1);
+  STATIC_REQUIRE(var::b.value == 2);
+  STATIC_REQUIRE(var::c.value == 4);
 }
 
 TEST_CASE("operations", "[enum/enum]")

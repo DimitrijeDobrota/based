@@ -44,10 +44,13 @@ inline int test::get_var(var::type req) const
 TEST_CASE("types", "[enum/enum]")
 {
   STATIC_REQUIRE(requires { typename test::var; });
-  STATIC_REQUIRE(requires { test::var::type::size == 3; });
   STATIC_REQUIRE(requires { test::var::a; });
   STATIC_REQUIRE(requires { test::var::b; });
   STATIC_REQUIRE(requires { test::var::c; });
+  STATIC_REQUIRE(test::var::type::size == 3);
+  STATIC_REQUIRE(test::var::a.value == 0);
+  STATIC_REQUIRE(test::var::b.value == 1);
+  STATIC_REQUIRE(test::var::c.value == 2);
 }
 
 TEST_CASE("safety", "[enum/enum]")

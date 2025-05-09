@@ -26,8 +26,13 @@
 #define BASED_DETAIL_DEFINE_ENUM_FLAG_VAL(Qualifier, Name, Index)              \
   inline constexpr BASED_DETAIL_SET(                                           \
       Qualifier::Name,                                                         \
-      Qualifier::type::size_t {1} << Qualifier::type::size_t {(Index)}         \
+      Qualifier::type::size_t {1}                                              \
+          << Qualifier::type::size_t {Qualifier::type::size - (Index) - 2}     \
   )
+
+#define BASED_DETAIL_DEFINE_ENUM_FLAG_VALS(Qualifier, First, ...)              \
+  BASED_FOREACH_1(Qualifier, BASED_DETAIL_DEFINE_ENUM_FLAG_VAL, __VA_ARGS__)   \
+  inline constexpr BASED_DETAIL_SET(Qualifier::First, 0)
 
 #define BASED_DETAIL_DEFINE_ENUM_GET(Qualifier, Type, ...)                     \
   inline const Qualifier::type& Qualifier::type::get(Type idx)                 \
@@ -42,7 +47,7 @@
   }
 
 #define BASED_DETAIL_DEFINE_ENUM(Qualifier, Type, ...)                         \
-  BASED_FOREACH_1(Qualifier, BASED_DETAIL_DEFINE_ENUM_FLAG_VAL, __VA_ARGS__)   \
+  BASED_DETAIL_DEFINE_ENUM_FLAG_VALS(Qualifier, __VA_ARGS__)                   \
   BASED_DETAIL_DEFINE_ENUM_GET(Qualifier, Type, __VA_ARGS__)
 
 #define BASED_DECLARE_ENUM_FLAG(Name, Type, ...)                               \
