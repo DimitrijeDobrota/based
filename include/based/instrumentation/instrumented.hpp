@@ -17,7 +17,7 @@ namespace based
 
 struct instrumented_base
 {
-  BASED_ENUM_DECLARE(
+  BASED_DECLARE_ENUM(
       op,
       u8,
       n,

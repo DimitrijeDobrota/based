@@ -12,7 +12,7 @@
 #include "based/concepts/is/same.hpp"
 #include "based/types/types.hpp"
 
-BASED_ENUM_DECLARE_FLAG(var, based::u8, a, b, c)
+BASED_DECLARE_ENUM_FLAG(var, based::u8, a, b, c)
 BASED_DEFINE_ENUM_FLAG(var, based::u8, a, b, c)
 
 TEST_CASE("types", "[enum/enum]")

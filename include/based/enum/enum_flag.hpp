@@ -2,49 +2,50 @@
 
 #include <cassert>
 
-#include "based/macro/macros.hpp"
+#include "based/macro/foreach.hpp"
+#include "based/macro/foreach_1.hpp"
 
 // NOLINTBEGIN(*macro-usage*)
 
-#define BASED_LIST_ELEM_STR(Name, Index) #Name,
+#define BASED_DETAIL_NUMARGS(...) (std::array {__VA_ARGS__}.size())
 
-#define BASED_LIST_STR(...) BASED_FOREACH(BASED_LIST_ELEM_STR, __VA_ARGS__)
+#define BASED_DETAIL_LIST_ELEM_STR(Name, Index) #Name,
+
+#define BASED_DETAIL_LIST_STR(...)                                             \
+  BASED_FOREACH(BASED_DETAIL_LIST_ELEM_STR, __VA_ARGS__)
 
 // NOLINTNEXTLINE(*macro-parentheses*)
-#define BASED_SET(var, val) decltype(var) var = decltype(var) {val};
+#define BASED_DETAIL_SET(var, val) decltype(var) var = decltype(var) {val};
 
-#define BASED_DETAIL_ENUM_DECLARE_VAL(Name, Index) static const type Name;
+#define BASED_DETAIL_DECLARE_ENUM_VAL(Name, Index) static const type Name;
 
-#define BASED_DETAIL_ENUM_DECLARE_CASE(Qualifier, Name, Index)                 \
+#define BASED_DETAIL_DECLARE_ENUM_CASE(Qualifier, Name, Index)                 \
   case Qualifier::Name.value:                                                  \
     return Name;
 
-#define BASED_DETAIL_ENUM_DEFINE_FLAG_VAL(Qualifier, Name, Index)                   \
-  inline constexpr BASED_SET(                                                  \
+#define BASED_DETAIL_DEFINE_ENUM_FLAG_VAL(Qualifier, Name, Index)              \
+  inline constexpr BASED_DETAIL_SET(                                           \
       Qualifier::Name,                                                         \
       Qualifier::type::size_t {1} << Qualifier::type::size_t {(Index)}         \
   )
 
-#define BASED_DETAIL_ENUM_DEFINE_VALS(Qualifier, ...)                          \
-  BASED_FOREACH_1(Qualifier, BASED_DETAIL_ENUM_DEFINE_FLAG_VAL, __VA_ARGS__)
-
-#define BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, ...)                     \
+#define BASED_DETAIL_DEFINE_ENUM_GET(Qualifier, Type, ...)                     \
   inline const Qualifier::type& Qualifier::type::get(Type idx)                 \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
     switch (idx) {                                                             \
-      BASED_FOREACH_1(Qualifier, BASED_DETAIL_ENUM_DECLARE_CASE, __VA_ARGS__)  \
+      BASED_FOREACH_1(Qualifier, BASED_DETAIL_DECLARE_ENUM_CASE, __VA_ARGS__)  \
       default:                                                                 \
         break;                                                                 \
     }                                                                          \
     assert(0); /* NOLINT(*assert*,cert-dcl03-c) */                             \
   }
 
-#define BASED_DETAIL_ENUM_DEFINE(Qualifier, Type, ...)                         \
-  BASED_DETAIL_ENUM_DEFINE_VALS(Qualifier, __VA_ARGS__)                        \
-  BASED_DETAIL_ENUM_DEFINE_GET(Qualifier, Type, __VA_ARGS__)
+#define BASED_DETAIL_DEFINE_ENUM(Qualifier, Type, ...)                         \
+  BASED_FOREACH_1(Qualifier, BASED_DETAIL_DEFINE_ENUM_FLAG_VAL, __VA_ARGS__)   \
+  BASED_DETAIL_DEFINE_ENUM_GET(Qualifier, Type, __VA_ARGS__)
 
-#define BASED_ENUM_DECLARE_FLAG(Name, Type, ...)                               \
+#define BASED_DECLARE_ENUM_FLAG(Name, Type, ...)                               \
   struct Name                                                                  \
   {                                                                            \
     class type                                                                 \
@@ -59,7 +60,7 @@
     public:                                                                    \
       using size_t = Type;                                                     \
       static constexpr size_t size =                                           \
-          BASED_NUMARGS(BASED_LIST_STR(__VA_ARGS__));                          \
+          BASED_DETAIL_NUMARGS(BASED_DETAIL_LIST_STR(__VA_ARGS__));            \
                                                                                \
       static const type& get(Type idx);                                        \
                                                                                \
@@ -139,13 +140,13 @@
       Type value;                                                              \
     };                                                                         \
                                                                                \
-    BASED_FOREACH(BASED_DETAIL_ENUM_DECLARE_VAL, __VA_ARGS__)                  \
+    BASED_FOREACH(BASED_DETAIL_DECLARE_ENUM_VAL, __VA_ARGS__)                  \
   };
 
 #define BASED_DEFINE_ENUM_FLAG(Name, Type, ...)                                \
-  BASED_DETAIL_ENUM_DEFINE(Name, Type, __VA_ARGS__)
+  BASED_DETAIL_DEFINE_ENUM(Name, Type, __VA_ARGS__)
 
 #define BASED_DEFINE_ENUM_FLAG_CLASS(Class, Name, Type, ...)                   \
-  BASED_DETAIL_ENUM_DEFINE(Class::Name, Type, __VA_ARGS__)
+  BASED_DETAIL_DEFINE_ENUM(Class::Name, Type, __VA_ARGS__)
 
 // NOLINTEND(*macro-usage*)
