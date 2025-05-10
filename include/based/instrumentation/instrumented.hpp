@@ -20,6 +20,7 @@ struct instrumented_base
   BASED_DECLARE_ENUM(
       op,
       u8,
+      0,
       n,
       ctor_default,
       ctor_value,
@@ -45,6 +46,7 @@ BASED_DEFINE_ENUM_CLASS(
     instrumented_base,
     op,
     u8,
+    0,
     n,
     ctor_default,
     ctor_value,
@@ -198,7 +200,7 @@ void count_operations(
 )
 {
   using instrumented = instrumented<double>;
-  using esize_t = instrumented::op::type::size_t;
+  using esize_t = instrumented::op::type::size_type;
 
   constexpr esize_t cols = instrumented::op::type::size;
   const esize_t decimals((norm == dont_normalize) ? 0 : 2);

@@ -15,7 +15,7 @@
 BASED_DECLARE_ENUM_FLAG(var, based::u8, empty, a, b, c)
 BASED_DEFINE_ENUM_FLAG(var, based::u8, empty, a, b, c)
 
-TEST_CASE("types", "[enum/enum]")
+TEST_CASE("types", "[enum/enum_flag]")
 {
   STATIC_REQUIRE(requires { typename var; });
   STATIC_REQUIRE(requires { var::empty; });
@@ -29,7 +29,7 @@ TEST_CASE("types", "[enum/enum]")
   STATIC_REQUIRE(var::c.value == 4);
 }
 
-TEST_CASE("operations", "[enum/enum]")
+TEST_CASE("operations", "[enum/enum_flag]")
 {
   using based::SameAs;
 

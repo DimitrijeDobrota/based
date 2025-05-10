@@ -15,7 +15,7 @@
 
 struct test
 {
-  BASED_DECLARE_ENUM(var, based::u8, a, b, c)
+  BASED_DECLARE_ENUM(var, based::u8, 0, a, b, c)
 
   [[nodiscard]] int get_var(var::type req) const;
 
@@ -25,7 +25,7 @@ private:
   int m_c = 3;
 };
 
-BASED_DEFINE_ENUM_CLASS(test, var, based::u8, a, b, c)
+BASED_DEFINE_ENUM_CLASS(test, var, based::u8, 0, a, b, c)
 
 inline int test::get_var(var::type req) const
 {
