@@ -69,3 +69,17 @@ TEST_CASE("operations", "[enum/enum_flag]")
     REQUIRE(var4.test(var::c));
   }
 }
+
+TEST_CASE("enum_flag_wrapper", "[enum/enum_flag_wrapper]")
+{
+  based::u8 flags = 0;
+
+  {
+    auto wrapper = based::enum_flag_wrapper<var::type>(flags);
+
+    wrapper |= var::a;
+    wrapper |= var::c;
+  }
+
+  REQUIRE(flags == 0x5);
+}

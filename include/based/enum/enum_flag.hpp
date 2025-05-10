@@ -158,4 +158,38 @@
 #define BASED_DEFINE_ENUM_FLAG_CLASS(Class, Name, Type, ...)                   \
   BASED_EF_DETAIL_DEFINE(Class::Name, Type, __VA_ARGS__)
 
+namespace based
+{
+
+template<class FlagType>
+struct enum_flag_wrapper : public FlagType
+{
+  using value_type = FlagType::value_type;
+
+  explicit enum_flag_wrapper(value_type& value)
+      : FlagType(value)
+      , m_value(&value)
+  {
+  }
+
+  enum_flag_wrapper& operator=(FlagType flag)
+  {
+    *m_value = flag.value;
+    return *this;
+  }
+
+  ~enum_flag_wrapper() { *m_value = FlagType::value; }
+
+  enum_flag_wrapper(const enum_flag_wrapper&) = delete;
+  enum_flag_wrapper& operator=(const enum_flag_wrapper&) = delete;
+
+  enum_flag_wrapper(enum_flag_wrapper&&) = default;
+  enum_flag_wrapper& operator=(enum_flag_wrapper&&) = default;
+
+private:
+  value_type* m_value;
+};
+
+}  // namespace based
+
 // NOLINTEND(*macro-usage*)
