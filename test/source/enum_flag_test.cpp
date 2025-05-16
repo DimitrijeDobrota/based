@@ -12,8 +12,8 @@
 #include "based/concepts/is/same.hpp"
 #include "based/types/types.hpp"
 
-BASED_DECLARE_ENUM_FLAG(var, based::u8, empty, a, b, c)
-BASED_DEFINE_ENUM_FLAG(var, based::u8, empty, a, b, c)
+BASED_DECLARE_ENUM_FLAG(var, based::bu8, empty, a, b, c)
+BASED_DEFINE_ENUM_FLAG(var, based::bu8, empty, a, b, c)
 
 TEST_CASE("types", "[enum/enum_flag]")
 {
@@ -72,7 +72,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
 
 TEST_CASE("enum_flag_wrapper", "[enum/enum_flag_wrapper]")
 {
-  based::u8 flags = 0;
+  based::bu8 flags = 0;
 
   {
     auto wrapper = based::enum_flag_wrapper<var::type>(flags);

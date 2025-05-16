@@ -3,6 +3,9 @@
 #include <cassert>
 #include <vector>
 
+#include "based/concepts/is/same.hpp"
+#include "based/types/types.hpp"
+
 namespace based
 {
 
@@ -19,7 +22,7 @@ private:
   struct node_t
   {
     value_type value {};
-    list_type next = list_type(0);
+    list_type next;
   };
 
   std::vector<node_t> m_pool;
@@ -27,20 +30,20 @@ private:
 
   [[nodiscard]] const node_t& node(list_type x) const
   {
-    assert(x != 0);
-    return m_pool[x - 1];
+    assert(x != list_type(0));
+    return m_pool[(x - list_type(1)).value];
   }
 
   [[nodiscard]] node_t& node(list_type x)
   {
-    assert(x != 0);
-    return m_pool[x - 1];
+    assert(x != list_type(0));
+    return m_pool[(x - list_type(1)).value];
   }
 
   [[nodiscard]] list_type new_node()
   {
     m_pool.push_back(node_t());
-    return list_type(m_pool.size());
+    return list_type {static_cast<list_type::basic_type>(m_pool.size())};
   }
 
 public:
@@ -212,7 +215,9 @@ public:
 
   [[nodiscard]] bool is_empty(const queue_t& queue) const
   {
-    return is_empty(queue.first); } [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
+    return is_empty(queue.first);
+  }
+  [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
 
   [[nodiscard]] queue_t push_front(const queue_t& queue, const value_type& val)
   {

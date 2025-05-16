@@ -9,18 +9,58 @@ namespace based
 #define BASED_DETAIL_MACRO(decl, val)                                          \
   decltype(decl)                                                               \
   {                                                                            \
-    static_cast<decltype(decl)::value_type>(val)                               \
+    static_cast<decltype(decl)::basic_type>(val)                               \
   }
 
-template<class ValueType, class Tag>
-// NOLINTNEXTLINE(*crtp*)
+template<class V, class Tag>
+// NOLINTBEGIN(*crtp*)
 struct strong_type
 {
-  using value_type = ValueType;
+  using value_type = strong_type;
+  using basic_type = V;
   using tag_type = Tag;
 
-  ValueType value;
+  constexpr ~strong_type() = default;
+
+  constexpr explicit strong_type()
+      : value(0)
+  {
+  }
+
+  constexpr explicit strong_type(basic_type val)
+      : value(val)
+  {
+  }
+
+  constexpr strong_type(const strong_type&) = default;
+  constexpr strong_type(strong_type&&) = default;
+
+  constexpr strong_type& operator=(const strong_type&) = default;
+  constexpr strong_type& operator=(strong_type&&) = default;
+
+  basic_type value;
 };
+// NOLINTEND(*crtp*)
+
+template<class LHS, class RHS>
+concept comparable = requires(LHS lhs, RHS rhs) { compare(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires comparable<LHS, RHS>
+constexpr bool operator==(LHS lhs, RHS rhs)
+{
+  return lhs.value == rhs.value;
+}
+
+template<class LHS, class RHS>
+concept ordered = requires(LHS lhs, RHS rhs) { order(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires ordered<LHS, RHS>
+constexpr auto operator<=>(LHS lhs, RHS rhs)
+{
+  return lhs.value <=> rhs.value;
+}
 
 template<class LHS, class RHS>
 concept addable = requires(LHS lhs, RHS rhs) { add(lhs, rhs); };
@@ -30,6 +70,17 @@ template<class LHS, class RHS>
 constexpr auto operator+(LHS lhs, RHS rhs)
 {
   return BASED_DETAIL_MACRO(add(lhs, rhs), lhs.value + rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires addable<LHS, RHS>;
+    requires SameAs<LHS, decltype(add(lhs, rhs))>;
+  })
+constexpr auto& operator+=(LHS& lhs, RHS& rhs)
+{
+  lhs.value += rhs.value;
+  return lhs;
 }
 
 template<class LHS, class RHS>
@@ -72,6 +123,36 @@ constexpr auto operator%(LHS lhs, RHS rhs)
   return BASED_DETAIL_MACRO(mod(lhs, rhs), lhs.value % rhs.value);
 }
 
+template<class LHS, class RHS>
+concept andable = requires(LHS lhs, RHS rhs) { land(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires andable<LHS, RHS>
+constexpr auto operator&(LHS lhs, RHS rhs)
+{
+  return BASED_DETAIL_MACRO(land(lhs, rhs), lhs.value & rhs.value);
+}
+
+template<class LHS, class RHS>
+concept orable = requires(LHS lhs, RHS rhs) { lor(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires orable<LHS, RHS>
+constexpr auto operator|(LHS lhs, RHS rhs)
+{
+  return BASED_DETAIL_MACRO(lor(lhs, rhs), lhs.value | rhs.value);
+}
+
+template<class LHS, class RHS>
+concept xorable = requires(LHS lhs, RHS rhs) { lxor(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires xorable<LHS, RHS>
+constexpr auto operator^(LHS lhs, RHS rhs)
+{
+  return BASED_DETAIL_MACRO(lxor(lhs, rhs), lhs.value ^ rhs.value);
+}
+
 template<class LHS>
 concept preincable = requires(LHS lhs) { preinc(lhs); };
 
@@ -112,148 +193,6 @@ template<class LHS>
 constexpr auto operator--(LHS lhs, int)
 {
   return BASED_DETAIL_MACRO(postdec(lhs), lhs.value--);
-}
-
-template<class LHS>
-concept neggable = requires(LHS lhs) { lneg(lhs); };
-
-template<class LHS>
-  requires neggable<LHS>
-constexpr auto operator~(LHS lhs)
-{
-  return BASED_DETAIL_MACRO(lneg(lhs), ~lhs.value);
-}
-
-template<class LHS, class RHS>
-concept andable = requires(LHS lhs, RHS rhs) { land(lhs, rhs); };
-
-template<class LHS, class RHS>
-  requires andable<LHS, RHS>
-constexpr auto operator&(LHS lhs, RHS rhs)
-{
-  return BASED_DETAIL_MACRO(land(lhs, rhs), lhs.value & rhs.value);
-}
-
-template<class LHS, class RHS>
-concept orable = requires(LHS lhs, RHS rhs) { lor(lhs, rhs); };
-
-template<class LHS, class RHS>
-  requires orable<LHS, RHS>
-constexpr auto operator|(LHS lhs, RHS rhs)
-{
-  return BASED_DETAIL_MACRO(lor(lhs, rhs), lhs.value | rhs.value);
-}
-
-template<class LHS, class RHS>
-concept xorable = requires(LHS lhs, RHS rhs) { lxor(lhs, rhs); };
-
-template<class LHS, class RHS>
-  requires xorable<LHS, RHS>
-constexpr auto operator^(LHS lhs, RHS rhs)
-{
-  return BASED_DETAIL_MACRO(lxor(lhs, rhs), lhs.value ^ rhs.value);
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_addable = requires(LHS lhs, RHS rhs) { eadd(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_addable<LHS, RHS>
-constexpr auto& operator+=(LHS& lhs, RHS rhs)
-{
-  lhs.value += rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_subtractable = requires(LHS lhs, RHS rhs) { esub(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_subtractable<LHS, RHS>
-constexpr auto& operator-=(LHS& lhs, RHS rhs)
-{
-  lhs.value -= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_multiplyable = requires(LHS lhs, RHS rhs) { emul(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_multiplyable<LHS, RHS>
-constexpr auto& operator*=(LHS& lhs, RHS rhs)
-{
-  lhs.value *= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_divisible = requires(LHS lhs, RHS rhs) { ediv(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_divisible<LHS, RHS>
-constexpr auto& operator/=(LHS& lhs, RHS rhs)
-{
-  lhs.value /= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_modable = requires(LHS lhs, RHS rhs) { emod(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_modable<LHS, RHS>
-constexpr auto& operator%=(LHS& lhs, RHS rhs)
-{
-  lhs.value %= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_andable = requires(LHS lhs, RHS rhs) { eland(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_andable<LHS, RHS>
-constexpr auto& operator&=(LHS& lhs, RHS rhs)
-{
-  lhs.value &= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_orable = requires(LHS lhs, RHS rhs) { elor(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_orable<LHS, RHS>
-constexpr auto& operator|=(LHS& lhs, RHS rhs)
-{
-  lhs.value |= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS = LHS>
-concept equal_xorable = requires(LHS lhs, RHS rhs) { elxor(lhs, rhs); };
-
-template<class LHS, class RHS = LHS>
-  requires equal_xorable<LHS, RHS>
-constexpr auto& operator^=(LHS& lhs, RHS rhs)
-{
-  lhs.value ^= rhs.value;
-  return lhs;
-}
-
-template<class LHS, class RHS>
-concept equalable = requires(LHS lhs, RHS rhs) {
-  {
-    equal(lhs, rhs)
-  } -> SameAs<bool>;
-};
-
-template<class LHS, class RHS>
-  requires equalable<LHS, RHS>
-constexpr bool operator==(LHS lhs, RHS rhs)
-{
-  return lhs.value == rhs.value;
 }
 
 #undef BASED_DETAIL_MACRO

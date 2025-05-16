@@ -58,6 +58,7 @@
     class type                                                                 \
     {                                                                          \
       friend Name;                                                             \
+      friend struct based::enum_flag_wrapper<type>;                            \
                                                                                \
       constexpr explicit type(Type enum_value)                                 \
           : value(enum_value)                                                  \

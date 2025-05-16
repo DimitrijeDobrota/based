@@ -10,6 +10,7 @@ template class based::list_pool<based::u8, based::u8>;
 
 TEST_CASE("list_pool", "[list/list_pool]")
 {
+  using namespace based::literals;  // NOLINT
   using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
@@ -23,21 +24,21 @@ TEST_CASE("list_pool", "[list/list_pool]")
 
   SECTION("add one node")
   {
-    head = pool.allocate(1, head);
+    head = pool.allocate(1_u8, head);
 
     REQUIRE(pool.is_empty(head) == false);
-    REQUIRE(pool.value(head) == 1);
+    REQUIRE(pool.value(head) == 1_u8);
 
     REQUIRE(pool.next(head) == pool.node_empty());
 
     SECTION("add two nodes")
     {
-      head = pool.allocate(2, head);
+      head = pool.allocate(2_u8, head);
 
       REQUIRE(pool.is_empty(head) == false);
-      REQUIRE(pool.value(head) == 2);
+      REQUIRE(pool.value(head) == 2_u8);
 
-      REQUIRE(pool.value(pool.next(head)) == 1);
+      REQUIRE(pool.value(pool.next(head)) == 1_u8);
       REQUIRE(pool.next(pool.next(head)) == pool.node_empty());
 
       head = pool.free(head);
@@ -45,12 +46,12 @@ TEST_CASE("list_pool", "[list/list_pool]")
 
     SECTION("alloc after free")
     {
-      head = pool.allocate(2, head);
+      head = pool.allocate(2_u8, head);
       head = pool.free(head);
-      head = pool.allocate(3, head);
+      head = pool.allocate(3_u8, head);
 
       REQUIRE(pool.is_empty(head) == false);
-      REQUIRE(pool.value(head) == 3);
+      REQUIRE(pool.value(head) == 3_u8);
 
       head = pool.free(head);
     }
@@ -64,13 +65,14 @@ TEST_CASE("list_pool", "[list/list_pool]")
 
 TEST_CASE("list_pool iterator", "[list/list_pool]")
 {
+  using namespace based::literals;  // NOLINT
   using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  static constexpr based::size_t iter_count = 0xFF;
-  for (based::u8 i = 0; i < iter_count; i++) {
+  static constexpr auto iter_count = 0xFF_u8;
+  for (auto i = 0_u8; i < iter_count; i++) {
     head = pool.allocate(i, head);
   }
 
@@ -78,13 +80,13 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
   {
     using iter = list_pool::iterator;
 
-    based::u32 sum = 0;
+    auto sum = 0_u32;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 0xFF * 0xFE);
+    REQUIRE(sum == 0xFF_u32 * 0xFE_u32);
   }
 
   SECTION("accumulate")
@@ -101,7 +103,7 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
         }
     );
 
-    REQUIRE(sum == 0xFF * 0xFE / 2);
+    REQUIRE(sum == 0xFF_u32 * 0xFE_u32 / 2_u32);
   }
 
   based::free_list(pool, head);
@@ -109,13 +111,14 @@ TEST_CASE("list_pool iterator", "[list/list_pool]")
 
 TEST_CASE("list_pool const iterator", "[list/list_pool]")
 {
+  using namespace based::literals;  // NOLINT
   using list_pool = based::list_pool<based::u8, based::u8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
 
-  static constexpr based::size_t iter_count = 0xFF;
-  for (based::u8 i = 0; i < iter_count; i++) {
+  static constexpr auto iter_count = 0xFF_u8;
+  for (auto i = 0_u8; i < iter_count; i++) {
     head = pool.allocate(i, head);
   }
 
@@ -123,13 +126,13 @@ TEST_CASE("list_pool const iterator", "[list/list_pool]")
   {
     using iter = list_pool::const_iterator;
 
-    based::u32 sum = 0;
+    auto sum = 0_u32;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 0xFF * 0xFE);
+    REQUIRE(sum == 0xFF_u32 * 0xFE_u32);
   }
 
   SECTION("const accumulate")
@@ -150,7 +153,7 @@ TEST_CASE("list_pool const iterator", "[list/list_pool]")
       );
     };
 
-    REQUIRE(sum(pool, head) == 0xFF * 0xFE / 2);
+    REQUIRE(sum(pool, head) == 0xFF_u32 * 0xFE_u32 / 2_u32);
   }
 
   based::free_list(pool, head);
@@ -174,25 +177,26 @@ TEST_CASE("list_pool queue", "[list/list_pool/queue]")
     REQUIRE(pool.pop_front(queue) == queue);
   }
 
-  static constexpr based::size_t iter_count = 0xFF;
-  for (based::u8 i = 0; i < iter_count; i++) {
-    if (i % 2 == 0) {
+  using namespace based::literals;  // NOLINT
+  static constexpr auto iter_count = 0xFF_u8;
+  for (auto i = 0_u8; i < iter_count; i++) {
+    if (i % 2_u8 == 0_u8) {
       queue = pool.push_front(queue, i);
     } else {
       queue = pool.push_back(queue, i);
     }
 
-    if (i % 3 == 0) {
+    if (i % 3_u8 == 0_u8) {
       queue = pool.pop_front(queue);
     }
   }
 
-  based::u64 sum = 0;
+  auto sum = 0_u64;
   for (auto it = iter(pool, queue.first); it != iter(pool); ++it) {
     sum += *it;
   }
 
   pool.free(queue);
 
-  REQUIRE(sum == 21717);
+  REQUIRE(sum == 21717_u64);
 }

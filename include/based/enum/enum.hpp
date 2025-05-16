@@ -28,7 +28,9 @@
 
 #define BASED_E_DETAIL_DEFINE_VAL(Qualifier, Initial, Name, Index)             \
   inline constexpr BASED_E_DETAIL_SET(                                         \
-      Qualifier::Name, (Initial) + Qualifier::type::size - (Index) - 1         \
+      Qualifier::Name,                                                         \
+      Qualifier::type::value_type {Initial} + Qualifier::type::size - (Index)  \
+          - 1                                                                  \
   )
 
 #define BASED_E_DETAIL_DEFINE_NAMES(Qualifier, ...)                            \
@@ -68,7 +70,7 @@
     }                                                                          \
                                                                                \
     template<class... Args>                                                    \
-      requires(sizeof...(Args) == Name::type::size)                            \
+      requires(Name::type::size_type(sizeof...(Args)) == Name::type::size)     \
     constexpr explicit array(Args&&... args                                    \
     ) noexcept /* NOLINTNEXTLINE(*decay*) */                                   \
         : base({based::forward<Args>(args)...})                                \
@@ -77,22 +79,22 @@
                                                                                \
     const T& operator[](Name::type val) const                                  \
     {                                                                          \
-      return base::operator[](val.value - (Initial));                          \
+      return base::operator[](val.value - Name::type::value_type {Initial});   \
     }                                                                          \
                                                                                \
     T& operator[](Name::type val)                                              \
     {                                                                          \
-      return base::operator[](val.value - (Initial));                          \
+      return base::operator[](val.value - Name::type::value_type {Initial});   \
     }                                                                          \
                                                                                \
     const T& at(Name::type val) const                                          \
     {                                                                          \
-      return base::operator[](val.value - (Initial));                          \
+      return base::operator[](val.value - Name::type::value_type {Initial});   \
     }                                                                          \
                                                                                \
     T& at(Name::type val)                                                      \
     {                                                                          \
-      return base::operator[](val.value - (Initial));                          \
+      return base::operator[](val.value - Name::type::value_type {Initial});   \
     }                                                                          \
   };
 

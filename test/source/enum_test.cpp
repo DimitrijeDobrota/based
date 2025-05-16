@@ -15,7 +15,7 @@
 
 struct test
 {
-  BASED_DECLARE_ENUM(var, based::u8, 0, a, b, c)
+  BASED_DECLARE_ENUM(var, based::bu8, 0, a, b, c)
 
   [[nodiscard]] int get_var(var::type req) const;
 
@@ -25,7 +25,7 @@ private:
   int m_c = 3;
 };
 
-BASED_DEFINE_ENUM_CLASS(test, var, based::u8, 0, a, b, c)
+BASED_DEFINE_ENUM_CLASS(test, var, based::bu8, 0, a, b, c)
 
 inline int test::get_var(var::type req) const
 {
@@ -61,7 +61,7 @@ TEST_CASE("safety", "[enum/enum]")
   REQUIRE(crnt.get_var(test::var::b) == 2);
   REQUIRE(crnt.get_var(test::var::c) == 3);
 
-  REQUIRE(!based::Invocable<decltype(&test::get_var), based::u8>);
+  REQUIRE(!based::Invocable<decltype(&test::get_var), based::bu8>);
   REQUIRE(!based::Invocable<decltype(&test::get_var), int>);
 }
 

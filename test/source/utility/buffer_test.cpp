@@ -31,16 +31,17 @@ TEST_CASE("valid type", "[template/buffer]")
 
 TEST_CASE("buffer", "[template/buffer]")
 {
+  using namespace based::literals;  // NOLINT
   using buffer = based::buffer<sizeof(based::size_t)>;
 
-  static constexpr based::u8 value = 8;
+  static constexpr auto value = 8_u8;
   buffer buf(std::in_place_type<based::u8>, value);
 
   REQUIRE(*buf.as<based::u8>() == value);
 
   SECTION("emplace")
   {
-    static constexpr based::u16 new_value = 10;
+    static constexpr auto new_value = 10_u16;
     buf.emplace<based::u16>(new_value);
 
     REQUIRE(*buf.as<based::u16>() == new_value);
@@ -48,7 +49,7 @@ TEST_CASE("buffer", "[template/buffer]")
 
   SECTION("swap")
   {
-    static constexpr based::u16 new_value = 10;
+    static constexpr auto new_value = 10_u16;
     buffer new_buf(std::in_place_type<based::u16>, new_value);
     buf.swap(new_buf);
 
@@ -59,9 +60,10 @@ TEST_CASE("buffer", "[template/buffer]")
 
 TEST_CASE("const buffer", "[template/buffer]")
 {
+  using namespace based::literals;  // NOLINT
   using buffer = based::buffer<sizeof(based::size_t)>;
 
-  static constexpr based::u8 value = 8;
+  static constexpr auto value = 8_u8;
   const buffer buf(std::in_place_type<based::u8>, value);
 
   REQUIRE(*buf.as<based::u8>() == value);

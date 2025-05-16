@@ -1,21 +1,99 @@
 #pragma once
 
+#include "based/macro/foreach_1.hpp"
+#include "based/types/strong.hpp"
+
 namespace based
 {
 
 // NOLINTBEGIN(google-runtime-int)
 
-using i8 = signed char;
-using i16 = signed short int;
-using i32 = signed int;
-using i64 = signed long int;
+using bi8 = signed char;
+using bi16 = signed short int;
+using bi32 = signed int;
+using bi64 = signed long int;
 
-using u8 = unsigned char;
-using u16 = unsigned short int;
-using u32 = unsigned int;
-using u64 = unsigned long int;
+using bu8 = unsigned char;
+using bu16 = unsigned short int;
+using bu32 = unsigned int;
+using bu64 = unsigned long int;
 
-using size_t = u64;
+using size_t = bu64;
+
+#define TYPE(Name)                                                             \
+  /* NOLINTNEXTLINE(*macro*) */                                                \
+  struct Name : strong_type<b##Name, Name>                                     \
+  {                                                                            \
+    using strong_type::strong_type;                                            \
+    using strong_type::operator=;                                              \
+  };                                                                           \
+                                                                               \
+  namespace literals                                                           \
+  {                                                                            \
+  constexpr auto operator""_##Name(unsigned long long val)                     \
+  {                                                                            \
+    /* NOLINTNEXTLINE(*macro*) */                                              \
+    return Name {static_cast<Name::basic_type>(val)};                          \
+  }                                                                            \
+  }  // namespace literals
+
+TYPE(i8)
+TYPE(i16)
+TYPE(i32)
+TYPE(i64)
+
+#define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
+  auto Name(Prefix##8)->Prefix##8;                                             \
+  auto Name(Prefix##16)->Prefix##16;                                           \
+  auto Name(Prefix##32)->Prefix##32;                                           \
+  auto Name(Prefix##64)->Prefix##64;
+
+#define BASED_DETAIL_OP_BINARY(Prefix, Name, Index)                            \
+  auto Name(Prefix##8, Prefix##8)->Prefix##8;                                  \
+  auto Name(Prefix##8, Prefix##16)->Prefix##16;                                \
+  auto Name(Prefix##8, Prefix##32)->Prefix##32;                                \
+  auto Name(Prefix##8, Prefix##64)->Prefix##64;                                \
+                                                                               \
+  auto Name(Prefix##16, Prefix##8)->Prefix##16;                                \
+  auto Name(Prefix##16, Prefix##16)->Prefix##16;                               \
+  auto Name(Prefix##16, Prefix##32)->Prefix##32;                               \
+  auto Name(Prefix##16, Prefix##64)->Prefix##64;                               \
+                                                                               \
+  auto Name(Prefix##32, Prefix##8)->Prefix##32;                                \
+  auto Name(Prefix##32, Prefix##16)->Prefix##32;                               \
+  auto Name(Prefix##32, Prefix##32)->Prefix##32;                               \
+  auto Name(Prefix##32, Prefix##64)->Prefix##64;                               \
+                                                                               \
+  auto Name(Prefix##64, Prefix##8)->Prefix##64;                                \
+  auto Name(Prefix##64, Prefix##16)->Prefix##64;                               \
+  auto Name(Prefix##64, Prefix##32)->Prefix##64;                               \
+  auto Name(Prefix##64, Prefix##64)->Prefix##64;
+
+BASED_FOREACH_1(i, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec)
+BASED_FOREACH_1(
+    i, BASED_DETAIL_OP_BINARY, compare, order, add, sub, mul, div, mod
+)
+
+TYPE(u8)
+TYPE(u16)
+TYPE(u32)
+TYPE(u64)
+
+BASED_FOREACH_1(u, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec)
+BASED_FOREACH_1(
+    u,
+    BASED_DETAIL_OP_BINARY,
+    compare,
+    order,
+    add,
+    sub,
+    mul,
+    div,
+    mod,
+    land,
+    lor,
+    lxor
+)
 
 // NOLINTEND(google-runtime-int)
 

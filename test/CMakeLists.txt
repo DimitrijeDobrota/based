@@ -28,6 +28,7 @@ endfunction()
 ## ----- Types -----
 
 add_test(types strong_type_test)
+add_test(types type_test)
 
 ## ----- Trait -----
 
