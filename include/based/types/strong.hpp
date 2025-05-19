@@ -79,8 +79,7 @@ template<class LHS, class RHS>
   })
 constexpr auto& operator+=(LHS& lhs, RHS& rhs)
 {
-  lhs.value += rhs.value;
-  return lhs;
+  return lhs = lhs + rhs;
 }
 
 template<class LHS, class RHS>
@@ -94,6 +93,16 @@ constexpr auto operator-(LHS lhs, RHS rhs)
 }
 
 template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires subtractable<LHS, RHS>;
+    requires SameAs<LHS, decltype(sub(lhs, rhs))>;
+  })
+constexpr auto& operator-=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs - rhs;
+}
+
+template<class LHS, class RHS>
 concept multiplyable = requires(LHS lhs, RHS rhs) { mul(lhs, rhs); };
 
 template<class LHS, class RHS>
@@ -101,6 +110,16 @@ template<class LHS, class RHS>
 constexpr auto operator*(LHS lhs, RHS rhs)
 {
   return BASED_DETAIL_MACRO(mul(lhs, rhs), lhs.value * rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires multiplyable<LHS, RHS>;
+    requires SameAs<LHS, decltype(mul(lhs, rhs))>;
+  })
+constexpr auto& operator*=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs * rhs;
 }
 
 template<class LHS, class RHS>
@@ -114,6 +133,16 @@ constexpr auto operator/(LHS lhs, RHS rhs)
 }
 
 template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires divisible<LHS, RHS>;
+    requires SameAs<LHS, decltype(div(lhs, rhs))>;
+  })
+constexpr auto& operator/=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs / rhs;
+}
+
+template<class LHS, class RHS>
 concept modable = requires(LHS lhs, RHS rhs) { mod(lhs, rhs); };
 
 template<class LHS, class RHS>
@@ -121,6 +150,56 @@ template<class LHS, class RHS>
 constexpr auto operator%(LHS lhs, RHS rhs)
 {
   return BASED_DETAIL_MACRO(mod(lhs, rhs), lhs.value % rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires modable<LHS, RHS>;
+    requires SameAs<LHS, decltype(mod(lhs, rhs))>;
+  })
+constexpr auto& operator%=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs % rhs;
+}
+
+template<class LHS, class RHS>
+concept lshiftable = requires(LHS lhs, RHS rhs) { lshift(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires lshiftable<LHS, RHS>
+constexpr auto operator<<(LHS lhs, RHS rhs)
+{
+  return BASED_DETAIL_MACRO(lshift(lhs, rhs), lhs.value << rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires lshiftable<LHS, RHS>;
+    requires SameAs<LHS, decltype(lshift(lhs, rhs))>;
+  })
+constexpr auto& operator<<=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs << rhs;
+}
+
+template<class LHS, class RHS>
+concept rshiftable = requires(LHS lhs, RHS rhs) { rshift(lhs, rhs); };
+
+template<class LHS, class RHS>
+  requires rshiftable<LHS, RHS>
+constexpr auto operator>>(LHS lhs, RHS rhs)
+{
+  return BASED_DETAIL_MACRO(rshift(lhs, rhs), lhs.value >> rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires rshiftable<LHS, RHS>;
+    requires SameAs<LHS, decltype(rshift(lhs, rhs))>;
+  })
+constexpr auto& operator>>=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs >> rhs;
 }
 
 template<class LHS, class RHS>
@@ -134,6 +213,16 @@ constexpr auto operator&(LHS lhs, RHS rhs)
 }
 
 template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires andable<LHS, RHS>;
+    requires SameAs<LHS, decltype(land(lhs, rhs))>;
+  })
+constexpr auto& operator&=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs & rhs;
+}
+
+template<class LHS, class RHS>
 concept orable = requires(LHS lhs, RHS rhs) { lor(lhs, rhs); };
 
 template<class LHS, class RHS>
@@ -144,6 +233,16 @@ constexpr auto operator|(LHS lhs, RHS rhs)
 }
 
 template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires orable<LHS, RHS>;
+    requires SameAs<LHS, decltype(lor(lhs, rhs))>;
+  })
+constexpr auto& operator|=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs | rhs;
+}
+
+template<class LHS, class RHS>
 concept xorable = requires(LHS lhs, RHS rhs) { lxor(lhs, rhs); };
 
 template<class LHS, class RHS>
@@ -151,6 +250,27 @@ template<class LHS, class RHS>
 constexpr auto operator^(LHS lhs, RHS rhs)
 {
   return BASED_DETAIL_MACRO(lxor(lhs, rhs), lhs.value ^ rhs.value);
+}
+
+template<class LHS, class RHS>
+  requires(requires(LHS lhs, RHS rhs) {
+    requires xorable<LHS, RHS>;
+    requires SameAs<LHS, decltype(lxor(lhs, rhs))>;
+  })
+constexpr auto& operator^=(LHS& lhs, RHS& rhs)
+{
+  return lhs = lhs ^ rhs;
+}
+
+template<class LHS>
+concept lnotable = requires(LHS lhs) { lnot(lhs); };
+
+template<class LHS>
+  requires lnotable<LHS>
+constexpr auto operator~(LHS lhs)
+{
+  lhs.value = ~lhs.value;
+  return lhs;
 }
 
 template<class LHS>

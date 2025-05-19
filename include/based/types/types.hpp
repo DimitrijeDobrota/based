@@ -1,5 +1,4 @@
 #pragma once
-
 #include "based/macro/foreach_1.hpp"
 #include "based/types/strong.hpp"
 
@@ -20,7 +19,7 @@ using bu64 = unsigned long int;
 
 using size_t = bu64;
 
-#define TYPE(Name)                                                             \
+#define BASED_DETAIL_TYPE(Name)                                                             \
   /* NOLINTNEXTLINE(*macro*) */                                                \
   struct Name : strong_type<b##Name, Name>                                     \
   {                                                                            \
@@ -37,10 +36,15 @@ using size_t = bu64;
   }                                                                            \
   }  // namespace literals
 
-TYPE(i8)
-TYPE(i16)
-TYPE(i32)
-TYPE(i64)
+BASED_DETAIL_TYPE(i8)
+BASED_DETAIL_TYPE(i16)
+BASED_DETAIL_TYPE(i32)
+BASED_DETAIL_TYPE(i64)
+
+BASED_DETAIL_TYPE(u8)
+BASED_DETAIL_TYPE(u16)
+BASED_DETAIL_TYPE(u32)
+BASED_DETAIL_TYPE(u64)
 
 #define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
   auto Name(Prefix##8)->Prefix##8;                                             \
@@ -74,11 +78,6 @@ BASED_FOREACH_1(
     i, BASED_DETAIL_OP_BINARY, compare, order, add, sub, mul, div, mod
 )
 
-TYPE(u8)
-TYPE(u16)
-TYPE(u32)
-TYPE(u64)
-
 BASED_FOREACH_1(u, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec)
 BASED_FOREACH_1(
     u,
@@ -90,10 +89,16 @@ BASED_FOREACH_1(
     mul,
     div,
     mod,
+    lshift,
+    rshift,
     land,
     lor,
     lxor
 )
+
+#undef BASED_DETAIL_TYPE
+#undef BASED_DETAIL_OP_UNARY
+#undef BASED_DETAIL_OP_BINARY
 
 // NOLINTEND(google-runtime-int)
 
