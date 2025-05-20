@@ -22,7 +22,7 @@ TEST_CASE("types", "[enum/enum_flag]")
   STATIC_REQUIRE(requires { var::a; });
   STATIC_REQUIRE(requires { var::b; });
   STATIC_REQUIRE(requires { var::c; });
-  STATIC_REQUIRE(var::type::size == 4);
+  STATIC_REQUIRE(var::enum_type::size == 4);
   STATIC_REQUIRE(var::empty.value == 0);
   STATIC_REQUIRE(var::a.value == 1);
   STATIC_REQUIRE(var::b.value == 2);
@@ -35,11 +35,11 @@ TEST_CASE("operations", "[enum/enum_flag]")
 
   SECTION("COMPARE")
   {
-    STATIC_REQUIRE(based::EqualityComparable<var::type>);
-    STATIC_REQUIRE(!based::LessComparable<var::type>);
-    STATIC_REQUIRE(!based::GreaterComparable<var::type>);
-    STATIC_REQUIRE(!based::LessEqualComparable<var::type>);
-    STATIC_REQUIRE(!based::GreaterEqualComparable<var::type>);
+    STATIC_REQUIRE(based::EqualityComparable<var::enum_type>);
+    STATIC_REQUIRE(!based::LessComparable<var::enum_type>);
+    STATIC_REQUIRE(!based::GreaterComparable<var::enum_type>);
+    STATIC_REQUIRE(!based::LessEqualComparable<var::enum_type>);
+    STATIC_REQUIRE(!based::GreaterEqualComparable<var::enum_type>);
   }
 
   SECTION("functions")
@@ -75,7 +75,7 @@ TEST_CASE("enum_flag_wrapper", "[enum/enum_flag_wrapper]")
   based::bu8 flags = 0;
 
   {
-    auto wrapper = based::enum_flag_wrapper<var::type>(flags);
+    auto wrapper = based::enum_flag_wrapper<var::enum_type>(flags);
 
     wrapper |= var::a;
     wrapper |= var::c;

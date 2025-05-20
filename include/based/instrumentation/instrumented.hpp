@@ -19,7 +19,7 @@ struct instrumented_base
 {
   BASED_DECLARE_ENUM(
       op,
-      u8,
+      based::bu8,
       0,
       n,
       ctor_default,
@@ -33,7 +33,7 @@ struct instrumented_base
       comparison
   )
 
-  static op::type::array<double> counts;
+  static op::enum_type::array<double> counts;
 
   static void initialize(size_t size)
   {
@@ -45,7 +45,7 @@ struct instrumented_base
 BASED_DEFINE_ENUM_CLASS(
     instrumented_base,
     op,
-    u8,
+    bu8,
     0,
     n,
     ctor_default,
@@ -200,18 +200,18 @@ void count_operations(
 )
 {
   using instrumented = instrumented<double>;
-  using esize_t = instrumented::op::type::size_type;
+  using esize_t = instrumented::op::enum_type::size_type;
 
-  constexpr esize_t cols = instrumented::op::type::size;
+  constexpr esize_t cols = instrumented::op::enum_type::size;
   const esize_t decimals((norm == dont_normalize) ? 0 : 2);
 
-  instrumented_base::op::type::array<double> values;
+  instrumented_base::op::enum_type::array<double> values;
 
   static constexpr int width = 12;
   table tbl(width);
   tbl.print_header(
-      std::begin(instrumented::op::type::names),
-      std::end(instrumented::op::type::names)
+      std::begin(instrumented::op::enum_type::names),
+      std::end(instrumented::op::enum_type::names)
   );
 
   std::mt19937 rng(0);  // NOLINT(*cert-msc32-c*, *cert-msc51-cpp*)
@@ -227,7 +227,7 @@ void count_operations(
 
     values[instrumented_base::op::n] = dbl;
     for (esize_t k = 1; k < cols; ++k) {
-      const auto& val = instrumented::op::type::get(k);
+      const auto& val = instrumented::op::enum_type::get(k);
       values[val] = norm(instrumented::counts[val], dbl);
     }
 

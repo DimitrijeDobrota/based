@@ -20,7 +20,7 @@
 // NOLINTNEXTLINE(*macro-parentheses*)
 #define BASED_E_DETAIL_SET(var, val) decltype(var) var = decltype(var) {val};
 
-#define BASED_E_DETAIL_DECLARE_VAL(Name, Index) static const type Name;
+#define BASED_E_DETAIL_DECLARE_VAL(Name, Index) static const enum_type Name;
 
 #define BASED_E_DETAIL_DECLARE_CASE(Qualifier, Name, Index)                    \
   case Qualifier::Name.value:                                                  \
@@ -29,17 +29,17 @@
 #define BASED_E_DETAIL_DEFINE_VAL(Qualifier, Initial, Name, Index)             \
   inline constexpr BASED_E_DETAIL_SET(                                         \
       Qualifier::Name,                                                         \
-      Qualifier::type::value_type {Initial} + Qualifier::type::size - (Index)  \
-          - 1                                                                  \
+      Qualifier::enum_type::value_type {Initial} + Qualifier::enum_type::size  \
+          - (Index) - 1                                                        \
   )
 
 #define BASED_E_DETAIL_DEFINE_NAMES(Qualifier, ...)                            \
   inline constexpr BASED_E_DETAIL_SET(                                         \
-      Qualifier::type::names, BASED_E_DETAIL_LIST_STR(__VA_ARGS__)             \
+      Qualifier::enum_type::names, BASED_E_DETAIL_LIST_STR(__VA_ARGS__)        \
   )
 
 #define BASED_E_DETAIL_DEFINE_GET(Qualifier, Type, ...)                        \
-  inline const Qualifier::type& Qualifier::type::get(Type idx)                 \
+  inline const Qualifier::enum_type& Qualifier::enum_type::get(Type idx)       \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
     switch (idx) {                                                             \
@@ -57,9 +57,10 @@
 
 #define BASED_DECLARE_ARRAY(Name, Initial)                                     \
   template<typename T>                                                         \
-  class array : public std::array<T, Name::type::size>                         \
+  class array : public std::array<T, Name::enum_type::size>                    \
   {                                                                            \
-    using base = std::array<T, Name::type::size>;                              \
+    using enum_type = Name::enum_type;                                         \
+    using base = std::array<T, enum_type::size>;                               \
     using base::operator[];                                                    \
     using base::at;                                                            \
                                                                                \
@@ -70,42 +71,42 @@
     }                                                                          \
                                                                                \
     template<class... Args>                                                    \
-      requires(Name::type::size_type(sizeof...(Args)) == Name::type::size)     \
+      requires(enum_type::size_type(sizeof...(Args)) == enum_type::size)       \
     constexpr explicit array(Args&&... args                                    \
     ) noexcept /* NOLINTNEXTLINE(*decay*) */                                   \
         : base({based::forward<Args>(args)...})                                \
     {                                                                          \
     }                                                                          \
                                                                                \
-    const T& operator[](Name::type val) const                                  \
+    const T& operator[](enum_type val) const                                   \
     {                                                                          \
-      return base::operator[](val.value - Name::type::value_type {Initial});   \
+      return base::operator[](val.value - enum_type::value_type {Initial});    \
     }                                                                          \
                                                                                \
-    T& operator[](Name::type val)                                              \
+    T& operator[](enum_type val)                                               \
     {                                                                          \
-      return base::operator[](val.value - Name::type::value_type {Initial});   \
+      return base::operator[](val.value - enum_type::value_type {Initial});    \
     }                                                                          \
                                                                                \
-    const T& at(Name::type val) const                                          \
+    const T& at(enum_type val) const                                           \
     {                                                                          \
-      return base::operator[](val.value - Name::type::value_type {Initial});   \
+      return base::operator[](val.value - enum_type::value_type {Initial});    \
     }                                                                          \
                                                                                \
-    T& at(Name::type val)                                                      \
+    T& at(enum_type val)                                                       \
     {                                                                          \
-      return base::operator[](val.value - Name::type::value_type {Initial});   \
+      return base::operator[](val.value - enum_type::value_type {Initial});    \
     }                                                                          \
   };
 
 #define BASED_DECLARE_ENUM(Name, Type, Initial, ...)                           \
   struct Name                                                                  \
   {                                                                            \
-    class type                                                                 \
+    class enum_type                                                            \
     {                                                                          \
       friend Name;                                                             \
                                                                                \
-      constexpr explicit type(Type enum_value)                                 \
+      constexpr explicit enum_type(Type enum_value)                            \
           : value(enum_value)                                                  \
       {                                                                        \
       }                                                                        \
@@ -120,9 +121,14 @@
       BASED_DECLARE_ARRAY(Name, Initial)                                       \
       static const array<const char*> names;                                   \
                                                                                \
-      static const type& get(Type idx);                                        \
+      static const enum_type& get(Type idx);                                   \
                                                                                \
-      friend bool operator==(type lhs, type rhs)                               \
+      constexpr Type operator()() const                                        \
+      {                                                                        \
+        return value;                                                          \
+      }                                                                        \
+                                                                               \
+      friend bool operator==(enum_type lhs, enum_type rhs)                     \
       {                                                                        \
         return lhs.value == rhs.value;                                         \
       }                                                                        \
