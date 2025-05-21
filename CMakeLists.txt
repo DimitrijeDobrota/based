@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     based
-    VERSION 0.1.2
+    VERSION 0.2.0
     DESCRIPTION "Opinionated utility library"
     HOMEPAGE_URL "https://git.dimitrijedobrota.com/based.git"
     LANGUAGES CXX

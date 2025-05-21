@@ -77,7 +77,7 @@ template<class LHS, class RHS>
     requires addable<LHS, RHS>;
     requires SameAs<LHS, decltype(add(lhs, rhs))>;
   })
-constexpr auto& operator+=(LHS& lhs, RHS& rhs)
+constexpr auto& operator+=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs + rhs;
 }
@@ -97,7 +97,7 @@ template<class LHS, class RHS>
     requires subtractable<LHS, RHS>;
     requires SameAs<LHS, decltype(sub(lhs, rhs))>;
   })
-constexpr auto& operator-=(LHS& lhs, RHS& rhs)
+constexpr auto& operator-=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs - rhs;
 }
@@ -117,7 +117,7 @@ template<class LHS, class RHS>
     requires multiplyable<LHS, RHS>;
     requires SameAs<LHS, decltype(mul(lhs, rhs))>;
   })
-constexpr auto& operator*=(LHS& lhs, RHS& rhs)
+constexpr auto& operator*=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs * rhs;
 }
@@ -137,7 +137,7 @@ template<class LHS, class RHS>
     requires divisible<LHS, RHS>;
     requires SameAs<LHS, decltype(div(lhs, rhs))>;
   })
-constexpr auto& operator/=(LHS& lhs, RHS& rhs)
+constexpr auto& operator/=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs / rhs;
 }
@@ -157,7 +157,7 @@ template<class LHS, class RHS>
     requires modable<LHS, RHS>;
     requires SameAs<LHS, decltype(mod(lhs, rhs))>;
   })
-constexpr auto& operator%=(LHS& lhs, RHS& rhs)
+constexpr auto& operator%=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs % rhs;
 }
@@ -177,7 +177,7 @@ template<class LHS, class RHS>
     requires lshiftable<LHS, RHS>;
     requires SameAs<LHS, decltype(lshift(lhs, rhs))>;
   })
-constexpr auto& operator<<=(LHS& lhs, RHS& rhs)
+constexpr auto& operator<<=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs << rhs;
 }
@@ -197,7 +197,7 @@ template<class LHS, class RHS>
     requires rshiftable<LHS, RHS>;
     requires SameAs<LHS, decltype(rshift(lhs, rhs))>;
   })
-constexpr auto& operator>>=(LHS& lhs, RHS& rhs)
+constexpr auto& operator>>=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs >> rhs;
 }
@@ -217,7 +217,7 @@ template<class LHS, class RHS>
     requires andable<LHS, RHS>;
     requires SameAs<LHS, decltype(land(lhs, rhs))>;
   })
-constexpr auto& operator&=(LHS& lhs, RHS& rhs)
+constexpr auto& operator&=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs & rhs;
 }
@@ -237,7 +237,7 @@ template<class LHS, class RHS>
     requires orable<LHS, RHS>;
     requires SameAs<LHS, decltype(lor(lhs, rhs))>;
   })
-constexpr auto& operator|=(LHS& lhs, RHS& rhs)
+constexpr auto& operator|=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs | rhs;
 }
@@ -257,7 +257,7 @@ template<class LHS, class RHS>
     requires xorable<LHS, RHS>;
     requires SameAs<LHS, decltype(lxor(lhs, rhs))>;
   })
-constexpr auto& operator^=(LHS& lhs, RHS& rhs)
+constexpr auto& operator^=(LHS& lhs, RHS rhs)
 {
   return lhs = lhs ^ rhs;
 }
