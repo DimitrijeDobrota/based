@@ -83,6 +83,10 @@ add_test(. list_test)
 
 add_test(. string_literal_test)
 
+## ----- Char -----
+
+add_test(char mapper_test)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)
