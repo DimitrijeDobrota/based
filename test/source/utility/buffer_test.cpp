@@ -4,7 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/types/types.hpp"
+#include "based/types/literals.hpp"
 
 template struct based::buffer<sizeof(void*)>;
 
@@ -31,7 +31,7 @@ TEST_CASE("valid type", "[template/buffer]")
 
 TEST_CASE("buffer", "[template/buffer]")
 {
-  using namespace based::literals;  // NOLINT
+  using namespace based::literals;  // NOLINT(*namespace*)
   using buffer = based::buffer<sizeof(based::size_t)>;
 
   static constexpr auto value = 8_u8;
@@ -60,7 +60,7 @@ TEST_CASE("buffer", "[template/buffer]")
 
 TEST_CASE("const buffer", "[template/buffer]")
 {
-  using namespace based::literals;  // NOLINT
+  using namespace based::literals;  // NOLINT(*namespace*)
   using buffer = based::buffer<sizeof(based::size_t)>;
 
   static constexpr auto value = 8_u8;

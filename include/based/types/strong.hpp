@@ -20,6 +20,8 @@ struct strong_type
   using basic_type = V;
   using tag_type = Tag;
 
+  basic_type value;
+
   constexpr ~strong_type() = default;
 
   constexpr explicit strong_type()
@@ -40,7 +42,11 @@ struct strong_type
   constexpr strong_type& operator=(const strong_type&) = default;
   constexpr strong_type& operator=(strong_type&&) = default;
 
-  basic_type value;
+  template<class T>
+  static constexpr Tag basic_cast(T value)
+  {
+    return Tag {static_cast<basic_type>(value)};
+  }
 };
 // NOLINTEND(*crtp*)
 
@@ -273,6 +279,23 @@ constexpr auto operator~(LHS lhs)
 {
   lhs.value = ~lhs.value;
   return lhs;
+}
+
+template<class LHS>
+concept unariable = requires(LHS lhs) { unary(lhs); };
+
+template<class LHS>
+  requires unariable<LHS>
+constexpr auto operator+(LHS lhs)
+{
+  return decltype(lhs)(+lhs.value);
+}
+
+template<class LHS>
+  requires unariable<LHS>
+constexpr auto operator-(LHS lhs)
+{
+  return decltype(lhs)(-lhs.value);
 }
 
 template<class LHS>
