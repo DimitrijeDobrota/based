@@ -1,6 +1,9 @@
 #pragma once
 
+#include <compare>
+
 #include "based/concepts/is/same.hpp"
+#include "based/trait/is/class.hpp"
 
 namespace based
 {
@@ -24,12 +27,12 @@ struct strong_type
 
   constexpr ~strong_type() = default;
 
-  constexpr explicit strong_type()
+  explicit constexpr strong_type()
       : value(0)
   {
   }
 
-  constexpr explicit strong_type(basic_type val)
+  explicit constexpr strong_type(basic_type val)
       : value(val)
   {
   }
@@ -46,6 +49,13 @@ struct strong_type
   static constexpr Tag basic_cast(T value)
   {
     return Tag {static_cast<basic_type>(value)};
+  }
+
+  template<class T>
+    requires is_class_v<T>
+  static constexpr Tag basic_cast(T value)
+  {
+    return static_cast<Tag>(value);
   }
 };
 // NOLINTEND(*crtp*)
