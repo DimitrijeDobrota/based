@@ -344,7 +344,7 @@ concept postdecable = requires(LHS lhs) { postdec(lhs); };
 
 template<class LHS>
   requires postdecable<LHS>
-constexpr auto operator--(LHS lhs, int)
+constexpr auto operator--(LHS& lhs, int)
 {
   return BASED_DETAIL_MACRO(postdec(lhs), lhs.value--);
 }
