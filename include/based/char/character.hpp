@@ -21,7 +21,7 @@ public:
   using strong_type::strong_type;
   using strong_type::operator=;
 
-  explicit constexpr character(char chr)
+  constexpr character(char chr)  // NOLINT(*explicit*)
       : strong_type(cast(chr))
   {
   }

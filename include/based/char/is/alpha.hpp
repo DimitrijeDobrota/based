@@ -1,12 +1,13 @@
 #pragma once
 
+#include "based/char/character.hpp"
 #include "based/char/is/alpha_lower.hpp"
 #include "based/char/is/alpha_upper.hpp"
 
 namespace based
 {
 
-constexpr bool is_alpha(char chr)
+constexpr bool is_alpha(character chr)
 {
   return is_alpha_lower(chr) || is_alpha_upper(chr);
 }

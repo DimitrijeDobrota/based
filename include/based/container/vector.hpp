@@ -6,18 +6,18 @@ namespace based
 {
 
 template<class T, class U, class Allocator = std::allocator<T>>
-class vector : public vector<T, Allocator>
+class vector : public std::vector<T, Allocator>
 {
-  using base = vector<T, Allocator>;
+  using base = std::vector<T, Allocator>;
 
-  static constexpr auto cast(U value)
+  static constexpr auto cast(U pos)
   {
-    return static_cast<base::size_type>(value);
+    return static_cast<base::size_type>(pos.value);
   }
 
-  static constexpr auto cast(base::size_type value)
+  static constexpr auto cast(base::size_type pos)
   {
-    return static_cast<U>(value);
+    return static_cast<U>(pos);
   }
 
 public:

@@ -1,9 +1,11 @@
 #pragma once
 
+#include "based/char/character.hpp"
+
 namespace based
 {
 
-constexpr bool is_alpha_lower(char chr)
+constexpr bool is_alpha_lower(character chr)
 {
   return chr >= 'a' && chr <= 'z';
 }

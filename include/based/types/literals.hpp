@@ -34,7 +34,7 @@ constexpr auto make_signed_itnernal()
 {
   const signed long long radix = 10;
 
-  static_assert(is_digit(c), "invalid digit");
+  static_assert(is_digit(character(c)), "invalid digit");
   static_assert(v <= (limits<i64>::max.value - (c - '0')) / radix, "overflow");
 
   return make_signed_itnernal<(radix * v) + (c - '0'), cs...>();
@@ -111,7 +111,7 @@ constexpr auto make_unsigned_internal()
 {
   const unsigned long long radix = 10;
 
-  static_assert(is_digit(c), "invalid digit");
+  static_assert(is_digit(character(c)), "invalid digit");
   static_assert(v <= (limits<u64>::max.value - (c - '0')) / radix, "overflow");
 
   return make_unsigned_internal<(radix * v) + c - '0', cs...>();

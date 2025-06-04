@@ -1,29 +1,30 @@
 #pragma once
 
-#include <array>
-
+#include "based/char/character.hpp"
 #include "based/concepts/procedure/predicate.hpp"
-#include "based/types/types.hpp"
+#include "based/container/array.hpp"
+#include "based/types/limits.hpp"
+#include "based/types/literals.hpp"
 
 namespace based
 {
 
-template<Predicate<char> Predicate>
+template<Predicate<character> Predicate>
 class mapper
 {
-  static constexpr based::size_t size = 128;
-  using mapped_type = bu8;
+  static constexpr auto size = limits<u8>::max;
+  using mapped_type = u8;
 
   static constexpr Predicate m_predicate = {};
 
-  using direct_t = std::array<mapped_type, size>;
+  using direct_t = array<mapped_type, u8, size>;
   static constexpr direct_t direct = []
   {
     direct_t res = {};
 
-    mapped_type count = 0;
-    for (std::size_t idx = 0; idx < size; idx++) {
-      if (m_predicate(static_cast<char>(idx))) {
+    mapped_type count = 0_u8;
+    for (auto idx = 0_u8; idx < size; idx++) {
+      if (m_predicate(character::basic_cast(idx))) {
         res[idx] = count++;
       }
     }
@@ -31,25 +32,25 @@ class mapper
     return res;
   }();
 
-  static constexpr const std::size_t count = []
+  static constexpr const u8 count = []
   {
-    mapped_type count = 0;
-    for (std::size_t idx = 0; idx < size; idx++) {
-      if (m_predicate(static_cast<char>(idx))) {
+    mapped_type count = 0_u8;
+    for (auto idx = 0_u8; idx < size; idx++) {
+      if (m_predicate(character::basic_cast(idx))) {
         count++;
       }
     }
     return count;
   }();
 
-  using reverse_t = std::array<char, count>;
+  using reverse_t = array<character, u8, count>;
   static constexpr reverse_t reverse = []
   {
     reverse_t res = {};
 
-    mapped_type count = 0;
-    for (std::size_t idx = 0; idx < size; idx++) {
-      const auto chr = static_cast<char>(idx);
+    mapped_type count = 0_u8;
+    for (auto idx = 0_u8; idx < size; idx++) {
+      const auto chr = character::basic_cast(idx);
       if (m_predicate(chr)) {
         res[count++] = chr;
       }
@@ -59,17 +60,9 @@ class mapper
   }();
 
 public:
-  static constexpr bool predicate(char chr) { return m_predicate(chr); }
-  static constexpr char map(mapped_type value) { return reverse[value]; }
-  static constexpr mapped_type map(char chr)
-  {
-    return direct[static_cast<based::size_t>(chr)];
-  }
-};
-
-struct test
-{
-  constexpr bool operator()(char chr) const { return chr >= 'a' && chr <= 'z'; }
+  static constexpr bool predicate(character chr) { return m_predicate(chr); }
+  static constexpr character map(mapped_type value) { return reverse[value]; }
+  static constexpr mapped_type map(character chr) { return direct[chr.ord()]; }
 };
 
 }  // namespace based

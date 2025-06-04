@@ -4,9 +4,11 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "based/char/character.hpp"
+
 struct test
 {
-  constexpr bool operator()(char chr) const { return chr >= '\0'; }
+  constexpr bool operator()(based::character chr) const { return chr >= '\0'; }
 };
 
 template class based::mapper<test>;
