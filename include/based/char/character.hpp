@@ -5,53 +5,42 @@
 namespace based
 {
 
-class character : public strong_type<unsigned char, character>
+struct character : public strong_type<char, character>
 {
-  static constexpr auto cast(char pos)
-  {
-    return static_cast<unsigned char>(pos);
-  }
-
-  static constexpr auto cast(unsigned char pos)
-  {
-    return static_cast<char>(pos);
-  }
-
-public:
   using strong_type::strong_type;
   using strong_type::operator=;
 
   constexpr character(char chr)  // NOLINT(*explicit*)
-      : strong_type(cast(chr))
+      : strong_type(chr)
   {
   }
 
   explicit constexpr character(u8 ord)
-      : strong_type(ord.value)
+      : strong_type(static_cast<char>(ord.value))
   {
   }
 
-  [[nodiscard]] char chr() const { return cast(value); }
-  [[nodiscard]] u8 ord() const { return u8::basic_cast(value); }
+  [[nodiscard]] char chr() const { return value; }
+  [[nodiscard]] u8 ord() const { return u8::underlying_cast(value); }
 
   friend constexpr bool operator==(character lhs, char rhs)
   {
-    return lhs.value == cast(rhs);
+    return lhs.value == rhs;
   }
 
   friend constexpr bool operator==(char lhs, character rhs)
   {
-    return cast(lhs) == rhs.value;
+    return lhs == rhs.value;
   }
 
   friend constexpr auto operator<=>(character lhs, char rhs)
   {
-    return lhs.value <=> cast(rhs);
+    return lhs.value <=> rhs;
   }
 
   friend constexpr auto operator<=>(char lhs, character rhs)
   {
-    return cast(lhs) <=> rhs.value;
+    return lhs <=> rhs.value;
   }
 };
 

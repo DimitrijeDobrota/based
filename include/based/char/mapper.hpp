@@ -3,7 +3,6 @@
 #include "based/char/character.hpp"
 #include "based/concepts/procedure/predicate.hpp"
 #include "based/container/array.hpp"
-#include "based/types/limits.hpp"
 #include "based/types/literals.hpp"
 
 namespace based
@@ -24,7 +23,7 @@ class mapper
 
     mapped_type count = 0_u8;
     for (auto idx = 0_u8; idx < size; idx++) {
-      if (m_predicate(character::basic_cast(idx))) {
+      if (m_predicate(character::cast(idx))) {
         res[idx] = count++;
       }
     }
@@ -36,7 +35,7 @@ class mapper
   {
     mapped_type count = 0_u8;
     for (auto idx = 0_u8; idx < size; idx++) {
-      if (m_predicate(character::basic_cast(idx))) {
+      if (m_predicate(character::cast(idx))) {
         count++;
       }
     }
@@ -50,7 +49,7 @@ class mapper
 
     mapped_type count = 0_u8;
     for (auto idx = 0_u8; idx < size; idx++) {
-      const auto chr = character::basic_cast(idx);
+      const auto chr = character::cast(idx);
       if (m_predicate(chr)) {
         res[count++] = chr;
       }

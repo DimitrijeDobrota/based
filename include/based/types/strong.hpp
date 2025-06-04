@@ -46,14 +46,13 @@ struct strong_type
   constexpr strong_type& operator=(strong_type&&) = default;
 
   template<class T>
-  static constexpr Tag basic_cast(T value)
+  static constexpr Tag underlying_cast(T value)
   {
     return Tag {static_cast<basic_type>(value)};
   }
 
   template<class T>
-    requires is_class_v<T>
-  static constexpr Tag basic_cast(T value)
+  static constexpr Tag cast(T value)
   {
     return static_cast<Tag>(value);
   }

@@ -8,9 +8,9 @@ namespace based
 {
 
 template<class T, class U, U n>
-class array : public std::array<T, u64::basic_cast(n).value>
+class array : public std::array<T, u64::cast(n).value>
 {
-  using base = std::array<T, u64::basic_cast(n).value>;
+  using base = std::array<T, u64::cast(n).value>;
 
   static constexpr auto cast(U pos)
   {
