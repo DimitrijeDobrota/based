@@ -32,6 +32,11 @@ See the [`BUILDING`](BUILDING.md) document.
 
 ## Version History
 
+* 0.2
+    * Big restructure
+    * Strong types facilities
+    * Strong signed and unsigned types
+    * Enum and Enum Flag system
 * 0.1.1
 	* Enforce return type on all procedure
 	* Lots of utility classes
