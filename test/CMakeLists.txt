@@ -66,6 +66,7 @@ add_test(algorithms min_test)
 
 add_test(utility buffer_test)
 add_test(utility scopeguard_test)
+add_test(utility static_view_test)
 
 ## ----- Functional -----
 
