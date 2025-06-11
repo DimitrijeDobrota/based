@@ -8,7 +8,7 @@
 
 template struct based::buffer<sizeof(void*)>;
 
-TEST_CASE("valid type", "[template/buffer]")
+TEST_CASE("valid type", "[utility/buffer]")
 {
   SECTION("small buffer")
   {
@@ -29,7 +29,7 @@ TEST_CASE("valid type", "[template/buffer]")
   }
 }
 
-TEST_CASE("buffer", "[template/buffer]")
+TEST_CASE("buffer", "[utility/buffer]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
   using buffer = based::buffer<sizeof(based::size_t)>;
@@ -58,7 +58,7 @@ TEST_CASE("buffer", "[template/buffer]")
   }
 }
 
-TEST_CASE("const buffer", "[template/buffer]")
+TEST_CASE("const buffer", "[utility/buffer]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
   using buffer = based::buffer<sizeof(based::size_t)>;

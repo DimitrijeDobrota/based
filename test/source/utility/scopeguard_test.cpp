@@ -23,7 +23,7 @@ private:
 
 template class based::scopeguard<set>;
 
-TEST_CASE("manual", "[template/scopeguard]")
+TEST_CASE("manual", "[utility/scopeguard]")
 {
   SECTION("commit")
   {
@@ -50,7 +50,7 @@ TEST_CASE("manual", "[template/scopeguard]")
   }
 }
 
-TEST_CASE("on success", "[template/scopeguard]")
+TEST_CASE("on success", "[utility/scopeguard]")
 {
   SECTION("success")
   {
@@ -77,7 +77,7 @@ TEST_CASE("on success", "[template/scopeguard]")
   }
 }
 
-TEST_CASE("on failure", "[template/scopeguard]")
+TEST_CASE("on failure", "[utility/scopeguard]")
 {
   SECTION("success")
   {
@@ -104,7 +104,7 @@ TEST_CASE("on failure", "[template/scopeguard]")
   }
 }
 
-TEST_CASE("exit", "[template/scopeguard]")
+TEST_CASE("exit", "[utility/scopeguard]")
 {
   SECTION("success")
   {
