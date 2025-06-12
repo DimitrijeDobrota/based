@@ -84,7 +84,8 @@ add_test(. list_test)
 
 ## ----- String -----
 
-add_test(. string_literal_test)
+add_test(string literal_test)
+add_test(string format_test)
 
 ## ----- Char -----
 

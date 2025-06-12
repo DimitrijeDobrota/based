@@ -2,7 +2,7 @@
 
 #include "based/string/literal.hpp"
 
-TEST_CASE("empty", "[string/string_literal]")
+TEST_CASE("empty", "[string/literal]")
 {
   const based::string_literal sltr = "";
 
@@ -10,7 +10,7 @@ TEST_CASE("empty", "[string/string_literal]")
   REQUIRE(std::memcmp(sltr.data(), "", sltr.size()) == 0);
 }
 
-TEST_CASE("nonempty", "[string/string_literal]")
+TEST_CASE("nonempty", "[string/literal]")
 {
   const based::string_literal sltr = "nonempty";
 
@@ -18,7 +18,7 @@ TEST_CASE("nonempty", "[string/string_literal]")
   REQUIRE(std::memcmp(sltr.data(), "nonempty", sltr.size()) == 0);
 }
 
-TEST_CASE("template", "[string/string_literal]")
+TEST_CASE("template", "[string/literal]")
 {
   const auto data = []<based::string_literal l>()
   {
