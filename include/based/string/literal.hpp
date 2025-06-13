@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <string_view>
 
 namespace based
 {
@@ -15,7 +16,13 @@ struct string_literal
   {
   }
 
-  [[nodiscard]] constexpr size_t size() const { return n; }
+  // NOLINTNEXTLINE(*explicit*)
+  [[nodiscard]] constexpr operator std::string_view() const
+  {
+    return {data(), size()};
+  }
+
+  [[nodiscard]] constexpr size_t size() const { return n - 1; }
   [[nodiscard]] constexpr const char* data() const { return m_value.data(); }
 
   std::array<char, n> m_value;
