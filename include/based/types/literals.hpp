@@ -1,7 +1,5 @@
 #pragma once
 
-#include "based/char/is/digit.hpp"
-#include "based/concepts/is/castable.hpp"
 #include "based/types/types.hpp"
 
 // NOLINTBEGIN(google-runtime-int)
@@ -9,144 +7,70 @@
 namespace based
 {
 
-// Signed
-namespace detail
+namespace literals
 {
 
-template<signed long long val>
-consteval i make_signed_itnernal()
+consteval auto operator""_i(unsigned long long val)
 {
   return i::underlying_cast(val);
 }
 
-template<signed long long v, char c, char... cs>
-consteval auto make_signed_itnernal()
+consteval i8 operator""_i8(unsigned long long val)
 {
-  const signed long long radix = 10;
-
-  static_assert(is_digit(character(c)), "invalid digit");
-  static_assert(v <= (limits<i64>::max.value - (c - '0')) / radix, "overflow");
-
-  return make_signed_itnernal<(radix * v) + (c - '0'), cs...>();
+  return i::underlying_cast(val);
 }
 
-template<char... cs>
-consteval auto make_signed()
+consteval i16 operator""_i16(unsigned long long val)
 {
-  return make_signed_itnernal<0, cs...>();
+  return i::underlying_cast(val);
 }
 
-}  // namespace detail
-
-namespace literals
+consteval i32 operator""_i32(unsigned long long val)
 {
-
-template<char... cs>
-consteval auto operator"" _i()
-{
-  return detail::make_signed<cs...>();
+  return i::underlying_cast(val);
 }
 
-template<char... cs>
-  requires CastableTo<decltype(detail::make_signed<cs...>()), u8>
-consteval auto operator"" _i8()
+consteval i64 operator""_i64(unsigned long long val)
 {
-  return i8::cast(detail::make_signed<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_signed<cs...>()), u16>
-consteval auto operator"" _i16()
-{
-  return i16::cast(detail::make_signed<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_signed<cs...>()), u32>
-consteval auto operator"" _i32()
-{
-  return i32::cast(detail::make_signed<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_signed<cs...>()), u64>
-consteval auto operator"" _i64()
-{
-  return i64::cast(detail::make_signed<cs...>());
+  return i::underlying_cast(val);
 }
 
 }  // namespace literals
 
 // Unsigned
 
-namespace detail
+namespace literals
 {
 
-template<unsigned long long val>
-consteval u make_unsigned_internal()
+consteval auto operator""_u(unsigned long long val)
 {
   return u::underlying_cast(val);
 }
 
-template<unsigned long long v, char c, char... cs>
-consteval auto make_unsigned_internal()
+consteval u8 operator""_u8(unsigned long long val)
 {
-  const unsigned long long radix = 10;
-
-  static_assert(is_digit(character(c)), "invalid digit");
-  static_assert(v <= (limits<u64>::max.value - (c - '0')) / radix, "overflow");
-
-  return make_unsigned_internal<(radix * v) + c - '0', cs...>();
+  return u::underlying_cast(val);
 }
 
-template<char... cs>
-consteval auto make_unsigned()
+consteval u16 operator""_u16(unsigned long long val)
 {
-  return make_unsigned_internal<0, cs...>();
+  return u::underlying_cast(val);
 }
 
-}  // namespace detail
-
-namespace literals
+consteval u32 operator""_u32(unsigned long long val)
 {
-
-template<char... cs>
-consteval auto operator"" _u()
-{
-  return detail::make_unsigned<cs...>();
+  return u::underlying_cast(val);
 }
 
-template<char... cs>
-  requires CastableTo<decltype(detail::make_unsigned<cs...>()), u8>
-consteval auto operator"" _u8()
+consteval u64 operator""_u64(unsigned long long val)
 {
-  return u8::cast(detail::make_unsigned<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_unsigned<cs...>()), u16>
-consteval auto operator"" _u16()
-{
-  return u16::cast(detail::make_unsigned<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_unsigned<cs...>()), u32>
-consteval auto operator"" _u32()
-{
-  return u32::cast(detail::make_unsigned<cs...>());
-}
-
-template<char... cs>
-  requires CastableTo<decltype(detail::make_unsigned<cs...>()), u64>
-consteval auto operator"" _u64()
-{
-  return u64::cast(detail::make_unsigned<cs...>());
+  return u::underlying_cast(val);
 }
 
 }  // namespace literals
 
 using namespace literals;  // NOLINT(*namespace*)
+
 }  // namespace based
 
 // NOLINTEND(google-runtime-int)
