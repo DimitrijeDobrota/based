@@ -294,7 +294,10 @@ BASED_FOREACH_1(
     i, BASED_DETAIL_OP_BINARY, compare, order, add, sub, mul, div, mod
 )
 
-BASED_FOREACH_1(u, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec)
+BASED_FOREACH_1(
+    u, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec, lnot
+)
+
 BASED_FOREACH_1(
     u,
     BASED_DETAIL_OP_BINARY,
