@@ -10,10 +10,13 @@
 #include "based/concepts/comparable/less.hpp"
 #include "based/concepts/comparable/less_equal.hpp"
 #include "based/concepts/is/same.hpp"
+#include "based/types/literals.hpp"
 #include "based/types/types.hpp"
 
-BASED_DECLARE_ENUM_FLAG(var, based::bu8, empty, a, b, c)
-BASED_DEFINE_ENUM_FLAG(var, based::bu8, empty, a, b, c)
+using namespace based::literals;  // NOLINT(*namespace*)
+
+BASED_DECLARE_ENUM_FLAG(var, based::u8, empty, a, b, c)
+BASED_DEFINE_ENUM_FLAG(var, based::u8, empty, a, b, c)
 
 TEST_CASE("types", "[enum/enum_flag]")
 {
@@ -22,11 +25,11 @@ TEST_CASE("types", "[enum/enum_flag]")
   STATIC_REQUIRE(requires { var::a; });
   STATIC_REQUIRE(requires { var::b; });
   STATIC_REQUIRE(requires { var::c; });
-  STATIC_REQUIRE(var::size == 4);
-  STATIC_REQUIRE(var::empty.value == 0);
-  STATIC_REQUIRE(var::a.value == 1);
-  STATIC_REQUIRE(var::b.value == 2);
-  STATIC_REQUIRE(var::c.value == 4);
+  STATIC_REQUIRE(var::size == 4_u8);
+  STATIC_REQUIRE(var::empty.value == 0_u8);
+  STATIC_REQUIRE(var::a.value == 1_u8);
+  STATIC_REQUIRE(var::b.value == 2_u8);
+  STATIC_REQUIRE(var::c.value == 4_u8);
 }
 
 TEST_CASE("operations", "[enum/enum_flag]")
@@ -72,8 +75,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
 
 TEST_CASE("enum_flag_wrapper", "[enum/enum_flag_wrapper]")
 {
-  based::bu8 flags = 0;
-
+  auto flags = 0_u8;
   {
     auto wrapper = based::enum_flag_wrapper<var>(flags);
 
@@ -81,5 +83,5 @@ TEST_CASE("enum_flag_wrapper", "[enum/enum_flag_wrapper]")
     wrapper |= var::c;
   }
 
-  REQUIRE(flags == 0x5);
+  REQUIRE(flags == 0x5_u8);
 }

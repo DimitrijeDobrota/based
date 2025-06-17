@@ -1,13 +1,15 @@
 #pragma once
 
-#include <cassert>
+#include <array>
 
+#include "based/assert.hpp"
 #include "based/macro/foreach.hpp"
 #include "based/macro/foreach_1.hpp"
+#include "based/types/types.hpp"
 
 // NOLINTBEGIN(*macro-usage*)
 
-#define BASED_EF_DETAIL_NUMARGS(...) (std::array {__VA_ARGS__}.size())
+#define BASED_EF_DETAIL_NUMARGS(...) based::u(std::array {__VA_ARGS__}.size())
 
 #define BASED_EF_DETAIL_LIST_ELEM_STR(Name, Index) #Name,
 
@@ -22,25 +24,25 @@
   static const Name Var;
 
 #define BASED_EF_DETAIL_DECLARE_ENUM_CASE(Qualifier, Var, Index)               \
-  case Qualifier::Var.value:                                                   \
+  case Qualifier::Var():                                                       \
     return Var;
 
-#define BASED_EF_DETAIL_DEFINE_VAL(Qualifier, Var, Index)                      \
-  inline constexpr BASED_EF_DETAIL_SET(                                        \
-      Qualifier::Var,                                                          \
-      Qualifier::value_type {1}                                                \
-          << Qualifier::value_type {Qualifier::size - (Index) - 2}             \
+#define BASED_EF_DETAIL_DEFINE_VAL(Qualifier, Var, Index)                                              \
+  inline constexpr BASED_EF_DETAIL_SET(                                                                \
+      Qualifier::Var,                                                                                  \
+      Qualifier::value_type {1} << Qualifier::                                                         \
+              value_type {Qualifier::size - Qualifier::value_type {Index} - Qualifier::value_type {2}} \
   )
 
 #define BASED_EF_DETAIL_DEFINE_VALS(Qualifier, First, ...)                     \
   BASED_FOREACH_1(Qualifier, BASED_EF_DETAIL_DEFINE_VAL, __VA_ARGS__)          \
-  inline constexpr BASED_EF_DETAIL_SET(Qualifier::First, 0)
+  inline constexpr BASED_EF_DETAIL_SET(Qualifier::First, based::u {0})
 
 #define BASED_EF_DETAIL_DEFINE_GET(Qualifier, Type, ...)                       \
   inline const Qualifier& Qualifier::get(Type idx)                             \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
-    switch (idx) {                                                             \
+    switch (static_cast<Type::basic_type>(idx)) {                              \
       BASED_FOREACH_1(                                                         \
           Qualifier, BASED_EF_DETAIL_DECLARE_ENUM_CASE, __VA_ARGS__            \
       )                                                                        \
@@ -144,6 +146,11 @@
     {                                                                          \
       value ^= rhs.value;                                                      \
       return *this;                                                            \
+    }                                                                          \
+                                                                               \
+    constexpr auto operator()() const                                          \
+    {                                                                          \
+      return static_cast<Type::basic_type>(value);                             \
     }                                                                          \
                                                                                \
     Type value;                                                                \

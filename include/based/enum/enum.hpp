@@ -1,16 +1,16 @@
 #pragma once
 
-#include <array>
-#include <cassert>
-
+#include "based/assert.hpp"
+#include "based/container/array.hpp"
 #include "based/macro/foreach.hpp"
 #include "based/macro/foreach_1.hpp"
 #include "based/macro/foreach_2.hpp"
+#include "based/types/types.hpp"
 #include "based/utility/forward.hpp"
 
 // NOLINTBEGIN(*macro-usage*)
 
-#define BASED_E_DETAIL_NUMARGS(...) (std::array {__VA_ARGS__}.size())
+#define BASED_E_DETAIL_NUMARGS(...) based::u(std::array {__VA_ARGS__}.size())
 
 #define BASED_E_DETAIL_LIST_ELEM_STR(Name, Index) #Name,
 
@@ -24,13 +24,14 @@
 #define BASED_E_DETAIL_DECLARE_VAL(Name, Var, Index) static const Name Var;
 
 #define BASED_E_DETAIL_DECLARE_CASE(Qualifier, Var, Index)                     \
-  case Qualifier::Var.value:                                                   \
+  case Qualifier::Var():                                                       \
     return Var;
 
 #define BASED_E_DETAIL_DEFINE_VAL(Qualifier, Initial, Var, Index)              \
   inline constexpr BASED_E_DETAIL_SET(                                         \
       Qualifier::Var,                                                          \
-      Qualifier::value_type {Initial} + Qualifier::size - (Index) - 1          \
+      Qualifier::value_type {Initial} + Qualifier::size                        \
+          - Qualifier::value_type {Index} - Qualifier::value_type {1_u}        \
   )
 
 #define BASED_E_DETAIL_DEFINE_NAMES(Qualifier, ...)                            \
@@ -42,7 +43,7 @@
   inline const Qualifier& Qualifier::get(Type idx)                             \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
-    switch (idx) {                                                             \
+    switch (static_cast<Type::basic_type>(idx)) {                              \
       BASED_FOREACH_1(Qualifier, BASED_E_DETAIL_DECLARE_CASE, __VA_ARGS__)     \
       default:                                                                 \
         break;                                                                 \
@@ -57,10 +58,10 @@
 
 #define BASED_DECLARE_ARRAY(Name, Initial)                                     \
   template<typename T>                                                         \
-  class array : public std::array<T, Name::size>                               \
+  class array : public based::array<T, Name::size_type, Name::size>            \
   {                                                                            \
     using enum_type = Name;                                                    \
-    using base = std::array<T, enum_type::size>;                               \
+    using base = based::array<T, Name::size_type, enum_type::size>;            \
     using base::operator[];                                                    \
     using base::at;                                                            \
                                                                                \
@@ -119,9 +120,9 @@
                                                                                \
     static const Name& get(Type idx);                                          \
                                                                                \
-    constexpr Type operator()() const                                          \
+    constexpr auto operator()() const                                          \
     {                                                                          \
-      return value;                                                            \
+      return static_cast<Type::basic_type>(value);                             \
     }                                                                          \
                                                                                \
     friend bool operator==(Name lhs, Name rhs)                                 \
