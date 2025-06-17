@@ -9,17 +9,7 @@ namespace based
 
 // NOLINTBEGIN(google-runtime-int)
 
-using bi8 = signed char;
-using bi16 = signed short int;
-using bi32 = signed int;
-using bi64 = signed long long int;
-
-using bu8 = unsigned char;
-using bu16 = unsigned short int;
-using bu32 = unsigned int;
-using bu64 = unsigned long long int;
-
-using size_t = bu64;
+using size_t = unsigned long long int;
 
 #define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
   auto Name(Prefix##8)->Prefix##8;                                             \
