@@ -17,29 +17,29 @@
 #define BASED_E_DETAIL_LIST_STR(...)                                           \
   BASED_FOREACH(BASED_E_DETAIL_LIST_ELEM_STR, __VA_ARGS__)
 
-// NOLINTNEXTLINE(*macro-parentheses*)
-#define BASED_E_DETAIL_SET(var, val) decltype(var) var = decltype(var) {val};
+#define BASED_E_DETAIL_SET(Var, Value)                                         \
+  /* NOLINTNEXTLINE(*macro-parentheses*) */                                    \
+  decltype(Var) Var = decltype(Var) {Value};
 
-#define BASED_E_DETAIL_DECLARE_VAL(Name, Index) static const enum_type Name;
+#define BASED_E_DETAIL_DECLARE_VAL(Name, Var, Index) static const Name Var;
 
-#define BASED_E_DETAIL_DECLARE_CASE(Qualifier, Name, Index)                    \
-  case Qualifier::Name.value:                                                  \
-    return Name;
+#define BASED_E_DETAIL_DECLARE_CASE(Qualifier, Var, Index)                     \
+  case Qualifier::Var.value:                                                   \
+    return Var;
 
-#define BASED_E_DETAIL_DEFINE_VAL(Qualifier, Initial, Name, Index)             \
+#define BASED_E_DETAIL_DEFINE_VAL(Qualifier, Initial, Var, Index)              \
   inline constexpr BASED_E_DETAIL_SET(                                         \
-      Qualifier::Name,                                                         \
-      Qualifier::enum_type::value_type {Initial} + Qualifier::enum_type::size  \
-          - (Index) - 1                                                        \
+      Qualifier::Var,                                                          \
+      Qualifier::value_type {Initial} + Qualifier::size - (Index) - 1          \
   )
 
 #define BASED_E_DETAIL_DEFINE_NAMES(Qualifier, ...)                            \
   inline constexpr BASED_E_DETAIL_SET(                                         \
-      Qualifier::enum_type::names, BASED_E_DETAIL_LIST_STR(__VA_ARGS__)        \
+      Qualifier::names, BASED_E_DETAIL_LIST_STR(__VA_ARGS__)                   \
   )
 
 #define BASED_E_DETAIL_DEFINE_GET(Qualifier, Type, ...)                        \
-  inline const Qualifier::enum_type& Qualifier::enum_type::get(Type idx)       \
+  inline const Qualifier& Qualifier::get(Type idx)                             \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
     switch (idx) {                                                             \
@@ -57,9 +57,9 @@
 
 #define BASED_DECLARE_ARRAY(Name, Initial)                                     \
   template<typename T>                                                         \
-  class array : public std::array<T, Name::enum_type::size>                    \
+  class array : public std::array<T, Name::size>                               \
   {                                                                            \
-    using enum_type = Name::enum_type;                                         \
+    using enum_type = Name;                                                    \
     using base = std::array<T, enum_type::size>;                               \
     using base::operator[];                                                    \
     using base::at;                                                            \
@@ -102,41 +102,36 @@
 #define BASED_DECLARE_ENUM(Name, Type, Initial, ...)                           \
   struct Name                                                                  \
   {                                                                            \
-    class enum_type                                                            \
+    constexpr explicit Name(Type enum_value)                                   \
+        : value(enum_value)                                                    \
     {                                                                          \
-      friend Name;                                                             \
+    }                                                                          \
                                                                                \
-      constexpr explicit enum_type(Type enum_value)                            \
-          : value(enum_value)                                                  \
-      {                                                                        \
-      }                                                                        \
+  public:                                                                      \
+    using value_type = Type;                                                   \
+    using size_type = Type;                                                    \
                                                                                \
-    public:                                                                    \
-      using value_type = Type;                                                 \
-      using size_type = Type;                                                  \
+    static constexpr size_type size =                                          \
+        BASED_E_DETAIL_NUMARGS(BASED_E_DETAIL_LIST_STR(__VA_ARGS__));          \
                                                                                \
-      static constexpr size_type size =                                        \
-          BASED_E_DETAIL_NUMARGS(BASED_E_DETAIL_LIST_STR(__VA_ARGS__));        \
+    BASED_DECLARE_ARRAY(Name, Initial)                                         \
+    static const array<const char*> names;                                     \
                                                                                \
-      BASED_DECLARE_ARRAY(Name, Initial)                                       \
-      static const array<const char*> names;                                   \
+    static const Name& get(Type idx);                                          \
                                                                                \
-      static const enum_type& get(Type idx);                                   \
+    constexpr Type operator()() const                                          \
+    {                                                                          \
+      return value;                                                            \
+    }                                                                          \
                                                                                \
-      constexpr Type operator()() const                                        \
-      {                                                                        \
-        return value;                                                          \
-      }                                                                        \
+    friend bool operator==(Name lhs, Name rhs)                                 \
+    {                                                                          \
+      return lhs.value == rhs.value;                                           \
+    }                                                                          \
                                                                                \
-      friend bool operator==(enum_type lhs, enum_type rhs)                     \
-      {                                                                        \
-        return lhs.value == rhs.value;                                         \
-      }                                                                        \
+    Type value;                                                                \
                                                                                \
-      Type value;                                                              \
-    };                                                                         \
-                                                                               \
-    BASED_FOREACH(BASED_E_DETAIL_DECLARE_VAL, __VA_ARGS__)                     \
+    BASED_FOREACH_1(Name, BASED_E_DETAIL_DECLARE_VAL, __VA_ARGS__)             \
   };
 
 #define BASED_DEFINE_ENUM(Name, Type, Initial, ...)                            \

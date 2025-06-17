@@ -14,21 +14,22 @@
 #define BASED_EF_DETAIL_LIST_STR(...)                                          \
   BASED_FOREACH(BASED_EF_DETAIL_LIST_ELEM_STR, __VA_ARGS__)
 
-// NOLINTNEXTLINE(*macro-parentheses*)
-#define BASED_EF_DETAIL_SET(var, val) decltype(var) var = decltype(var) {val};
+#define BASED_EF_DETAIL_SET(Var, Value)                                        \
+  /* NOLINTNEXTLINE(*macro-parentheses*) */                                    \
+  decltype(Var) Var = decltype(Var) {Value};
 
-#define BASED_EF_DETAIL_DECLARE_ENUM_VAL(Name, Index)                          \
-  static const enum_type Name;
+#define BASED_EF_DETAIL_DECLARE_ENUM_VAL(Name, Var, Index)                     \
+  static const Name Var;
 
-#define BASED_EF_DETAIL_DECLARE_ENUM_CASE(Qualifier, Name, Index)              \
-  case Qualifier::Name.value:                                                  \
-    return Name;
+#define BASED_EF_DETAIL_DECLARE_ENUM_CASE(Qualifier, Var, Index)               \
+  case Qualifier::Var.value:                                                   \
+    return Var;
 
-#define BASED_EF_DETAIL_DEFINE_VAL(Qualifier, Name, Index)                     \
+#define BASED_EF_DETAIL_DEFINE_VAL(Qualifier, Var, Index)                      \
   inline constexpr BASED_EF_DETAIL_SET(                                        \
-      Qualifier::Name,                                                         \
-      Qualifier::enum_type::value_type {1} << Qualifier::enum_type::           \
-              value_type {Qualifier::enum_type::size - (Index) - 2}            \
+      Qualifier::Var,                                                          \
+      Qualifier::value_type {1}                                                \
+          << Qualifier::value_type {Qualifier::size - (Index) - 2}             \
   )
 
 #define BASED_EF_DETAIL_DEFINE_VALS(Qualifier, First, ...)                     \
@@ -36,7 +37,7 @@
   inline constexpr BASED_EF_DETAIL_SET(Qualifier::First, 0)
 
 #define BASED_EF_DETAIL_DEFINE_GET(Qualifier, Type, ...)                       \
-  inline const Qualifier::enum_type& Qualifier::enum_type::get(Type idx)       \
+  inline const Qualifier& Qualifier::get(Type idx)                             \
   {                                                                            \
     /* NOLINTNEXTLINE(*paths-covered*) */                                      \
     switch (idx) {                                                             \
@@ -56,102 +57,98 @@
 #define BASED_DECLARE_ENUM_FLAG(Name, Type, ...)                               \
   struct Name                                                                  \
   {                                                                            \
-    class enum_type                                                            \
+    friend struct based::enum_flag_wrapper<Name>;                              \
+                                                                               \
+    constexpr explicit Name(Type enum_value)                                   \
+        : value(enum_value)                                                    \
     {                                                                          \
-      friend Name;                                                             \
-      friend struct based::enum_flag_wrapper<enum_type>;                       \
+    }                                                                          \
                                                                                \
-      constexpr explicit enum_type(Type enum_value)                            \
-          : value(enum_value)                                                  \
-      {                                                                        \
-      }                                                                        \
+  public:                                                                      \
+    using value_type = Type;                                                   \
+    using size_type = Type;                                                    \
                                                                                \
-    public:                                                                    \
-      using value_type = Type;                                                 \
-      using size_type = Type;                                                  \
+    static constexpr size_type size =                                          \
+        BASED_EF_DETAIL_NUMARGS(BASED_EF_DETAIL_LIST_STR(__VA_ARGS__));        \
                                                                                \
-      static constexpr size_type size =                                        \
-          BASED_EF_DETAIL_NUMARGS(BASED_EF_DETAIL_LIST_STR(__VA_ARGS__));      \
+    static const Name& get(Type idx);                                          \
                                                                                \
-      static const enum_type& get(Type idx);                                   \
+    Name& set(Name val)                                                        \
+    {                                                                          \
+      return *this |= val;                                                     \
+    }                                                                          \
                                                                                \
-      enum_type& set(enum_type val)                                            \
-      {                                                                        \
-        return *this |= val;                                                   \
-      }                                                                        \
+    Name& mask(Name val)                                                       \
+    {                                                                          \
+      return *this &= val;                                                     \
+    }                                                                          \
                                                                                \
-      enum_type& mask(enum_type val)                                           \
-      {                                                                        \
-        return *this &= val;                                                   \
-      }                                                                        \
+    Name& tgl(Name val)                                                        \
+    {                                                                          \
+      return *this ^= val;                                                     \
+    }                                                                          \
                                                                                \
-      enum_type& tgl(enum_type val)                                            \
-      {                                                                        \
-        return *this ^= val;                                                   \
-      }                                                                        \
+    Name& neg()                                                                \
+    {                                                                          \
+      return *this = ~*this;                                                   \
+    }                                                                          \
                                                                                \
-      enum_type& neg()                                                         \
-      {                                                                        \
-        return *this = ~*this;                                                 \
-      }                                                                        \
+    Name& clear(Name val)                                                      \
+    {                                                                          \
+      return *this &= ~val;                                                    \
+    }                                                                          \
                                                                                \
-      enum_type& clear(enum_type val)                                          \
-      {                                                                        \
-        return *this &= ~val;                                                  \
-      }                                                                        \
+    bool test(Name val) const                                                  \
+    {                                                                          \
+      return (*this & val) == val;                                             \
+    }                                                                          \
                                                                                \
-      bool test(enum_type val) const                                           \
-      {                                                                        \
-        return (*this & val) == val;                                           \
-      }                                                                        \
+    friend bool operator==(Name lhs, Name rhs)                                 \
+    {                                                                          \
+      return lhs.value == rhs.value;                                           \
+    }                                                                          \
                                                                                \
-      friend bool operator==(enum_type lhs, enum_type rhs)                     \
-      {                                                                        \
-        return lhs.value == rhs.value;                                         \
-      }                                                                        \
+    friend Name operator|(Name lhs, Name rhs)                                  \
+    {                                                                          \
+      return Name(lhs.value | rhs.value);                                      \
+    }                                                                          \
                                                                                \
-      friend enum_type operator|(enum_type lhs, enum_type rhs)                 \
-      {                                                                        \
-        return enum_type(lhs.value | rhs.value);                               \
-      }                                                                        \
+    friend Name operator&(Name lhs, Name rhs)                                  \
+    {                                                                          \
+      return Name(lhs.value & rhs.value);                                      \
+    }                                                                          \
                                                                                \
-      friend enum_type operator&(enum_type lhs, enum_type rhs)                 \
-      {                                                                        \
-        return enum_type(lhs.value & rhs.value);                               \
-      }                                                                        \
+    friend Name operator^(Name lhs, Name rhs)                                  \
+    {                                                                          \
+      return Name(lhs.value ^ rhs.value);                                      \
+    }                                                                          \
                                                                                \
-      friend enum_type operator^(enum_type lhs, enum_type rhs)                 \
-      {                                                                        \
-        return enum_type(lhs.value ^ rhs.value);                               \
-      }                                                                        \
+    Name operator~() const                                                     \
+    {                                                                          \
+      return Name(~value);                                                     \
+    }                                                                          \
                                                                                \
-      enum_type operator~() const                                              \
-      {                                                                        \
-        return enum_type(~value);                                              \
-      }                                                                        \
+    Name& operator|=(Name rhs)                                                 \
+    {                                                                          \
+      value |= rhs.value;                                                      \
+      return *this;                                                            \
+    }                                                                          \
                                                                                \
-      enum_type& operator|=(enum_type rhs)                                     \
-      {                                                                        \
-        value |= rhs.value;                                                    \
-        return *this;                                                          \
-      }                                                                        \
+    Name& operator&=(Name rhs)                                                 \
+    {                                                                          \
+      value &= rhs.value;                                                      \
+      return *this;                                                            \
+    }                                                                          \
                                                                                \
-      enum_type& operator&=(enum_type rhs)                                     \
-      {                                                                        \
-        value &= rhs.value;                                                    \
-        return *this;                                                          \
-      }                                                                        \
+    Name& operator^=(Name rhs)                                                 \
+    {                                                                          \
+      value ^= rhs.value;                                                      \
+      return *this;                                                            \
+    }                                                                          \
                                                                                \
-      enum_type& operator^=(enum_type rhs)                                     \
-      {                                                                        \
-        value ^= rhs.value;                                                    \
-        return *this;                                                          \
-      }                                                                        \
+    Type value;                                                                \
                                                                                \
-      Type value;                                                              \
-    };                                                                         \
-                                                                               \
-    BASED_FOREACH(BASED_EF_DETAIL_DECLARE_ENUM_VAL, __VA_ARGS__)               \
+    BASED_FOREACH_1(Name, BASED_EF_DETAIL_DECLARE_ENUM_VAL, __VA_ARGS__)       \
   };
 
 #define BASED_DEFINE_ENUM_FLAG(Name, Type, ...)                                \

@@ -17,7 +17,7 @@ struct test
 {
   BASED_DECLARE_ENUM(var, based::bu8, 0, a, b, c)
 
-  [[nodiscard]] int get_var(var::enum_type req) const;
+  [[nodiscard]] int get_var(var req) const;
 
 private:
   int m_a = 1;
@@ -27,7 +27,7 @@ private:
 
 BASED_DEFINE_ENUM_CLASS(test, var, based::bu8, 0, a, b, c)
 
-inline int test::get_var(var::enum_type req) const
+inline int test::get_var(var req) const
 {
   switch (req()) {
     case var::a():
@@ -47,7 +47,7 @@ TEST_CASE("types", "[enum/enum]")
   STATIC_REQUIRE(requires { test::var::a; });
   STATIC_REQUIRE(requires { test::var::b; });
   STATIC_REQUIRE(requires { test::var::c; });
-  STATIC_REQUIRE(test::var::enum_type::size == 3);
+  STATIC_REQUIRE(test::var::size == 3);
   STATIC_REQUIRE(test::var::a() == 0);
   STATIC_REQUIRE(test::var::b() == 1);
   STATIC_REQUIRE(test::var::c() == 2);
@@ -67,18 +67,18 @@ TEST_CASE("safety", "[enum/enum]")
 
 TEST_CASE("names", "[enum/enum]")
 {
-  REQUIRE(std::strcmp(test::var::enum_type::names[test::var::a], "a") == 0);
-  REQUIRE(std::strcmp(test::var::enum_type::names[test::var::b], "b") == 0);
-  REQUIRE(std::strcmp(test::var::enum_type::names[test::var::c], "c") == 0);
+  REQUIRE(std::strcmp(test::var::names[test::var::a], "a") == 0);
+  REQUIRE(std::strcmp(test::var::names[test::var::b], "b") == 0);
+  REQUIRE(std::strcmp(test::var::names[test::var::c], "c") == 0);
 }
 
 TEST_CASE("operations", "[enum/enum]")
 {
   using based::SameAs;
 
-  STATIC_REQUIRE(based::EqualityComparable<test::var::enum_type>);
-  STATIC_REQUIRE(!based::LessComparable<test::var::enum_type>);
-  STATIC_REQUIRE(!based::GreaterComparable<test::var::enum_type>);
-  STATIC_REQUIRE(!based::LessEqualComparable<test::var::enum_type>);
-  STATIC_REQUIRE(!based::GreaterEqualComparable<test::var::enum_type>);
+  STATIC_REQUIRE(based::EqualityComparable<test::var>);
+  STATIC_REQUIRE(!based::LessComparable<test::var>);
+  STATIC_REQUIRE(!based::GreaterComparable<test::var>);
+  STATIC_REQUIRE(!based::LessEqualComparable<test::var>);
+  STATIC_REQUIRE(!based::GreaterEqualComparable<test::var>);
 }
