@@ -37,7 +37,7 @@ struct strong_type
   {
   }
 
-  explicit operator basic_type() const { return value; }
+  explicit constexpr operator basic_type() const { return value; }
 
   constexpr strong_type(const strong_type&) = default;
   constexpr strong_type(strong_type&&) = default;
