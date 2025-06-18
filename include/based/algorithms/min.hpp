@@ -9,17 +9,9 @@
 namespace based
 {
 
-namespace detail
-{
-
-template<typename P, typename Arg>
-concept NoninputRelation = RegularProcedure<P, bool, Arg, Arg>;
-
-}  // namespace detail
-
-template<BareRegular T, BareRegular U, detail::NoninputRelation<T> Rel>
+template<BareRegular T, BareRegular U, RegularProcedure<bool, T, T> Rel>
   requires BareSameAs<T, U>
-decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
+constexpr decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 {
   return rel(rhs, lhs) ? based::forward<U>(rhs) : based::forward<T>(lhs);
 }
@@ -27,7 +19,7 @@ decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 // returns min element, first if equal
 template<BareRegular T, BareRegular U>
   requires BareSameAs<T, U>
-decltype(auto) min(T&& lhs, U&& rhs)
+constexpr decltype(auto) min(T&& lhs, U&& rhs)
 {
   return based::min(
       based::forward<T>(lhs),

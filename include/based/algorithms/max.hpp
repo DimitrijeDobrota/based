@@ -9,18 +9,10 @@
 namespace based
 {
 
-namespace detail
-{
-
-template<typename P, typename Arg>
-concept NoninputRelation = RegularProcedure<P, bool, Arg, Arg>;
-
-}  // namespace detail
-
 // returns max element, second if equal
-template<BareRegular T, BareRegular U, detail::NoninputRelation<T> Rel>
+template<BareRegular T, BareRegular U, RegularProcedure<bool, T, T> Rel>
   requires BareSameAs<T, U>
-decltype(auto) max(T&& lhs, U&& rhs, Rel rel)
+constexpr decltype(auto) max(T&& lhs, U&& rhs, Rel rel)
 {
   return rel(rhs, lhs) ? based::forward<T>(lhs) : based::forward<U>(rhs);
 }
@@ -28,7 +20,7 @@ decltype(auto) max(T&& lhs, U&& rhs, Rel rel)
 // returns max element, second if equal
 template<BareRegular T, BareRegular U>
   requires BareSameAs<T, U>
-decltype(auto) max(T&& lhs, U&& rhs)
+constexpr decltype(auto) max(T&& lhs, U&& rhs)
 {
   return based::max(
       based::forward<T>(lhs),
