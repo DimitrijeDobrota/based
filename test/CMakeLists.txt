@@ -75,8 +75,8 @@ add_test(functional function_test)
 
 ## ------ Enum -----
 
-add_test(. enum_test)
-add_test(. enum_flag_test)
+add_test(enum standard_test)
+add_test(enum bitmask_test)
 
 ## ----- List -----
 
