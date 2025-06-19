@@ -4,7 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/types/literals.hpp"
+#include "based/integral/literals.hpp"
 
 template struct based::buffer<sizeof(void*)>;
 

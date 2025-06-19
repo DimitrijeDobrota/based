@@ -25,15 +25,14 @@ function(add_test DIR NAME)
   catch_discover_tests("${NAME}")
 endfunction()
 
-## ----- Types -----
+## ----- Integral -----
 
-add_test(types strong_type_test)
-add_test(types type_test)
-add_test(types limits)
-add_test(types literals)
+add_test(integral strong_type_test)
+add_test(integral type_test)
+add_test(integral limits_test)
+add_test(integral literals_test)
 
 ## ----- Trait -----
-
 
 add_test(trait invoke_result_test)
 add_test(trait is_array_test)
@@ -53,14 +52,14 @@ add_test(trait remove_reference_test)
 add_test(trait remove_volatile_test)
 add_test(trait signature_test_test)
 
-## ----- Concepts -----
+## ----- Concept -----
 
-add_test(concepts callable_test)
+add_test(concept callable_test)
 
 ## ----- Algorithm -----
 
-add_test(algorithms max_test)
-add_test(algorithms min_test)
+add_test(algorithm max_test)
+add_test(algorithm min_test)
 
 ## ----- Utility -----
 
@@ -78,10 +77,6 @@ add_test(functional function_test)
 add_test(enum standard_test)
 add_test(enum bitmask_test)
 
-## ----- List -----
-
-add_test(. list_test)
-
 ## ----- String -----
 
 add_test(string literal_test)
@@ -89,7 +84,11 @@ add_test(string format_test)
 
 ## ----- Char -----
 
-add_test(char mapper_test)
+add_test(character mapper_test)
+
+## ----- Container -----
+
+add_test(container list_test)
 
 # ---- End-of-file commands ----
 

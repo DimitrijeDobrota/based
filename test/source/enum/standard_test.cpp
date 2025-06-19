@@ -2,9 +2,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concepts/is/invocable.hpp"
+#include "based/concept/is/invocable.hpp"
 #include "based/enum/enum.hpp"
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 
 struct test
 {

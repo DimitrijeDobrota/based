@@ -2,9 +2,9 @@
 
 #include <functional>
 
-#include "based/concepts/is/same.hpp"
+#include "based/concept/is/same.hpp"
 #include "based/trait/signature.hpp"
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 #include "based/utility/buffer.hpp"
 #include "based/utility/forward.hpp"
 

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <utility>
 
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 #include "based/utility/forward.hpp"
 
 namespace based

@@ -3,7 +3,7 @@
 #include <format>
 #include <iostream>
 
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 
 namespace based
 {

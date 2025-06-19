@@ -1,7 +1,7 @@
 #pragma once
 
 #include "based/trait/integral_constant.hpp"
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 
 namespace based
 {

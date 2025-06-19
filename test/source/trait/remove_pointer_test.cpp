@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concepts/is/same.hpp"
+#include "based/concept/is/same.hpp"
 #include "based/trait/remove/pointer.hpp"
 
 using based::SameAs;

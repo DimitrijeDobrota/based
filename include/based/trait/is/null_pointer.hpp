@@ -2,7 +2,7 @@
 
 #include "based/trait/is/same.hpp"
 #include "based/trait/remove/cv.hpp"
-#include "based/types/nullptr.hpp"
+#include "based/memory/nullptr.hpp"
 
 namespace based
 {

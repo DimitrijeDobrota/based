@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/concepts/procedure/predicate.hpp"
+#include "based/concept/procedure/predicate.hpp"
 
 namespace based
 {

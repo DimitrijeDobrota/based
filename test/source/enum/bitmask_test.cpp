@@ -4,8 +4,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concepts/is/same.hpp"
-#include "based/types/types.hpp"
+#include "based/concept/is/same.hpp"
+#include "based/integral/types.hpp"
 
 BASED_ENUM_BITMASK(var, based::u8) {
     a = 1,

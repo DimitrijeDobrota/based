@@ -9,7 +9,7 @@
 
 #include "based/enum/enum.hpp"
 #include "based/instrumentation/table.hpp"
-#include "based/types/types.hpp"
+#include "based/integral/types.hpp"
 #include "based/utility/move.hpp"
 
 namespace based

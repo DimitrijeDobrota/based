@@ -1,8 +1,8 @@
 #pragma once
 
-#include "based/algorithms/clamp.hpp"
-#include "based/concepts/is/enum.hpp"
-#include "based/concepts/is/same.hpp"
+#include "based/algorithm/clamp.hpp"
+#include "based/concept/is/enum.hpp"
+#include "based/concept/is/same.hpp"
 
 namespace based::enumeration
 {
