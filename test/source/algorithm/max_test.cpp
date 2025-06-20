@@ -4,7 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/utility/move.hpp"
 
 // NOLINTBEGIN(*const-arg*,*const-correctness*,*after-move, *access-moved)
@@ -13,7 +13,7 @@ TEST_CASE("max(literal, literal) = right", "[algorithm/max]")
 {
   using ResT = decltype(based::max(3, 4));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(3, 4) == 4);
 }
 
@@ -21,7 +21,7 @@ TEST_CASE("max(literal, literal) = left", "[algorithm/max]")
 {
   using ResT = decltype(based::max(4, 3));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(4, 3) == 4);
 }
 
@@ -31,7 +31,7 @@ TEST_CASE("max(value, literal) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, 4));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, 4) == 4);
 }
 
@@ -41,7 +41,7 @@ TEST_CASE("max(value, literal) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, 3));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, 3) == 4);
 }
 
@@ -51,7 +51,7 @@ TEST_CASE("max(literal, value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(3, b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(3, b) == 4);
 }
 
@@ -61,7 +61,7 @@ TEST_CASE("max(literal, value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(4, b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(4, b) == 4);
 }
 
@@ -72,7 +72,7 @@ TEST_CASE("max(value, value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -83,7 +83,7 @@ TEST_CASE("max(value, value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -93,7 +93,7 @@ TEST_CASE("max(const value, literal) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, 4));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, 4) == 4);
 }
 
@@ -103,7 +103,7 @@ TEST_CASE("max(const value, literal) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, 3));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, 3) == 4);
 }
 
@@ -113,7 +113,7 @@ TEST_CASE("max(literal, const value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(3, b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(3, b) == 4);
 }
 
@@ -123,7 +123,7 @@ TEST_CASE("max(literal, const value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(4, b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(4, b) == 4);
 }
 
@@ -134,7 +134,7 @@ TEST_CASE("max(const value, const value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -145,7 +145,7 @@ TEST_CASE("max(const value, const value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -156,7 +156,7 @@ TEST_CASE("max(value, const value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -167,7 +167,7 @@ TEST_CASE("max(value, const value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -178,7 +178,7 @@ TEST_CASE("max(const value, value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -189,7 +189,7 @@ TEST_CASE("max(const value, value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, b));
 
-  STATIC_REQUIRE(based::SameAs<const int&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<const int&, ResT>);
   REQUIRE(based::max(a, b) == 4);
 }
 
@@ -199,7 +199,7 @@ TEST_CASE("max(move, literal) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), 4));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(based::move(a), 4) == 4);
 }
 
@@ -209,7 +209,7 @@ TEST_CASE("max(move, literal) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), 3));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(based::move(a), 3) == 4);
 }
 
@@ -220,7 +220,7 @@ TEST_CASE("max(move, value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(based::move(a), b) == 4);
 }
 
@@ -231,7 +231,7 @@ TEST_CASE("max(move, value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(based::move(a), b) == 4);
 }
 
@@ -242,7 +242,7 @@ TEST_CASE("max(move, const value) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(based::move(a), b) == 4);
 }
 
@@ -253,7 +253,7 @@ TEST_CASE("max(move, const value) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), b));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(based::move(a), b) == 4);
 }
 
@@ -263,7 +263,7 @@ TEST_CASE("max(literal, move) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(3, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(3, based::move(b)) == 4);
 }
 
@@ -273,7 +273,7 @@ TEST_CASE("max(literal, move) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(4, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(4, based::move(b)) == 4);
 }
 
@@ -284,7 +284,7 @@ TEST_CASE("max(value, move) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, based::move(b)) == 4);
 }
 
@@ -295,7 +295,7 @@ TEST_CASE("max(value, move) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, based::move(b)) == 4);
 }
 
@@ -306,7 +306,7 @@ TEST_CASE("max(const value, move) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, based::move(b)) == 4);
 }
 
@@ -317,7 +317,7 @@ TEST_CASE("max(const value, move) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(a, based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int, ResT>);
   REQUIRE(based::max(a, based::move(b)) == 4);
 }
 
@@ -328,7 +328,7 @@ TEST_CASE("max(move, move) = right", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(based::move(a), based::move(b)) == 4);
 }
 
@@ -339,7 +339,7 @@ TEST_CASE("max(move, move) = left", "[algorithm/max]")
 
   using ResT = decltype(based::max(based::move(a), based::move(b)));
 
-  STATIC_REQUIRE(based::SameAs<int&&, ResT>);
+  STATIC_REQUIRE(based::trait::IsSame<int&&, ResT>);
   REQUIRE(based::max(based::move(a), based::move(b)) == 4);
 }
 

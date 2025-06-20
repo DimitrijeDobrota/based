@@ -1,8 +1,8 @@
 #pragma once
 
+#include "based/concept/is_base_of.hpp"
+#include "based/concept/is_reference_wrapper.hpp"
 #include "based/trait/decay.hpp"
-#include "based/trait/is/base_of.hpp"
-#include "based/trait/is/reference_wrapper.hpp"
 #include "based/utility/forward.hpp"
 
 namespace based
@@ -23,19 +23,19 @@ template<class B, class MT>
 struct InvokeImpl<MT B::*>
 {
   template<class T>
-    requires(is_base_of_v<B, trait::Decay<T>>)
+    requires(trait::IsBaseOf<B, trait::Decay<T>>)
   static auto get(T&& obj) -> T&&;
 
   template<class T>
-    requires(is_reference_wrapper_v<trait::Decay<T>>)
+    requires(trait::IsReferenceWrapper<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(obj.get());
 
   template<class T>
-    requires(!is_base_of_v<B, trait::Decay<T>> && !is_reference_wrapper_v<trait::Decay<T>>)
+    requires(!trait::IsBaseOf<B, trait::Decay<T>> && !trait::IsReferenceWrapper<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(*based::forward<T>(obj));
 
   template<class T, class... Args, class MT1>
-    requires(is_function_v<MT1>)
+    requires(trait::IsFunction<MT1>)
   static auto call(MT1 B::* pmf, T&& obj, Args&&... args)
       -> decltype((InvokeImpl::get(based::forward<T>(obj)).*pmf)(
           based::forward<Args>(args)...
@@ -47,9 +47,10 @@ struct InvokeImpl<MT B::*>
 };
 
 template<class F, class... Args>
-auto invoke_f(F&& func, Args&&... args) -> decltype(InvokeImpl<trait::Decay<F>>::call(
-    based::forward<F>(func), based::forward<Args>(args)...
-));
+auto invoke_f(F&& func, Args&&... args)
+    -> decltype(InvokeImpl<trait::Decay<F>>::call(
+        based::forward<F>(func), based::forward<Args>(args)...
+    ));
 
 }  // namespace detail
 

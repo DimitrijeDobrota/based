@@ -2,9 +2,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/trait/is/class.hpp"
+#include "based/concept/is_class.hpp"
 
-TEST_CASE("is_class", "[trait/is_class]")
+TEST_CASE("IsClass", "[concept/IsClass]")
 {
   // clang-format off
   struct A {};
@@ -12,14 +12,14 @@ TEST_CASE("is_class", "[trait/is_class]")
   enum class e {};
   union u { class Uc {}; };
 
-  STATIC_REQUIRE(based::is_class_v<A>);
-  STATIC_REQUIRE(based::is_class_v<B>);
-  STATIC_REQUIRE(!based::is_class_v<B*>);
-  STATIC_REQUIRE(!based::is_class_v<B&>);
-  STATIC_REQUIRE(based::is_class_v<const B>);
-  STATIC_REQUIRE(!based::is_class_v<e>);
-  STATIC_REQUIRE(!based::is_class_v<u>);
-  STATIC_REQUIRE(based::is_class_v<u::Uc>);
-  STATIC_REQUIRE(!based::is_class_v<int>);
+  STATIC_REQUIRE(based::trait::IsClass<A>);
+  STATIC_REQUIRE(based::trait::IsClass<B>);
+  STATIC_REQUIRE(!based::trait::IsClass<B*>);
+  STATIC_REQUIRE(!based::trait::IsClass<B&>);
+  STATIC_REQUIRE(based::trait::IsClass<const B>);
+  STATIC_REQUIRE(!based::trait::IsClass<e>);
+  STATIC_REQUIRE(!based::trait::IsClass<u>);
+  STATIC_REQUIRE(based::trait::IsClass<u::Uc>);
+  STATIC_REQUIRE(!based::trait::IsClass<int>);
   // clang-format on
 }

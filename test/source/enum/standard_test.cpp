@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/invocable.hpp"
+#include "based/concept/is_invocable.hpp"
 #include "based/enum/enum.hpp"
 #include "based/integral/types.hpp"
 
@@ -61,6 +61,6 @@ TEST_CASE("safety", "[enum/standard]")
   REQUIRE(crnt.get_var(Test::var::b) == 2);
   REQUIRE(crnt.get_var(Test::var::c) == 3);
 
-  REQUIRE(!based::Invocable<decltype(&Test::get_var), based::U8>);
-  REQUIRE(!based::Invocable<decltype(&Test::get_var), int>);
+  REQUIRE(!based::trait::IsInvocable<decltype(&Test::get_var), based::U8>);
+  REQUIRE(!based::trait::IsInvocable<decltype(&Test::get_var), int>);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/trait/remove_reference.hpp"
 
 namespace based
@@ -12,8 +12,8 @@ template<typename T>
 concept GreaterEqualComparable = requires
 (const trait::RemoveReference<T>& lhs, const trait::RemoveReference<T>& rhs)
 {
-	{lhs >= rhs} -> SameAs<bool>;
-	{rhs >= lhs} -> SameAs<bool>;
+	{lhs >= rhs} -> trait::IsSame<bool>;
+	{rhs >= lhs} -> trait::IsSame<bool>;
 };
 
 // clang-format on

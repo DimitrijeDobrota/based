@@ -81,7 +81,7 @@ struct instrumented : instrumented_base
     ;
   }
 
-  // Semiregular:
+  // trait::Semiregular:
   instrumented()
   {
     ++counts[op::ctor_default];
@@ -127,7 +127,7 @@ struct instrumented : instrumented_base
     ;
   }
 
-  // Regular
+  // trait::Regular
 
   friend bool operator==(const instrumented& lhs, const instrumented& rhs)
   {

@@ -2,7 +2,10 @@
 
 #include "based/trait/integral_constant.hpp"
 
-namespace based
+namespace based::trait
+{
+
+namespace detail
 {
 
 // clang-format off
@@ -86,8 +89,11 @@ struct IsFunction<Ret(Args......) const volatile && noexcept(ne)> : TrueType {};
 
 // NOLINTEND(*ambiguous-ellipsis*)
 
-template<class T> constexpr bool is_function_v = IsFunction<T>::value;
-
 // clang-format on
 
-}  // namespace based
+}  // namespace detail
+
+template<class T>
+concept IsFunction = detail::IsFunction<T>::value;
+
+}  // namespace based::trait

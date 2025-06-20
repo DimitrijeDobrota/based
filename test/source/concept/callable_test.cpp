@@ -4,8 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/same.hpp"
-#include "based/trait/remove_extent.hpp"
+#include "based/concept/is_same.hpp"
 
 namespace
 {
@@ -18,15 +17,15 @@ int free_func(int a, double b)
 
 }  // namespace
 
-using based::SameAs;
+using based::trait::IsSame;
 
 TEST_CASE("free function", "[concept/callable]")
 {
   using TypeT = decltype(free_func);
 
   STATIC_REQUIRE(based::Callable<TypeT>);
-  STATIC_REQUIRE(SameAs<based::CallableSigT<TypeT>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::CallableRetT<TypeT>, int>);
+  STATIC_REQUIRE(IsSame<based::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(IsSame<based::CallableRetT<TypeT>, int>);
 }
 
 TEST_CASE("lambda", "[concept/callable]")
@@ -38,8 +37,8 @@ TEST_CASE("lambda", "[concept/callable]")
   using TypeT = decltype(func);
 
   STATIC_REQUIRE(based::Callable<TypeT>);
-  STATIC_REQUIRE(SameAs<based::CallableSigT<TypeT>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::CallableRetT<TypeT>, int>);
+  STATIC_REQUIRE(IsSame<based::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(IsSame<based::CallableRetT<TypeT>, int>);
 }
 
 struct Func
@@ -55,7 +54,7 @@ TEST_CASE("member function", "[concept/callable]")
 
   // based::error_template<decltype(&func::template operator()<int, double>)>();
   STATIC_REQUIRE(based::Callable<Func>);
-  STATIC_REQUIRE(SameAs<based::CallableSigT<Func>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::CallableRetT<Func>, int>);
+  STATIC_REQUIRE(IsSame<based::CallableSigT<Func>, int(int, double)>);
+  STATIC_REQUIRE(IsSame<based::CallableRetT<Func>, int>);
 }
 */

@@ -1,0 +1,21 @@
+#pragma once
+
+#include "based/trait/integral_constant.hpp"
+
+namespace based::trait
+{
+
+namespace detail
+{
+
+// clang-format off
+template<class T> struct IsConst          : FalseType {};
+template<class T> struct IsConst<const T> : TrueType  {};
+// clang-format on
+
+}  // namespace detail
+
+template<class T>
+concept IsConst = detail::IsConst<T>::value;
+
+}  // namespace based::trait

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "based/concept/is/convertable.hpp"
-#include "based/concept/is/invocable.hpp"
-#include "based/concept/is/regular.hpp"
+#include "based/concept/is_convertible.hpp"
+#include "based/concept/is_invocable.hpp"
+#include "based/concept/is_regular.hpp"
 #include "based/concept/procedure/domain.hpp"
 #include "based/trait/integral_constant.hpp"
 #include "based/trait/invoke_result.hpp"
@@ -18,11 +18,11 @@ namespace detail
 template<typename P, typename Sig> struct Procedure : public FalseType {};
 
 template<typename P, typename Ret, typename... Args>
-requires (Invocable<P, Args...> && ConvertibleTo<InvokeResultT<P, Args...>, Ret>)
+requires (trait::IsInvocable<P, Args...> && trait::IsConvertible<InvokeResultT<P, Args...>, Ret>)
 struct Procedure<P, Ret(Args...)> : public TrueType {};
 
 template<typename P, typename... Args>
-requires (Invocable<P, Args...>)
+requires (trait::IsInvocable<P, Args...>)
 struct Procedure<P, void(Args...)> : public TrueType {};
 
 template<typename P, typename Ret, typename... Args>
@@ -42,7 +42,7 @@ template<typename P, typename Ret, typename... Args>
 concept RegularProcedure = requires {
   requires(Procedure<P, Ret, Args...>);
   requires(RegularDomain<Args...>);
-  requires(Regular<RetT<P, Args...>>);
+  requires(trait::Regular<RetT<P, Args...>>);
 };
 
 }  // namespace based

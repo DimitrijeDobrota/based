@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/integral/types.hpp"
 #include "based/trait/decay.hpp"
 #include "based/trait/signature.hpp"
@@ -49,7 +49,7 @@ public:
 
   template<typename CallableArg, typename Callable = trait::Decay<CallableArg>>
     requires(requires {
-              !SameAs<Function, Callable>;
+              !trait::IsSame<Function, Callable>;
               sizeof(Callable) <= size;
               alignof(Callable) <= alignment;
               std::is_trivially_destructible_v<Callable>;

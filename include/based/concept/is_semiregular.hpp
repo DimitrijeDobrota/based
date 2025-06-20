@@ -4,13 +4,13 @@
 
 #include "based/trait/remove_cvref.hpp"
 
-namespace based
+namespace based::trait
 {
 
 template<typename T>
 concept Semiregular = std::semiregular<T>;
 
 template<typename T>
-concept BareSemiregular = Semiregular<trait::RemoveCvref<T>>;
+concept BareSemiregular = Semiregular<RemoveCvref<T>>;
 
-}  // namespace based
+}  // namespace based::trait

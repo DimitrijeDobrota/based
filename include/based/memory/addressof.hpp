@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/trait/is/object.hpp"
+#include "based/concept/is_object.hpp"
 
 namespace based
 {
@@ -12,7 +12,7 @@ T* addressof(T& arg) noexcept
 }
 
 template<class T>
-  requires is_object_v<T>
+  requires trait::IsObject<T>
 T* addressof(T& arg) noexcept
 {
   // NOLINTBEGIN(*reinterpret*,*const*)

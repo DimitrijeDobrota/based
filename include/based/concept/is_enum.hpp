@@ -1,8 +1,8 @@
 #pragma once
 
-#include "based/trait/is/enum.hpp"
+#include <type_traits>
 
-namespace based
+namespace based::trait
 {
 
 namespace detail
@@ -14,7 +14,7 @@ void test_conversion(int) = delete;  // selected when E is complete and unscoped
 }  // namespace detail
 
 template<class T>
-concept IsEnum = is_enum_v<T>;
+concept IsEnum = std::is_enum_v<T>;
 
 template<class T>
 concept IsScopedEnum = requires {
@@ -24,4 +24,4 @@ concept IsScopedEnum = requires {
   };
 };
 
-}  // namespace based
+}  // namespace based::trait

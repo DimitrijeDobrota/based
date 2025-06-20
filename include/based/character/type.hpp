@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 #include "based/integral/types.hpp"
 
 namespace based

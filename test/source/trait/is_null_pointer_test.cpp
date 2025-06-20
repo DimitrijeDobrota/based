@@ -2,22 +2,22 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/trait/is/null_pointer.hpp"
+#include "based/concept/is_null_pointer.hpp"
 
-TEST_CASE("is_null_pointer", "[trait/is_null_pointer]")
+TEST_CASE("IsNullPointer", "[concept/IsNullPointer]")
 {
   double const test = 0;
 
-  // NOLINTBEGIN(*array*)
   // clang-format off
-  STATIC_REQUIRE(based::is_null_pointer_v<decltype(nullptr)>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<void>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<const void>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<volatile void>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<void*>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<int>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<decltype(test)>);
-  STATIC_REQUIRE(!based::is_null_pointer_v<std::is_null_pointer<void>>);
-  // clang-format on
+  // NOLINTBEGIN(*array*)
+  STATIC_REQUIRE(based::trait::IsNullPointer<decltype(nullptr)>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<void>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<const void>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<volatile void>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<void*>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<int>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<decltype(test)>);
+  STATIC_REQUIRE(!based::trait::IsNullPointer<void>);
   // NOLINTEND(*array*)
+  // clang-format on
 }

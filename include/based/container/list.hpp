@@ -3,7 +3,7 @@
 #include <cassert>
 #include <vector>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/integral/types.hpp"
 
 namespace based

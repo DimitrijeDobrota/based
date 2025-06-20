@@ -1,8 +1,8 @@
 #pragma once
 
+#include "based/concept/is_array.hpp"
+#include "based/concept/is_function.hpp"
 #include "based/trait/add_pointer.hpp"
-#include "based/trait/is/array.hpp"
-#include "based/trait/is/function.hpp"
 #include "based/trait/remove_cv.hpp"
 #include "based/trait/remove_extent.hpp"
 #include "based/trait/remove_reference.hpp"
@@ -20,14 +20,14 @@ struct Decay
 };
 
 template<class U>
-  requires is_array_v<U>
+  requires trait::IsArray<U>
 struct Decay<U>
 {
   using Type = trait::AddPointer<trait::RemoveExtent<U>>;
 };
 
 template<class U>
-  requires is_function_v<U>
+  requires trait::IsFunction<U>
 struct Decay<U>
 {
   using Type = trait::AddPointer<U>;

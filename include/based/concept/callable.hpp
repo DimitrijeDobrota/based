@@ -1,7 +1,7 @@
 #pragma once
 
+#include "based/concept/is_function.hpp"
 #include "based/trait/decay.hpp"
-#include "based/trait/is/function.hpp"
 #include "based/trait/remove_pointer.hpp"
 #include "based/trait/signature.hpp"
 
@@ -12,7 +12,7 @@ template<typename T>
 struct callable;
 
 template<typename T>
-  requires(is_function_v<T>)
+  requires(trait::IsFunction<T>)
 struct callable<T> : public Signature<trait::Decay<T>>
 {
 };

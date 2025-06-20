@@ -4,7 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 
 namespace
 {
@@ -15,7 +15,7 @@ int func(double);
 }  // namespace
 
 template<class Res, class T, class... Args>
-concept Test = based::SameAs<based::InvokeResultT<T, Args...>, Res>;
+concept Test = based::trait::IsSame<based::InvokeResultT<T, Args...>, Res>;
 
 TEST_CASE("invoke_result", "[trait/invoke_result]")
 {

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "based/concept/is_invocable.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/memory/addressof.hpp"
-#include "based/trait/is/invocable.hpp"
-#include "based/trait/is/same.hpp"
 #include "based/trait/remove_cvref.hpp"
 #include "based/utility/declvar.hpp"
 #include "based/utility/forward.hpp"
@@ -32,7 +32,7 @@ public:
   template<class U>
     requires(requires {
       detail::fun<T>(declval<U>());
-      requires(!is_same_v<ReferenceWrapper, trait::RemoveCvref<U>>);
+      requires(!trait::IsSame<ReferenceWrapper, trait::RemoveCvref<U>>);
     })
 
   // NOLINTNEXTLINE(*explicit*)
@@ -57,7 +57,7 @@ public:
 
   template<class... Args>
   constexpr decltype(auto) operator()(Args&&... args) const
-      noexcept(is_nothrow_invocable_v<T&, Args...>)
+      noexcept(trait::IsNothrowInvocable<T&, Args...>)
   {
     return get(based::forward<Args>(args)...);
   }

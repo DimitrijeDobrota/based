@@ -2,35 +2,35 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/trait/is/const.hpp"
+#include "based/concept/is_const.hpp"
 
-TEST_CASE("is_const", "[trait/is_const]")
+TEST_CASE("IsConst", "[concept/IsConst]")
 {
   // clang-format off
   struct Test {};
 
   // NOLINTBEGIN(*array*)
-  STATIC_REQUIRE(!based::is_const_v<int>);
-  STATIC_REQUIRE(!based::is_const_v<int&>);
-  STATIC_REQUIRE(!based::is_const_v<int&&>);
-  STATIC_REQUIRE(!based::is_const_v<int[2]>);
-  STATIC_REQUIRE(!based::is_const_v<int(&)[2]>);
-  STATIC_REQUIRE(!based::is_const_v<int(&&)[2]>);
-  STATIC_REQUIRE(based::is_const_v<const int>);
-  STATIC_REQUIRE(!based::is_const_v<const int&>);
-  STATIC_REQUIRE(based::is_const_v<const int[2]>);
-  STATIC_REQUIRE(!based::is_const_v<const int(&)[2]>);
-  STATIC_REQUIRE(!based::is_const_v<int(int)>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int&>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int&&>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int[2]>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int(&)[2]>);
-  STATIC_REQUIRE(!based::is_const_v<volatile int(&&)[2]>);
-  STATIC_REQUIRE(based::is_const_v<const volatile int>);
-  STATIC_REQUIRE(!based::is_const_v<const volatile int&>);
-  STATIC_REQUIRE(based::is_const_v<const volatile int[2]>);
-  STATIC_REQUIRE(!based::is_const_v<const volatile int(&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<int>);
+  STATIC_REQUIRE(!based::trait::IsConst<int&>);
+  STATIC_REQUIRE(!based::trait::IsConst<int&&>);
+  STATIC_REQUIRE(!based::trait::IsConst<int[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<int(&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<int(&&)[2]>);
+  STATIC_REQUIRE(based::trait::IsConst<const int>);
+  STATIC_REQUIRE(!based::trait::IsConst<const int&>);
+  STATIC_REQUIRE(based::trait::IsConst<const int[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<const int(&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<int(int)>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int&>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int&&>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int(&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<volatile int(&&)[2]>);
+  STATIC_REQUIRE(based::trait::IsConst<const volatile int>);
+  STATIC_REQUIRE(!based::trait::IsConst<const volatile int&>);
+  STATIC_REQUIRE(based::trait::IsConst<const volatile int[2]>);
+  STATIC_REQUIRE(!based::trait::IsConst<const volatile int(&)[2]>);
   // clang-format on
   // NOLINTEND(*array*)
 }

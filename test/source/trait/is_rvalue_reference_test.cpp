@@ -2,33 +2,33 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/trait/is/rvalue_reference.hpp"
+#include "based/concept/is_rvalue_reference.hpp"
 
-TEST_CASE("is_rvalue_reference", "[trait/is_rvalue_reference]")
+TEST_CASE("IsRvalueReference", "[concept/IsRvalueReference]")
 {
-  // NOLINTBEGIN(*array*)
   // clang-format off
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<int>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<int&>);
-  STATIC_REQUIRE(based::is_rvalue_reference_v<int&&>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<int[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<int(&)[2]>);
-  STATIC_REQUIRE(based::is_rvalue_reference_v<int(&&)[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const int>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const int&>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const int[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const int(&)[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<int(int)>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<volatile int>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<volatile int&>);
-  STATIC_REQUIRE(based::is_rvalue_reference_v<volatile int&&>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<volatile int[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<volatile int(&)[2]>);
-  STATIC_REQUIRE(based::is_rvalue_reference_v<volatile int(&&)[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const volatile int>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const volatile int&>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const volatile int[2]>);
-  STATIC_REQUIRE(!based::is_rvalue_reference_v<const volatile int(&)[2]>);
-  // clang-format on
+  // NOLINTBEGIN(*array*)
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<int>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<int&>);
+  STATIC_REQUIRE(based::trait::IsRvalueReference<int&&>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<int[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<int(&)[2]>);
+  STATIC_REQUIRE(based::trait::IsRvalueReference<int(&&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const int>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const int&>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const int[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const int(&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<int(int)>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<volatile int>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<volatile int&>);
+  STATIC_REQUIRE(based::trait::IsRvalueReference<volatile int&&>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<volatile int[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<volatile int(&)[2]>);
+  STATIC_REQUIRE(based::trait::IsRvalueReference<volatile int(&&)[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const volatile int>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const volatile int&>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const volatile int[2]>);
+  STATIC_REQUIRE(!based::trait::IsRvalueReference<const volatile int(&)[2]>);
   // NOLINTEND(*array*)
+  // clang-format on
 }

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "based/algorithm/clamp.hpp"
-#include "based/concept/is/enum.hpp"
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_enum.hpp"
+#include "based/concept/is_same.hpp"
 
 namespace based::enumeration
 {
@@ -107,14 +107,14 @@ namespace enum_traits
  * Enumeration traits class template
  *
  * Requires:
- *  - IsScopedEnum<T>
+ *  - trait::IsScopedEnum<T>
  *
  * Contains:
  *  - category_type: The Enumeration category used for this type
  *  - value_type: The underlying type for this type
  */
 template<class T>
-  requires IsScopedEnum<T>
+  requires trait::IsScopedEnum<T>
 // TODO: check for proper int type
 struct Traits
 {
@@ -172,7 +172,7 @@ static constexpr Enum max = Enum::max;
 template<class Enum, class Category>
 concept IsCategory = requires {
   requires(HasCategory<Enum>);
-  requires(SameAs<Category, CategoryType<Enum>>);
+  requires(trait::IsSame<Category, CategoryType<Enum>>);
 };
 
 template<class Enum>
@@ -384,7 +384,7 @@ struct Traits<category::Discrete<Enum, vals...>>
   using Category = category::Discrete<Enum, vals...>;
 
   template<enum_traits::IsCategory<Category> EnumI>
-    requires SameAs<Enum, EnumI>
+    requires trait::IsSame<Enum, EnumI>
   static constexpr bool valid() noexcept
   {
     if constexpr (enum_traits::HasNone<Enum>) {
@@ -395,7 +395,7 @@ struct Traits<category::Discrete<Enum, vals...>>
   }
 
   template<enum_traits::IsCategory<Category> EnumI>
-    requires SameAs<Enum, EnumI>
+    requires trait::IsSame<Enum, EnumI>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     if ((... || (detail::value_cast_impl(vals) == value))) {

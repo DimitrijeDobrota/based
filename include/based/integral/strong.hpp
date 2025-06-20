@@ -1,9 +1,6 @@
 #pragma once
 
-#include <compare>
-
-#include "based/concept/is/same.hpp"
-#include "based/trait/is/class.hpp"
+#include "based/concept/is_same.hpp"
 
 namespace based
 {
@@ -91,7 +88,7 @@ constexpr auto operator+(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Addable<LHS, RHS>;
-    requires SameAs<LHS, decltype(add(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(add(lhs, rhs))>;
   })
 constexpr auto& operator+=(LHS& lhs, RHS rhs)
 {
@@ -111,7 +108,7 @@ constexpr auto operator-(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Subtractable<LHS, RHS>;
-    requires SameAs<LHS, decltype(sub(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(sub(lhs, rhs))>;
   })
 constexpr auto& operator-=(LHS& lhs, RHS rhs)
 {
@@ -131,7 +128,7 @@ constexpr auto operator*(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Multiplyable<LHS, RHS>;
-    requires SameAs<LHS, decltype(mul(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(mul(lhs, rhs))>;
   })
 constexpr auto& operator*=(LHS& lhs, RHS rhs)
 {
@@ -151,7 +148,7 @@ constexpr auto operator/(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Divisible<LHS, RHS>;
-    requires SameAs<LHS, decltype(div(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(div(lhs, rhs))>;
   })
 constexpr auto& operator/=(LHS& lhs, RHS rhs)
 {
@@ -171,7 +168,7 @@ constexpr auto operator%(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Modable<LHS, RHS>;
-    requires SameAs<LHS, decltype(mod(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(mod(lhs, rhs))>;
   })
 constexpr auto& operator%=(LHS& lhs, RHS rhs)
 {
@@ -191,7 +188,7 @@ constexpr auto operator<<(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Lshiftable<LHS, RHS>;
-    requires SameAs<LHS, decltype(lshift(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(lshift(lhs, rhs))>;
   })
 constexpr auto& operator<<=(LHS& lhs, RHS rhs)
 {
@@ -211,7 +208,7 @@ constexpr auto operator>>(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Rshiftable<LHS, RHS>;
-    requires SameAs<LHS, decltype(rshift(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(rshift(lhs, rhs))>;
   })
 constexpr auto& operator>>=(LHS& lhs, RHS rhs)
 {
@@ -231,7 +228,7 @@ constexpr auto operator&(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Andable<LHS, RHS>;
-    requires SameAs<LHS, decltype(land(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(land(lhs, rhs))>;
   })
 constexpr auto& operator&=(LHS& lhs, RHS rhs)
 {
@@ -251,7 +248,7 @@ constexpr auto operator|(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Orable<LHS, RHS>;
-    requires SameAs<LHS, decltype(lor(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(lor(lhs, rhs))>;
   })
 constexpr auto& operator|=(LHS& lhs, RHS rhs)
 {
@@ -271,7 +268,7 @@ constexpr auto operator^(LHS lhs, RHS rhs)
 template<class LHS, class RHS>
   requires(requires(LHS lhs, RHS rhs) {
     requires Xorable<LHS, RHS>;
-    requires SameAs<LHS, decltype(lxor(lhs, rhs))>;
+    requires trait::IsSame<LHS, decltype(lxor(lhs, rhs))>;
   })
 constexpr auto& operator^=(LHS& lhs, RHS rhs)
 {

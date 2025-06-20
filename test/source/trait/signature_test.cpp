@@ -4,7 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 // NOLINTBEGIN(*cognitive-complexity*)
 
 namespace
@@ -24,24 +24,24 @@ int free_func_noexcept(const double& a, int&& b) noexcept(true)
 
 }  // namespace
 
-using based::SameAs;
+using based::trait::IsSame;
 
 TEST_CASE("free function", "[trait/Signature]")
 {
   using Sig = based::Signature<decltype(free_func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("free function noexcept", "[trait/Signature]")
 {
   using Sig = based::Signature<decltype(free_func_noexcept)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("empty", "[trait/Signature]")
@@ -52,14 +52,14 @@ TEST_CASE("empty", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const", "[trait/Signature]")
@@ -70,14 +70,14 @@ TEST_CASE("const", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile", "[trait/Signature]")
@@ -88,14 +88,14 @@ TEST_CASE("volatile", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile", "[trait/Signature]")
@@ -106,14 +106,14 @@ TEST_CASE("const volatile", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("noexcept", "[trait/Signature]")
@@ -124,14 +124,14 @@ TEST_CASE("noexcept", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const noexcept", "[trait/Signature]")
@@ -142,14 +142,14 @@ TEST_CASE("const noexcept", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile noexcept", "[trait/Signature]")
@@ -160,14 +160,14 @@ TEST_CASE("volatile noexcept", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile noexcept", "[trait/Signature]")
@@ -178,14 +178,14 @@ TEST_CASE("const volatile noexcept", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("lvalref", "[trait/Signature]")
@@ -196,14 +196,14 @@ TEST_CASE("lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const lvalref", "[trait/Signature]")
@@ -214,14 +214,14 @@ TEST_CASE("const lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile lvalref", "[trait/Signature]")
@@ -232,14 +232,14 @@ TEST_CASE("volatile lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile lvalref", "[trait/Signature]")
@@ -250,14 +250,14 @@ TEST_CASE("const volatile lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("noexcept lvalref", "[trait/Signature]")
@@ -268,14 +268,14 @@ TEST_CASE("noexcept lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const noexcept lvalref", "[trait/Signature]")
@@ -286,14 +286,14 @@ TEST_CASE("const noexcept lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile noexcept lvalref", "[trait/Signature]")
@@ -304,14 +304,14 @@ TEST_CASE("volatile noexcept lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile noexcept lvalref", "[trait/Signature]")
@@ -322,14 +322,14 @@ TEST_CASE("const volatile noexcept lvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("rvalref", "[trait/Signature]")
@@ -340,14 +340,14 @@ TEST_CASE("rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const rvalref", "[trait/Signature]")
@@ -358,14 +358,14 @@ TEST_CASE("const rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile rvalref", "[trait/Signature]")
@@ -376,14 +376,14 @@ TEST_CASE("volatile rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile rvalref", "[trait/Signature]")
@@ -394,14 +394,14 @@ TEST_CASE("const volatile rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("noexcept rvalref", "[trait/Signature]")
@@ -412,14 +412,14 @@ TEST_CASE("noexcept rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const noexcept rvalref", "[trait/Signature]")
@@ -430,14 +430,14 @@ TEST_CASE("const noexcept rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("volatile noexcept rvalref", "[trait/Signature]")
@@ -448,14 +448,14 @@ TEST_CASE("volatile noexcept rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 TEST_CASE("const volatile noexcept rvalref", "[trait/Signature]")
@@ -466,14 +466,14 @@ TEST_CASE("const volatile noexcept rvalref", "[trait/Signature]")
   };
 
   using Sig = based::Signature<decltype(&Test::func)>;
-  STATIC_REQUIRE(SameAs<int(const double&, int&&), Sig::SigType>);
-  STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, Sig::ArgType>);
-  STATIC_REQUIRE(SameAs<int, Sig::RetType>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::ConstVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::VolatileVal>);
-  STATIC_REQUIRE(SameAs<based::FalseType, Sig::LvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::RvalrefVal>);
-  STATIC_REQUIRE(SameAs<based::TrueType, Sig::NoexceptVal>);
+  STATIC_REQUIRE(IsSame<int(const double&, int&&), Sig::SigType>);
+  STATIC_REQUIRE(IsSame<std::tuple<const double&, int&&>, Sig::ArgType>);
+  STATIC_REQUIRE(IsSame<int, Sig::RetType>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::ConstVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::VolatileVal>);
+  STATIC_REQUIRE(IsSame<based::FalseType, Sig::LvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::RvalrefVal>);
+  STATIC_REQUIRE(IsSame<based::TrueType, Sig::NoexceptVal>);
 }
 
 // NOLINTEND(*cognitive-complexity*)

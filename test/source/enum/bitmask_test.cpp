@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/enum/enum.hpp"
 #include "based/integral/types.hpp"
 
@@ -26,8 +26,7 @@ TEST_CASE("types", "[enum/enum_flag]")
 
 TEST_CASE("operations", "[enum/enum_flag]")
 {
-  using based::SameAs;
-
+  using based::trait::IsSame;
   SECTION("operators")
   {
     using namespace based::enumeration;  // NOLINT(*namespace*)
@@ -37,13 +36,13 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a == b
-        } -> SameAs<bool>;
+        } -> IsSame<bool>;
       });
 
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a != b
-        } -> SameAs<bool>;
+        } -> IsSame<bool>;
       });
     }
 
@@ -52,13 +51,13 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a | b
-        } -> SameAs<var>;
+        } -> IsSame<var>;
       });
 
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a |= b
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -67,13 +66,13 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a& b
-        } -> SameAs<var>;
+        } -> IsSame<var>;
       });
 
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a &= b
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -82,13 +81,13 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a ^ b
-        } -> SameAs<var>;
+        } -> IsSame<var>;
       });
 
       STATIC_REQUIRE(requires(var a, var b) {
         {
           a ^= b
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -97,7 +96,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a) {
         {
           ~a
-        } -> SameAs<var>;
+        } -> IsSame<var>;
       });
     }
 
@@ -106,7 +105,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           set(a, b)
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -115,7 +114,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           mask(a, b)
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -124,7 +123,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           tgl(a, b)
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -133,7 +132,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a) {
         {
           neg(a)
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -142,7 +141,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           clear(a, b)
-        } -> SameAs<var&>;
+        } -> IsSame<var&>;
       });
     }
 
@@ -151,7 +150,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
       STATIC_REQUIRE(requires(var a, var b) {
         {
           test(a, b)
-        } -> SameAs<bool>;
+        } -> IsSame<bool>;
       });
     }
   }

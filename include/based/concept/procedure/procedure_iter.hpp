@@ -19,9 +19,9 @@ concept IterUnaryProcedure = requires {
 };
 
 template<typename P, typename Ret, typename I>
-concept IterRegularProcedure = requires {
+concept Itertrait::RegularProcedure = requires {
   requires(Iterator<I>);
-  requires(RegularProcedure<P, Ret, iter_value_t<I>>);
+  requires(trait::RegularProcedure<P, Ret, iter_value_t<I>>);
 };
 
 }  // namespace based

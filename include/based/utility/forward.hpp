@@ -1,6 +1,6 @@
 #pragma once
 
-#include "based/trait/is/lvalue_reference.hpp"
+#include "based/concept/is_lvalue_reference.hpp"
 #include "based/trait/remove_reference.hpp"
 
 namespace based
@@ -16,7 +16,7 @@ template<class T>
 // NOLINTNEXTLINE(*move*)
 constexpr decltype(auto) forward(trait::RemoveReference<T>&& tmp) noexcept
 {
-  static_assert(!is_lvalue_reference_v<T>);
+  static_assert(!trait::IsLvalueReference<T>);
   return static_cast<T&&>(tmp);
 }
 

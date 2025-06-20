@@ -2,9 +2,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "based/trait/is/base_of.hpp"
+#include "based/concept/is_base_of.hpp"
 
-TEST_CASE("is_base_of", "[trait/is_base_of]")
+TEST_CASE("IsBaseOf", "[concept/IsBaseOf]")
 {
   // clang-format off
 	class A {};
@@ -14,12 +14,12 @@ TEST_CASE("is_base_of", "[trait/is_base_of]")
 	union e {};
 	using I = int;
  
-  STATIC_REQUIRE(based::is_base_of_v<A, A>);
-  STATIC_REQUIRE(based::is_base_of_v<A, B>);
-  STATIC_REQUIRE(based::is_base_of_v<A, C>);
-  STATIC_REQUIRE(!based::is_base_of_v<A, D>);
-  STATIC_REQUIRE(!based::is_base_of_v<B, A>);
-  STATIC_REQUIRE(!based::is_base_of_v<e, e>);
-  STATIC_REQUIRE(!based::is_base_of_v<I, I>);
+  STATIC_REQUIRE(based::trait::IsBaseOf<A, A>);
+  STATIC_REQUIRE(based::trait::IsBaseOf<A, B>);
+  STATIC_REQUIRE(based::trait::IsBaseOf<A, C>);
+  STATIC_REQUIRE(!based::trait::IsBaseOf<A, D>);
+  STATIC_REQUIRE(!based::trait::IsBaseOf<B, A>);
+  STATIC_REQUIRE(!based::trait::IsBaseOf<e, e>);
+  STATIC_REQUIRE(!based::trait::IsBaseOf<I, I>);
   // clang-format on
 }

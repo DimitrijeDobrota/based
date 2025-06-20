@@ -1,7 +1,7 @@
 #pragma once
 
-#include "based/concept/is/regular.hpp"
-#include "based/concept/is/same.hpp"
+#include "based/concept/is_regular.hpp"
+#include "based/concept/is_same.hpp"
 #include "based/trait/iterator.hpp"
 
 namespace based
@@ -11,20 +11,20 @@ namespace based
 
 template<typename T>
 concept Readable = requires(T val) {
-  requires(Regular<T>);
+  requires(trait::Regular<T>);
   typename iter_value_t<T>;
   {
     *val
-  } -> BareSameAs<iter_value_t<T>>;
+  } -> trait::IsSameBare<iter_value_t<T>>;
 };
 
 template<typename T>
 concept Iterator = requires(T val) {
-  requires(Regular<T>);
+  requires(trait::Regular<T>);
   typename iter_dist_t<T>;
   {
     ++val
-  } -> BareSameAs<T>;
+  } -> trait::IsSameBare<T>;
   // successor is not necessarily regular
 };
 
