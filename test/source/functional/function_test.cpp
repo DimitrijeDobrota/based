@@ -12,11 +12,11 @@ int identity(int a)
 
 }  // namespace
 
-template class based::function<decltype(identity)>;
+template class based::Function<decltype(identity)>;
 
 TEST_CASE("empty", "[template/function]")
 {
-  const based::function<void()> func;
+  const based::Function<void()> func;
 
   try {
     func();
@@ -30,14 +30,14 @@ TEST_CASE("empty", "[template/function]")
 
 TEST_CASE("free function", "[template/function]")
 {
-  const based::function func = identity;
+  const based::Function func = identity;
 
   REQUIRE(func(3) == 3);
 }
 
 TEST_CASE("lambda function", "[template/function]")
 {
-  const based::function func = [](int a)
+  const based::Function func = [](int a)
   {
     return a;
   };

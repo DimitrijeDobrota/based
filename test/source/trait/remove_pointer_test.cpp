@@ -11,12 +11,12 @@ TEST_CASE("remove_pointer", "[trait/remove_pointer]")
 {
   // NOLINTBEGIN(*array*)
   // clang-format off
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int*>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int**>, int*>);
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int* const>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int* volatile>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_pointer_t<int* const volatile>, int>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int>, int>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int*>, int>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int**>, int*>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int* const>, int>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int* volatile>, int>);
+  STATIC_REQUIRE(SameAs<based::RemovePointerT<int* const volatile>, int>);
   // clang-format on
   // NOLINTEND(*array*)
 }

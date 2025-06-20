@@ -6,12 +6,12 @@ namespace based
 {
 
 template<class T>
-struct IsConst : false_type
+struct IsConst : FalseType
 {
 };
 
 template<class T>
-struct IsConst<const T> : true_type
+struct IsConst<const T> : TrueType
 {
 };
 

@@ -6,12 +6,12 @@ namespace based
 {
 
 template<class T>
-struct IsLvalueReference : false_type
+struct IsLvalueReference : FalseType
 {
 };
 
 template<class T>
-struct IsLvalueReference<T&> : true_type
+struct IsLvalueReference<T&> : TrueType
 {
 };
 

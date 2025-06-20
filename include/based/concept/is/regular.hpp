@@ -11,6 +11,6 @@ template<typename T>
 concept Regular = std::regular<T>;
 
 template<typename T>
-concept BareRegular = Regular<remove_cvref_t<T>>;
+concept BareRegular = Regular<RemoveCvrefT<T>>;
 
 }  // namespace based

@@ -5,10 +5,9 @@
 namespace based
 {
 
-constexpr bool is_digit(character chr)
+constexpr bool is_digit(Character chr)
 {
   return chr >= '0' && chr <= '9';
 }
 
 }  // namespace based
-

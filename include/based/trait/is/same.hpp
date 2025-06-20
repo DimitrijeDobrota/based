@@ -6,12 +6,12 @@ namespace based
 {
 
 template<class T, class U>
-struct IsSame : false_type
+struct IsSame : FalseType
 {
 };
 
 template<class T>
-struct IsSame<T, T> : true_type
+struct IsSame<T, T> : TrueType
 {
 };
 

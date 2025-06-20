@@ -74,12 +74,12 @@ public:
 };
 
 template<typename Func>
-using scopeguard_exit = Scopeguard<Func, true, true>;
+using ScopeguardExit = Scopeguard<Func, true, true>;
 
 template<typename Func>
-using scopeguard_success = Scopeguard<Func, true, false>;
+using ScopeguardSuccess = Scopeguard<Func, true, false>;
 
 template<typename Func>
-using scopeguard_failure = Scopeguard<Func, false, true>;
+using ScopeguardFailure = Scopeguard<Func, false, true>;
 
 }  // namespace based

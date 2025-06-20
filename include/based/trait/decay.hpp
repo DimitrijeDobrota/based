@@ -17,20 +17,20 @@ template<class T>
 struct Decay
 {
 private:
-  using u = remove_reference_t<T>;
+  using U = RemoveReferenceT<T>;
 
 public:
-  using type = conditional_t<
-      is_array_v<u>,
-      add_pointer_t<remove_extent_t<u>>,
-      conditional_t<
-		is_function_v<u>,
-		add_pointer_t<u>,
-		remove_cv_t<u>>
+  using Type = ConditionalT<
+      is_array_v<U>,
+      AddPointerT<RemoveExtentT<U>>,
+      ConditionalT<
+		is_function_v<U>,
+		AddPointerT<U>,
+		RemoveCvT<U>>
 	  >;
 };
 
-template<class T> using decay_t = typename Decay<T>::type;
+template<class T> using DecayT = typename Decay<T>::Type;
 
 // clang-format on
 

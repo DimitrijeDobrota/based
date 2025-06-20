@@ -5,7 +5,7 @@
 namespace based
 {
 
-constexpr bool is_xdigit(character chr)
+constexpr bool is_xdigit(Character chr)
 {
   return (chr >= 'a' && chr <= 'f') || (chr >= 'A' && chr <= 'F')
       || (chr >= '0' && chr <= '9');

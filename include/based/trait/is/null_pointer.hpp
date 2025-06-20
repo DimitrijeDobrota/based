@@ -8,7 +8,7 @@ namespace based
 {
 
 template<class T>
-struct IsNullPointer : IsSame<nullptr_t, remove_cv_t<T>>
+struct IsNullPointer : IsSame<NullptrT, RemoveCvT<T>>
 {
 };
 

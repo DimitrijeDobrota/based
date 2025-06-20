@@ -5,10 +5,10 @@ namespace based
 
 // clang-format off
 
-template<class T> struct RemoveConst          { using type = T; };
-template<class T> struct RemoveConst<const T> { using type = T; };
+template<class T> struct RemoveConst          { using Type = T; };
+template<class T> struct RemoveConst<const T> { using Type = T; };
 
-template<class T> using remove_const_t = typename RemoveConst<T>::type;
+template<class T> using RemoveConstT = typename RemoveConst<T>::Type;
 
 // clang-format on
 

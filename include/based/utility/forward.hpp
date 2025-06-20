@@ -7,14 +7,14 @@ namespace based
 {
 
 template<class T>
-constexpr decltype(auto) forward(remove_reference_t<T>& tmp) noexcept
+constexpr decltype(auto) forward(RemoveReferenceT<T>& tmp) noexcept
 {
   return static_cast<T&&>(tmp);
 }
 
 template<class T>
 // NOLINTNEXTLINE(*move*)
-constexpr decltype(auto) forward(remove_reference_t<T>&& tmp) noexcept
+constexpr decltype(auto) forward(RemoveReferenceT<T>&& tmp) noexcept
 {
   static_assert(!is_lvalue_reference_v<T>);
   return static_cast<T&&>(tmp);

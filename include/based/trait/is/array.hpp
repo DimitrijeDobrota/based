@@ -1,24 +1,24 @@
 #pragma once
 
-#include "based/trait/integral_constant.hpp"
 #include "based/integral/types.hpp"
+#include "based/trait/integral_constant.hpp"
 
 namespace based
 {
 
 // NOLINTBEGIN(*array*)
 template<class T>
-struct IsArray : false_type
+struct IsArray : FalseType
 {
 };
 
 template<class T>
-struct IsArray<T[]> : true_type
+struct IsArray<T[]> : TrueType
 {
 };
 
-template<class T, size_t n>
-struct IsArray<T[n]> : true_type
+template<class T, SizeT n>
+struct IsArray<T[n]> : TrueType
 {
 };
 // NOLINTEND(*array*)

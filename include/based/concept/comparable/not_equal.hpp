@@ -10,7 +10,7 @@ namespace based
 
 template<typename T>
 concept NotEqualComparable = requires
-(const remove_reference_t<T>& lhs, const remove_reference_t<T>& rhs)
+(const RemoveReferenceT<T>& lhs, const RemoveReferenceT<T>& rhs)
 {
 	{lhs != rhs} -> SameAs<bool>;
 	{rhs != lhs} -> SameAs<bool>;

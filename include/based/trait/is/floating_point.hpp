@@ -8,13 +8,13 @@ namespace based
 {
 
 template<class T>
-struct IsFloatingPoint : false_type
+struct IsFloatingPoint : FalseType
 {
 };
 
 template<class T>
-  requires(is_same_v<float, remove_cv_t<T>> || is_same_v<double, remove_cv_t<T>> || is_same_v<long double, remove_cv_t<T>>)
-struct IsFloatingPoint<T> : true_type
+  requires(is_same_v<float, RemoveCvT<T>> || is_same_v<double, RemoveCvT<T>> || is_same_v<long double, RemoveCvT<T>>)
+struct IsFloatingPoint<T> : TrueType
 {
 };
 

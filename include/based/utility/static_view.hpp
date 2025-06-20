@@ -5,6 +5,7 @@
 #include <span>
 #include <string>
 
+#include "based/trait/decay.hpp"
 #include "based/utility/make_static.hpp"
 
 namespace based
@@ -46,7 +47,7 @@ constexpr auto to_right_sized_array(auto callable)
 {
   constexpr auto oversized = to_oversized_array(callable());
 
-  using value_type = typename std::decay_t<decltype(oversized)>::value_type;
+  using value_type = typename DecayT<decltype(oversized)>::value_type;
   std::array<value_type, oversized.size> result {};
   std::ranges::copy(oversized, std::begin(result));
   return result;
@@ -56,7 +57,7 @@ consteval auto to_string_view(auto callable)
 {
   constexpr auto& static_data = make_static<to_right_sized_array(callable)>;
 
-  using value_type = typename std::decay_t<decltype(static_data)>::value_type;
+  using value_type = typename DecayT<decltype(static_data)>::value_type;
   const std::basic_string_view<value_type> result = {
       std::begin(static_data), std::end(static_data)
   };
@@ -67,7 +68,7 @@ consteval auto to_span(auto callable)
 {
   constexpr auto& static_data = make_static<to_right_sized_array(callable)>;
 
-  using value_type = typename std::decay_t<decltype(static_data)>::value_type;
+  using value_type = typename DecayT<decltype(static_data)>::value_type;
   std::span<const value_type> result(static_data.begin(), static_data.end());
   return result;
 }

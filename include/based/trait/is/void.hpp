@@ -7,7 +7,7 @@ namespace based
 {
 
 template<class T>
-struct IsVoid : IsSame<void, remove_cv_t<T>>
+struct IsVoid : IsSame<void, RemoveCvT<T>>
 {
 };
 

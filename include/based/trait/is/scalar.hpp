@@ -11,7 +11,7 @@ namespace based
 {
 
 template<class T>
-struct IsScalar : false_type
+struct IsScalar : FalseType
 {
 };
 

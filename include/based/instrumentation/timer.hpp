@@ -10,11 +10,11 @@ namespace based
 class Timer
 {
 public:
-  using clock_t = std::chrono::high_resolution_clock;
-  using duration_t = std::chrono::microseconds;
+  using ClockT = std::chrono::high_resolution_clock;
+  using DurationT = std::chrono::microseconds;
 
   Timer()
-      : m_startp(clock_t::now())
+      : m_startp(ClockT::now())
   {
   }
 
@@ -33,12 +33,12 @@ public:
   {
     static const auto count = [](const auto& time)
     {
-      return std::chrono::time_point_cast<duration_t>(time)
+      return std::chrono::time_point_cast<DurationT>(time)
           .time_since_epoch()
           .count();
     };
 
-    const auto endp = clock_t::now();
+    const auto endp = ClockT::now();
 
     const auto start = count(m_startp);
     const auto end = count(endp);
@@ -50,7 +50,7 @@ public:
   }
 
 private:
-  std::chrono::time_point<clock_t> m_startp;
+  std::chrono::time_point<ClockT> m_startp;
 };
 
 }  // namespace based

@@ -56,7 +56,7 @@ TEST_CASE("on success", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_success guard = Set(test);
+      const based::ScopeguardSuccess guard = Set(test);
     } catch (...) {
       test *= 1;
     }
@@ -68,7 +68,7 @@ TEST_CASE("on success", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_success guard = Set(test);
+      const based::ScopeguardSuccess guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       test *= 1;
@@ -83,7 +83,7 @@ TEST_CASE("on failure", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_failure guard = Set(test);
+      const based::ScopeguardFailure guard = Set(test);
     } catch (...) {
       test *= 1;
     }
@@ -95,7 +95,7 @@ TEST_CASE("on failure", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_failure guard = Set(test);
+      const based::ScopeguardFailure guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       REQUIRE(true);
@@ -110,7 +110,7 @@ TEST_CASE("exit", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_exit guard = Set(test);
+      const based::ScopeguardExit guard = Set(test);
     } catch (...) {
       REQUIRE(false);
     }
@@ -122,7 +122,7 @@ TEST_CASE("exit", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_exit guard = Set(test);
+      const based::ScopeguardExit guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       test *= 1;

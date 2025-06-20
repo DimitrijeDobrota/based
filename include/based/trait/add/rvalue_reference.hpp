@@ -11,16 +11,16 @@ namespace detail
 {
 
 // Note that “cv void&&” is a substitution failure
-template<class T> auto try_add(int) -> std::type_identity<T&&>;
+template<class T> auto try_add(int) -> TypeIdentity<T&&>;
 
 // Handle T = cv void case
-template<class T> auto try_add(...) -> std::type_identity<T>;
+template<class T> auto try_add(...) -> TypeIdentity<T>;
 
 }  // namespace detail
 
 template<class T> struct AddRvalueReference : decltype(detail::try_add<T>(0)) {};
 
-template<class T> using add_rvalue_reference_t = AddRvalueReference<T>::type;
+template<class T> using AddRvalueReferenceT = AddRvalueReference<T>::Type;
 
 // clang-format on
 

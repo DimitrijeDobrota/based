@@ -1,15 +1,15 @@
 #pragma once
 
-#include "based/utility/assert.hpp"
-#include "based/macro/foreach_1.hpp"
 #include "based/integral/strong.hpp"
+#include "based/macro/foreach_1.hpp"
+#include "based/utility/assert.hpp"
 
 namespace based
 {
 
 // NOLINTBEGIN(google-runtime-int)
 
-using size_t = unsigned long long int;
+using SizeT = unsigned long long int;
 
 #define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
   auto Name(Prefix##8)->Prefix##8;                                             \

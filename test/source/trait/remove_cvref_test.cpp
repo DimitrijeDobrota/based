@@ -11,27 +11,27 @@ TEST_CASE("remove_cvref", "[trait/remove_cvref]")
 {
   // NOLINTBEGIN(*array*)
   // clang-format off
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int&&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int(&)[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int(&&)[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const int>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const int&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const int[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const int(&)[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<int(int)>, int(int)>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int&&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int(&)[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<volatile int(&&)[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const volatile int>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const volatile int&>, int>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const volatile int[2]>, int[2]>);
-  STATIC_REQUIRE(SameAs<based::remove_cvref_t<const volatile int(&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int&&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int(&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int(&&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const int>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const int&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const int[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const int(&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<int(int)>, int(int)>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int&&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int(&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<volatile int(&&)[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const volatile int>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const volatile int&>, int>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const volatile int[2]>, int[2]>);
+  STATIC_REQUIRE(SameAs<based::RemoveCvrefT<const volatile int(&)[2]>, int[2]>);
   // clang-format on
   // NOLINTEND(*array*)
 }

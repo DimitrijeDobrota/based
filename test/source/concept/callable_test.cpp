@@ -21,11 +21,11 @@ using based::SameAs;
 
 TEST_CASE("free function", "[concept/callable]")
 {
-  using type_t = decltype(free_func);
+  using TypeT = decltype(free_func);
 
-  STATIC_REQUIRE(based::Callable<type_t>);
-  STATIC_REQUIRE(SameAs<based::callable_sig_t<type_t>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::callable_ret_t<type_t>, int>);
+  STATIC_REQUIRE(based::Callable<TypeT>);
+  STATIC_REQUIRE(SameAs<based::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(SameAs<based::CallableRetT<TypeT>, int>);
 }
 
 TEST_CASE("lambda", "[concept/callable]")
@@ -34,11 +34,11 @@ TEST_CASE("lambda", "[concept/callable]")
   {
     return static_cast<int>(a + b);
   };
-  using type_t = decltype(func);
+  using TypeT = decltype(func);
 
-  STATIC_REQUIRE(based::Callable<type_t>);
-  STATIC_REQUIRE(SameAs<based::callable_sig_t<type_t>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::callable_ret_t<type_t>, int>);
+  STATIC_REQUIRE(based::Callable<TypeT>);
+  STATIC_REQUIRE(SameAs<based::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(SameAs<based::CallableRetT<TypeT>, int>);
 }
 
 /*
@@ -54,7 +54,7 @@ TEST_CASE("member function", "[concept/callable]")
 
   // based::error_template<decltype(&func::template operator()<int, double>)>();
   STATIC_REQUIRE(based::Callable<func>);
-  STATIC_REQUIRE(SameAs<based::callable_sig_t<func>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::callable_ret_t<func>, int>);
+  STATIC_REQUIRE(SameAs<based::CallableSigT<func>, int(int, double)>);
+  STATIC_REQUIRE(SameAs<based::CallableRetT<func>, int>);
 }
 */

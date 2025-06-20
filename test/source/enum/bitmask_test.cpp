@@ -1,10 +1,9 @@
 #define CATCH_CONFIG_RUNTIME_STATIC_REQUIRE
 
-#include "based/enum/enum.hpp"
-
 #include <catch2/catch_test_macros.hpp>
 
 #include "based/concept/is/same.hpp"
+#include "based/enum/enum.hpp"
 #include "based/integral/types.hpp"
 
 BASED_ENUM_BITMASK(var, based::U8) {

@@ -19,7 +19,7 @@ struct std::formatter<based::character>
   }
 };
 
-inline std::ostream& operator<<(std::ostream& ost, based::character value)
+inline std::ostream& operator<<(std::ostream& ost, based::Character value)
 {
   return ost << value.chr();
 }

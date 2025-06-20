@@ -20,8 +20,8 @@ template<class V, class Tag>
 struct StrongType
 {
   using value_type = StrongType;
-  using basic_type = V;
-  using tag_type = Tag;
+  using basic_type = V;  // NOLINT(*identifier*)
+  using tag_type = Tag;  // NOLINT(*identifier*)
 
   basic_type value;
 

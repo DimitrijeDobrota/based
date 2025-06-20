@@ -9,10 +9,10 @@ namespace based
 // clang-format off
 
 template<class T> struct RemoveCvref {
-    using type = remove_cv_t<remove_reference_t<T>>;
+    using Type = RemoveCvT<RemoveReferenceT<T>>;
 };
 
-template<class T> using remove_cvref_t = typename RemoveCvref<T>::type;
+template<class T> using RemoveCvrefT = typename RemoveCvref<T>::Type;
 
 // clang-format on
 

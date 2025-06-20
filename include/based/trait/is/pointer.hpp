@@ -6,27 +6,27 @@ namespace based
 {
 
 template<class T>
-struct IsPointer : false_type
+struct IsPointer : FalseType
 {
 };
 
 template<class T>
-struct IsPointer<T*> : true_type
+struct IsPointer<T*> : TrueType
 {
 };
 
 template<class T>
-struct IsPointer<T* const> : true_type
+struct IsPointer<T* const> : TrueType
 {
 };
 
 template<class T>
-struct IsPointer<T* volatile> : true_type
+struct IsPointer<T* volatile> : TrueType
 {
 };
 
 template<class T>
-struct IsPointer<T* const volatile> : true_type
+struct IsPointer<T* const volatile> : TrueType
 {
 };
 

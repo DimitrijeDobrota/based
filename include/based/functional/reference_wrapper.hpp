@@ -26,13 +26,13 @@ class ReferenceWrapper
 {
 public:
   // types
-  using type = T;
+  using Type = T;
 
   // construct/copy/destroy
   template<class U>
     requires(requires {
       detail::fun<T>(declval<U>());
-      requires(!is_same_v<ReferenceWrapper, remove_cvref_t<U>>);
+      requires(!is_same_v<ReferenceWrapper, RemoveCvrefT<U>>);
     })
 
   // NOLINTNEXTLINE(*explicit*)

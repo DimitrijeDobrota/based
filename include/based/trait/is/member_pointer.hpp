@@ -10,17 +10,19 @@ namespace detail
 {
 
 template<class T>
-struct IsMemberPointerHelper : false_type { };
+struct IsMemberPointerHelper : FalseType
+{
+};
 
 template<class T, class U>
-struct IsMemberPointerHelper<T U::*> : true_type
+struct IsMemberPointerHelper<T U::*> : TrueType
 {
 };
 
 }  // namespace detail
 
 template<class T>
-struct IsMemberPointer : detail::IsMemberPointerHelper<remove_cv_t<T>>
+struct IsMemberPointer : detail::IsMemberPointerHelper<RemoveCvT<T>>
 {
 };
 

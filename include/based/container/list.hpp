@@ -16,34 +16,34 @@ class ListPool
 {
 public:
   using value_type = T;
-  using list_type = N;
+  using ListType = N;
 
 private:
   struct NodeT
   {
     value_type value {};
-    list_type next;
+    ListType next;
   };
 
-  std::vector<NodeT> m_pool{};
-  list_type m_free_list;
+  std::vector<NodeT> m_pool {};
+  ListType m_free_list;
 
-  [[nodiscard]] const NodeT& node(list_type x) const
+  [[nodiscard]] const NodeT& node(ListType x) const
   {
-    assert(x != list_type(0));
-    return m_pool[(x - list_type(1)).value];
+    assert(x != ListType(0));
+    return m_pool[(x - ListType(1)).value];
   }
 
-  [[nodiscard]] NodeT& node(list_type x)
+  [[nodiscard]] NodeT& node(ListType x)
   {
-    assert(x != list_type(0));
-    return m_pool[(x - list_type(1)).value];
+    assert(x != ListType(0));
+    return m_pool[(x - ListType(1)).value];
   }
 
-  [[nodiscard]] list_type new_node()
+  [[nodiscard]] ListType new_node()
   {
     m_pool.push_back(NodeT());
-    return list_type {static_cast<list_type::basic_type>(m_pool.size())};
+    return ListType {static_cast<ListType::basic_type>(m_pool.size())};
   }
 
 public:
@@ -52,22 +52,22 @@ public:
   {
   }
 
-  struct iterator
+  struct Iterator
   {
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = ListPool::list_type;
+    using IteratorCategory = std::forward_iterator_tag;
+    using difference_type = ListPool::ListType;
     using value_type = ListPool::value_type;
     using reference = value_type&;
     using pointer = value_type*;
 
-    iterator() = default;
+    Iterator() = default;
 
-    explicit iterator(ListPool& pool)
-        : iterator(pool, pool.node_empty())
+    explicit Iterator(ListPool& pool)
+        : Iterator(pool, pool.node_empty())
     {
     }
 
-    iterator(ListPool& pool, ListPool::list_type node)
+    Iterator(ListPool& pool, ListPool::ListType node)
         : m_pool(&pool)
         , m_node(node)
     {
@@ -76,51 +76,51 @@ public:
     reference operator*() const { return m_pool->value(m_node); }
     pointer operator->() const { return &**this; }
 
-    iterator& operator++()
+    Iterator& operator++()
     {
       m_node = m_pool->next(m_node);
       return *this;
     }
 
-    iterator operator++(int)
+    Iterator operator++(int)
     {
-      iterator tmp(*this);
+      Iterator tmp(*this);
       ++*this;
       return tmp;
     }
 
-    friend bool operator==(const iterator& x, const iterator& y)
+    friend bool operator==(const Iterator& x, const Iterator& y)
     {
       assert(x.m_pool == y.m_pool);
       return x.m_node == y.m_node;
     }
 
-    friend bool operator!=(const iterator& x, const iterator& y)
+    friend bool operator!=(const Iterator& x, const Iterator& y)
     {
       return !(x == y);
     }
 
   private:
     ListPool* m_pool;
-    ListPool::list_type m_node;
+    ListPool::ListType m_node;
   };
 
-  struct const_iterator
+  struct ConstIterator
   {
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = ListPool::list_type;
+    using IteratorCategory = std::forward_iterator_tag;
+    using difference_type = ListPool::ListType;
     using value_type = ListPool::value_type;
     using reference = const value_type&;
     using pointer = const value_type*;
 
-    const_iterator() = default;
+    ConstIterator() = default;
 
-    explicit const_iterator(const ListPool& pool)
-        : const_iterator(pool, pool.node_empty())
+    explicit ConstIterator(const ListPool& pool)
+        : ConstIterator(pool, pool.node_empty())
     {
     }
 
-    const_iterator(const ListPool& pool, ListPool::list_type node)
+    ConstIterator(const ListPool& pool, ListPool::ListType node)
         : m_pool(&pool)
         , m_node(node)
     {
@@ -129,76 +129,73 @@ public:
     reference operator*() const { return m_pool->value(m_node); }
     pointer operator->() const { return &**this; }
 
-    const_iterator& operator++()
+    ConstIterator& operator++()
     {
       m_node = m_pool->next(m_node);
       return *this;
     }
 
-    const_iterator operator++(int)
+    ConstIterator operator++(int)
     {
-      const_iterator tmp(*this);
+      ConstIterator tmp(*this);
       ++*this;
       return tmp;
     }
 
-    friend bool operator==(const const_iterator& x, const const_iterator& y)
+    friend bool operator==(const ConstIterator& x, const ConstIterator& y)
     {
       assert(x.m_pool == y.m_pool);
       return x.m_node == y.m_node;
     }
 
-    friend bool operator!=(const const_iterator& x, const const_iterator& y)
+    friend bool operator!=(const ConstIterator& x, const ConstIterator& y)
     {
       return !(x == y);
     }
 
   private:
     const ListPool* m_pool;
-    ListPool::list_type m_node;
+    ListPool::ListType m_node;
   };
 
-  [[nodiscard]] bool is_empty(list_type x) const { return x == node_empty(); }
-  [[nodiscard]] list_type node_empty() const { return list_type(0); }
+  [[nodiscard]] bool is_empty(ListType x) const { return x == node_empty(); }
+  [[nodiscard]] ListType node_empty() const { return ListType(0); }
 
-  [[nodiscard]] const value_type& value(list_type x) const
+  [[nodiscard]] const value_type& value(ListType x) const
   {
     return node(x).value;
   }
-  [[nodiscard]] value_type& value(list_type x) { return node(x).value; }
+  [[nodiscard]] value_type& value(ListType x) { return node(x).value; }
 
-  [[nodiscard]] const list_type& next(list_type x) const
-  {
-    return node(x).next;
-  }
-  [[nodiscard]] list_type& next(list_type x) { return node(x).next; }
+  [[nodiscard]] const ListType& next(ListType x) const { return node(x).next; }
+  [[nodiscard]] ListType& next(ListType x) { return node(x).next; }
 
-  list_type free(list_type x)
+  ListType free(ListType x)
   {
-    const list_type ret = next(x);
+    const ListType ret = next(x);
     next(x) = m_free_list;
     m_free_list = x;
     return ret;
   }
 
-  list_type free(
-      list_type front,  // NOLINT(*swappable*)
-      list_type back
+  ListType free(
+      ListType front,  // NOLINT(*swappable*)
+      ListType back
   )
   {
     if (is_empty(front)) {
       return node_empty();
     }
 
-    const list_type ret = next(back);
+    const ListType ret = next(back);
     next(back) = m_free_list;
     m_free_list = front;
     return ret;
   }
 
-  [[nodiscard]] list_type allocate(const value_type& val, list_type tail)
+  [[nodiscard]] ListType allocate(const value_type& val, ListType tail)
   {
-    list_type new_list = m_free_list;
+    ListType new_list = m_free_list;
 
     if (is_empty(new_list)) {
       new_list = new_node();
@@ -211,15 +208,15 @@ public:
     return new_list;
   }
 
-  using queue_t = std::pair<list_type, list_type>;
+  using QueueT = std::pair<ListType, ListType>;
 
-  [[nodiscard]] bool is_empty(const queue_t& queue) const
+  [[nodiscard]] bool is_empty(const QueueT& queue) const
   {
     return is_empty(queue.first);
   }
-  [[nodiscard]] queue_t queue_empty() { return {node_empty(), node_empty()}; }
+  [[nodiscard]] QueueT queue_empty() { return {node_empty(), node_empty()}; }
 
-  [[nodiscard]] queue_t push_front(const queue_t& queue, const value_type& val)
+  [[nodiscard]] QueueT push_front(const QueueT& queue, const value_type& val)
   {
     auto new_node = allocate(val, queue.first);
     if (is_empty(queue)) {
@@ -228,7 +225,7 @@ public:
     return {new_node, queue.second};
   }
 
-  [[nodiscard]] queue_t push_back(const queue_t& queue, const value_type& val)
+  [[nodiscard]] QueueT push_back(const QueueT& queue, const value_type& val)
   {
     auto new_node = allocate(val, node_empty());
     if (is_empty(queue)) {
@@ -238,21 +235,21 @@ public:
     return {queue.first, new_node};
   }
 
-  [[nodiscard]] queue_t pop_front(const queue_t& queue)
+  [[nodiscard]] QueueT pop_front(const QueueT& queue)
   {
     if (is_empty(queue)) {
       return queue;
     }
-    queue_t ret = {next(queue.first), queue.second};
+    QueueT ret = {next(queue.first), queue.second};
     free(queue.first);
     return ret;
   }
 
-  void free(const queue_t& queue) { free(queue.first, queue.second); }
+  void free(const QueueT& queue) { free(queue.first, queue.second); }
 };
 
 template<typename T, typename N>
-void free_list(ListPool<T, N>& pool, typename ListPool<T, N>::list_type x)
+void free_list(ListPool<T, N>& pool, typename ListPool<T, N>::ListType x)
 {
   while (!pool.is_empty(x)) {
     x = pool.free(x);

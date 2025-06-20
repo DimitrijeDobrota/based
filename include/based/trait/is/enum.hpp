@@ -6,7 +6,7 @@ namespace based
 {
 
 template<class T>
-using is_enum = std::is_enum<T>;
+using is_enum = std::is_enum<T>;  // NOLINT(*identifier*)
 
 template<class T>
 constexpr bool is_enum_v = std::is_enum_v<T>;

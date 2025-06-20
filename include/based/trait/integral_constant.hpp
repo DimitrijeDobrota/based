@@ -9,7 +9,7 @@ struct IntegralConstant
   static constexpr T value = v;
 
   using value_type = T;
-  using type = IntegralConstant;
+  using Type = IntegralConstant;
 
   // NOLINTNEXTLINE(*explicit*)
   constexpr operator value_type() const noexcept { return value; }
@@ -17,9 +17,9 @@ struct IntegralConstant
 };
 
 template<bool b>
-using bool_constant = IntegralConstant<bool, b>;
+using BoolConstant = IntegralConstant<bool, b>;
 
-using true_type = bool_constant<true>;
-using false_type = bool_constant<false>;
+using TrueType = BoolConstant<true>;
+using FalseType = BoolConstant<false>;
 
 }  // namespace based

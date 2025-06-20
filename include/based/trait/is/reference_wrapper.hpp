@@ -6,12 +6,12 @@ namespace based
 {
 
 template<class T>
-struct IsReferenceWrapper : false_type
+struct IsReferenceWrapper : FalseType
 {
 };
 
 template<class U>
-struct IsReferenceWrapper<ReferenceWrapper<U>> : true_type
+struct IsReferenceWrapper<ReferenceWrapper<U>> : TrueType
 {
 };
 

@@ -24,7 +24,7 @@ constexpr decltype(auto) min(T&& lhs, U&& rhs)
   return based::min(
       based::forward<T>(lhs),
       based::forward<U>(rhs),
-      [](const remove_reference_t<T>& llhs, const remove_reference_t<U>& lrhs)
+      [](const RemoveReferenceT<T>& llhs, const RemoveReferenceT<U>& lrhs)
       {
         return llhs < lrhs;
       }

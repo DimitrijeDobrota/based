@@ -7,7 +7,7 @@
 namespace based
 {
 
-template<size_t n>
+template<std::size_t n>
 struct StringLiteral
 {
   // NOLINTNEXTLINE(*explicit*, *array*)
@@ -22,7 +22,7 @@ struct StringLiteral
     return {data(), size()};
   }
 
-  [[nodiscard]] constexpr size_t size() const { return n - 1; }
+  [[nodiscard]] constexpr std::size_t size() const { return n - 1; }
   [[nodiscard]] constexpr const char* data() const { return m_value.data(); }
 
   std::array<char, n> m_value;

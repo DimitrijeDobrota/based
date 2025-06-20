@@ -11,6 +11,6 @@ template<typename T>
 concept Semiregular = std::semiregular<T>;
 
 template<typename T>
-concept BareSemiregular = Semiregular<remove_cvref_t<T>>;
+concept BareSemiregular = Semiregular<RemoveCvrefT<T>>;
 
 }  // namespace based

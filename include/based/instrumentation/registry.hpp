@@ -9,7 +9,7 @@ template<typename D>
 class Registry
 {
 public:
-  static size_t count;
+  static SizeT count;
   static D* head;
   D* prev;
   D* next;
@@ -54,7 +54,7 @@ private:
 };
 
 template<typename D>
-size_t Registry<D>::count(0);
+SizeT Registry<D>::count(0);
 
 template<typename D>
 D* Registry<D>::head(nullptr);

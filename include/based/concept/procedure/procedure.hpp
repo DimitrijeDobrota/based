@@ -15,15 +15,15 @@ namespace detail
 
 // clang-format off
 
-template<typename P, typename Sig> struct Procedure : public false_type {};
+template<typename P, typename Sig> struct Procedure : public FalseType {};
 
 template<typename P, typename Ret, typename... Args>
-requires (Invocable<P, Args...> && ConvertibleTo<invoke_result_t<P, Args...>, Ret>)
-struct Procedure<P, Ret(Args...)> : public true_type {};
+requires (Invocable<P, Args...> && ConvertibleTo<InvokeResultT<P, Args...>, Ret>)
+struct Procedure<P, Ret(Args...)> : public TrueType {};
 
 template<typename P, typename... Args>
 requires (Invocable<P, Args...>)
-struct Procedure<P, void(Args...)> : public true_type {};
+struct Procedure<P, void(Args...)> : public TrueType {};
 
 template<typename P, typename Ret, typename... Args>
 static constexpr bool procedure_v = Procedure<P, Ret(Args...)>::value;
@@ -42,7 +42,7 @@ template<typename P, typename Ret, typename... Args>
 concept RegularProcedure = requires {
   requires(Procedure<P, Ret, Args...>);
   requires(RegularDomain<Args...>);
-  requires(Regular<ret_t<P, Args...>>);
+  requires(Regular<RetT<P, Args...>>);
 };
 
 }  // namespace based

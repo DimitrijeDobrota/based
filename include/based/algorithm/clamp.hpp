@@ -36,7 +36,7 @@ constexpr decltype(auto) clamp(T&& value, U&& low, V&& high)
       based::forward<T>(value),
       based::forward<U>(low),
       based::forward<V>(high),
-      [](const remove_reference_t<T>& llhs, const remove_reference_t<U>& lrhs)
+      [](const RemoveReferenceT<T>& llhs, const RemoveReferenceT<U>& lrhs)
       {
         return llhs < lrhs;
       }

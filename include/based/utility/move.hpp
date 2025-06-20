@@ -9,7 +9,7 @@ template<class T>
 // NOLINTNEXTLINE(*forward*)
 constexpr decltype(auto) move(T&& tmp) noexcept
 {
-  return static_cast<remove_reference_t<T>&&>(tmp);
+  return static_cast<RemoveReferenceT<T>&&>(tmp);
 }
 
 }  // namespace based

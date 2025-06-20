@@ -5,13 +5,13 @@ namespace based
 
 // clang-format off
 
-template<class T> struct RemovePointer                    { using type = T; };
-template<class T> struct RemovePointer<T*>                { using type = T; };
-template<class T> struct RemovePointer<T* const>          { using type = T; };
-template<class T> struct RemovePointer<T* volatile>       { using type = T; };
-template<class T> struct RemovePointer<T* const volatile> { using type = T; };
+template<class T> struct RemovePointer                    { using Type = T; };
+template<class T> struct RemovePointer<T*>                { using Type = T; };
+template<class T> struct RemovePointer<T* const>          { using Type = T; };
+template<class T> struct RemovePointer<T* volatile>       { using Type = T; };
+template<class T> struct RemovePointer<T* const volatile> { using Type = T; };
 
-template<class T> using remove_pointer_t = typename RemovePointer<T>::type;
+template<class T> using RemovePointerT = typename RemovePointer<T>::Type;
 
 // clang-format on
 

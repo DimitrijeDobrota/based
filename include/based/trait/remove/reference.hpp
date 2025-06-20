@@ -5,11 +5,11 @@ namespace based
 
 // clang-format off
 
-template<class T> struct RemoveReference      { using type = T; };
-template<class T> struct RemoveReference<T&>  { using type = T; };
-template<class T> struct RemoveReference<T&&> { using type = T; };
+template<class T> struct RemoveReference      { using Type = T; };
+template<class T> struct RemoveReference<T&>  { using Type = T; };
+template<class T> struct RemoveReference<T&&> { using Type = T; };
 
-template<class T> using remove_reference_t = typename RemoveReference<T>::type;
+template<class T> using RemoveReferenceT = typename RemoveReference<T>::Type;
 
 // clang-format on
 

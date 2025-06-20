@@ -10,13 +10,13 @@ namespace based
 {
 
 template<class T>
-struct IsObject : false_type
+struct IsObject : FalseType
 {
 };
 
 template<class T>
   requires(is_scalar_v<T> || is_array_v<T> || is_union_v<T> || is_class_v<T>)
-struct IsObject<T> : true_type
+struct IsObject<T> : TrueType
 {
 };
 

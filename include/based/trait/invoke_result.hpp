@@ -23,15 +23,15 @@ template<class B, class MT>
 struct InvokeImpl<MT B::*>
 {
   template<class T>
-    requires(is_base_of_v<B, decay_t<T>>)
+    requires(is_base_of_v<B, DecayT<T>>)
   static auto get(T&& obj) -> T&&;
 
   template<class T>
-    requires(is_reference_wrapper_v<decay_t<T>>)
+    requires(is_reference_wrapper_v<DecayT<T>>)
   static auto get(T&& obj) -> decltype(obj.get());
 
   template<class T>
-    requires(!is_base_of_v<B, decay_t<T>> && !is_reference_wrapper_v<decay_t<T>>)
+    requires(!is_base_of_v<B, DecayT<T>> && !is_reference_wrapper_v<DecayT<T>>)
   static auto get(T&& obj) -> decltype(*based::forward<T>(obj));
 
   template<class T, class... Args, class MT1>
@@ -47,10 +47,9 @@ struct InvokeImpl<MT B::*>
 };
 
 template<class F, class... Args>
-auto invoke_f(F&& func, Args&&... args)
-    -> decltype(InvokeImpl<decay_t<F>>::call(
-        based::forward<F>(func), based::forward<Args>(args)...
-    ));
+auto invoke_f(F&& func, Args&&... args) -> decltype(InvokeImpl<DecayT<F>>::call(
+    based::forward<F>(func), based::forward<Args>(args)...
+));
 
 }  // namespace detail
 
@@ -68,7 +67,7 @@ struct InvokeResult<
     F,
     Args...>
 {
-  using type = decltype(detail::invoke_f(declval<F>(), declval<Args>()...));
+  using Type = decltype(detail::invoke_f(declval<F>(), declval<Args>()...));
 };
 
 }  // namespace detail
@@ -79,6 +78,6 @@ struct InvokeResult : detail::InvokeResult<void, F, Args...>
 };
 
 template<class F, class... Args>
-using invoke_result_t = typename InvokeResult<F, Args...>::type;
+using InvokeResultT = typename InvokeResult<F, Args...>::Type;
 
 }  // namespace based

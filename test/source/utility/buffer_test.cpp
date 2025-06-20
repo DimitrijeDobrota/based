@@ -12,30 +12,30 @@ TEST_CASE("valid type", "[utility/buffer]")
 {
   SECTION("small buffer")
   {
-    using buffer = based::Buffer<sizeof(based::U8)>;
-    STATIC_REQUIRE(buffer::valid_type<based::U8>());
-    STATIC_REQUIRE_FALSE(buffer::valid_type<based::size_t>());
+    using Buffer = based::Buffer<sizeof(based::U8)>;
+    STATIC_REQUIRE(Buffer::valid_type<based::U8>());
+    STATIC_REQUIRE_FALSE(Buffer::valid_type<based::SizeT>());
 
-    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT(*array*)
+    STATIC_REQUIRE_FALSE(Buffer::valid_type<char[5]>());  // NOLINT(*array*)
   }
 
   SECTION("big buffer")
   {
-    using buffer = based::Buffer<sizeof(based::size_t), alignof(based::size_t)>;
-    STATIC_REQUIRE(buffer::valid_type<based::U8>());
-    STATIC_REQUIRE(buffer::valid_type<based::size_t>());
+    using Buffer = based::Buffer<sizeof(based::SizeT), alignof(based::SizeT)>;
+    STATIC_REQUIRE(Buffer::valid_type<based::U8>());
+    STATIC_REQUIRE(Buffer::valid_type<based::SizeT>());
 
-    STATIC_REQUIRE_FALSE(buffer::valid_type<char[5]>());  // NOLINT(*array*)
+    STATIC_REQUIRE_FALSE(Buffer::valid_type<char[5]>());  // NOLINT(*array*)
   }
 }
 
 TEST_CASE("buffer", "[utility/buffer]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using buffer = based::Buffer<sizeof(based::size_t)>;
+  using Buffer = based::Buffer<sizeof(based::SizeT)>;
 
   static constexpr auto value = 8_u8;
-  buffer buf(std::in_place_type<based::U8>, value);
+  Buffer buf(std::in_place_type<based::U8>, value);
 
   REQUIRE(*buf.as<based::U8>() == value);
 
@@ -50,7 +50,7 @@ TEST_CASE("buffer", "[utility/buffer]")
   SECTION("swap")
   {
     static constexpr auto new_value = 10_U16;
-    buffer new_buf(std::in_place_type<based::U16>, new_value);
+    Buffer new_buf(std::in_place_type<based::U16>, new_value);
     buf.swap(new_buf);
 
     REQUIRE(*buf.as<based::U16>() == new_value);
@@ -61,10 +61,10 @@ TEST_CASE("buffer", "[utility/buffer]")
 TEST_CASE("const buffer", "[utility/buffer]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using buffer = based::Buffer<sizeof(based::size_t)>;
+  using Buffer = based::Buffer<sizeof(based::SizeT)>;
 
   static constexpr auto value = 8_u8;
-  const buffer buf(std::in_place_type<based::U8>, value);
+  const Buffer buf(std::in_place_type<based::U8>, value);
 
   REQUIRE(*buf.as<based::U8>() == value);
 }

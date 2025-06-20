@@ -13,9 +13,9 @@ template class based::ListPool<based::U8, based::U8>;
 TEST_CASE("ListPool", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::ListPool<based::U8, based::U8>;
+  using ListPool = based::ListPool<based::U8, based::U8>;
 
-  auto pool = list_pool();
+  auto pool = ListPool();
   auto head = pool.node_empty();
 
   SECTION("node_empty is empty")
@@ -68,9 +68,9 @@ TEST_CASE("ListPool", "[container/ListPool]")
 TEST_CASE("ListPool iterator", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::ListPool<based::U8, based::U8>;
+  using ListPool = based::ListPool<based::U8, based::U8>;
 
-  auto pool = list_pool();
+  auto pool = ListPool();
   auto head = pool.node_empty();
 
   static constexpr auto iter_count = 255_u8;
@@ -80,10 +80,10 @@ TEST_CASE("ListPool iterator", "[container/ListPool]")
 
   SECTION("for-loop")
   {
-    using iter = list_pool::iterator;
+    using Iter = ListPool::Iterator;
 
     auto sum = 0_U32;
-    for (auto it = iter(pool, head); it != iter(pool); it++) {
+    for (auto it = Iter(pool, head); it != Iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
@@ -93,11 +93,11 @@ TEST_CASE("ListPool iterator", "[container/ListPool]")
 
   SECTION("accumulate")
   {
-    using iter = list_pool::iterator;
+    using Iter = ListPool::Iterator;
 
     const auto sum = std::accumulate(
-        iter(pool, head),
-        iter(pool),
+        Iter(pool, head),
+        Iter(pool),
         based::U32 {0},
         [](auto a, auto b)
         {
@@ -114,9 +114,9 @@ TEST_CASE("ListPool iterator", "[container/ListPool]")
 TEST_CASE("ListPool const iterator", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::ListPool<based::U8, based::U8>;
+  using ListPool = based::ListPool<based::U8, based::U8>;
 
-  auto pool = list_pool();
+  auto pool = ListPool();
   auto head = pool.node_empty();
 
   static constexpr auto iter_count = 255_u8;
@@ -126,10 +126,10 @@ TEST_CASE("ListPool const iterator", "[container/ListPool]")
 
   SECTION("const for-loop")
   {
-    using iter = list_pool::const_iterator;
+    using Iter = ListPool::ConstIterator;
 
     auto sum = 0_U32;
-    for (auto it = iter(pool, head); it != iter(pool); it++) {
+    for (auto it = Iter(pool, head); it != Iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
@@ -139,14 +139,14 @@ TEST_CASE("ListPool const iterator", "[container/ListPool]")
 
   SECTION("const accumulate")
   {
-    using iter = list_pool::const_iterator;
+    using Iter = ListPool::ConstIterator;
 
     static const auto sum =
-        [](const list_pool& lpool, const list_pool::list_type& lhead)
+        [](const ListPool& lpool, const ListPool::ListType& lhead)
     {
       return std::accumulate(
-          iter(lpool, lhead),
-          iter(lpool),
+          Iter(lpool, lhead),
+          Iter(lpool),
           based::U32 {0},
           [](auto a, auto b)
           {
@@ -163,10 +163,10 @@ TEST_CASE("ListPool const iterator", "[container/ListPool]")
 
 TEST_CASE("ListPool queue", "[container/ListPool/queue]")
 {
-  using list_pool = based::ListPool<based::U8, based::U8>;
-  using iter = list_pool::iterator;
+  using ListPool = based::ListPool<based::U8, based::U8>;
+  using Iter = ListPool::Iterator;
 
-  auto pool = list_pool();
+  auto pool = ListPool();
   auto queue = pool.queue_empty();
 
   SECTION("free(empty, empty)")
@@ -196,7 +196,7 @@ TEST_CASE("ListPool queue", "[container/ListPool/queue]")
     }
 
     auto sum = 0_U64;
-    for (auto it = iter(pool, queue.first); it != iter(pool); ++it) {
+    for (auto it = Iter(pool, queue.first); it != Iter(pool); ++it) {
       sum += *it;
     }
 

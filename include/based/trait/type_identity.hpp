@@ -5,9 +5,9 @@ namespace based
 
 // clang-format off
 
-template<class T> struct TypeIdentity { using type = T; };
+template<class T> struct TypeIdentity { using Type = T; };
 
-template<class T> using type_dentity_t = TypeIdentity<T>::type;
+template<class T> using TypeDentityT = TypeIdentity<T>::Type;
 
 // clang-format on
 

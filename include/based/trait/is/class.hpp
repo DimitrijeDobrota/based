@@ -10,10 +10,10 @@ namespace detail
 {
 
 template<class T>
-bool_constant<!is_union_v<T>> test(int T::*);
+BoolConstant<!is_union_v<T>> test(int T::*);
 
 template<class T>
-false_type test(...);
+FalseType test(...);
 
 }  // namespace detail
 

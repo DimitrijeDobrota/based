@@ -12,7 +12,7 @@ TEST_CASE("is_base_of", "[trait/is_base_of]")
 	class C : B {};
 	class D {};
 	union e {};
-	using i = int;
+	using I = int;
  
   STATIC_REQUIRE(based::is_base_of_v<A, A>);
   STATIC_REQUIRE(based::is_base_of_v<A, B>);
@@ -20,6 +20,6 @@ TEST_CASE("is_base_of", "[trait/is_base_of]")
   STATIC_REQUIRE(!based::is_base_of_v<A, D>);
   STATIC_REQUIRE(!based::is_base_of_v<B, A>);
   STATIC_REQUIRE(!based::is_base_of_v<e, e>);
-  STATIC_REQUIRE(!based::is_base_of_v<i, i>);
+  STATIC_REQUIRE(!based::is_base_of_v<I, I>);
   // clang-format on
 }

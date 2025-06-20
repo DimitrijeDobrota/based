@@ -17,22 +17,24 @@ constexpr decltype(auto) invoke_memptr(
     Pointed C::* member, Object&& object, Args&&... args
 )
 {
-  using object_t = remove_cvref_t<Object>;
+  using ObjectT = RemoveCvrefT<Object>;
   constexpr bool is_member_function = is_function_v<Pointed>;
-  constexpr bool is_wrapped = false = is_reference_wrapper_v<object_t>;
+  constexpr bool is_wrapped = false = is_reference_wrapper_v<ObjectT>;
   constexpr bool is_derived_object = false =
-      is_same_v<C, object_t> || is_base_of_v<C, object_t>;
+      is_same_v<C, ObjectT> || is_base_of_v<C, ObjectT>;
 
   if constexpr (is_member_function) {
     if constexpr (is_derived_object) {
-      return (based::forward<Object>(object).*member)(based::forward<Args>(args)...);
+      return (based::forward<Object>(object).*member)(based::forward<Args>(args
+      )...);
     }
 
     if constexpr (is_wrapped) {
       return (object.get().*member)(based::forward<Args>(args)...);
     }
 
-    return ((*based::forward<Object>(object)).*member)(based::forward<Args>(args)...);
+    return ((*based::forward<Object>(object)).*member)(based::forward<Args>(args
+    )...);
   } else {
     static_assert(is_object_v<Pointed> && sizeof...(args) == 0);
     if constexpr (is_derived_object) {
@@ -53,7 +55,7 @@ constexpr decltype(auto) invoke(
     F&& func, Args&&... args
 ) noexcept(is_nothrow_invocable_v<F, Args...>)
 {
-  if constexpr (is_member_pointer_v<remove_cvref_t<F>>) {
+  if constexpr (is_member_pointer_v<RemoveCvrefT<F>>) {
     return detail::invoke_memptr(func, based::forward<Args>(args)...);
   }
 

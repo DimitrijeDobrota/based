@@ -35,7 +35,7 @@ struct InstrumentedBase
 
   static op::enum_type::array<double> counts;
 
-  static void initialize(size_t size)
+  static void initialize(SizeT size)
   {
     std::fill(std::begin(counts), std::end(counts), 0.0);
     std::count[op::n] = static_cast<double>(size);
@@ -43,7 +43,7 @@ struct InstrumentedBase
 };
 
 BASED_DEFINE_ENUM_CLASS(
-    instrumented_base,
+    InstrumentedBase,
     op,
     u8,
     0,
@@ -193,19 +193,19 @@ inline auto normalize_nlogn1(double x, double n)
 
 template<typename Function>
 void count_operations(
-    size_t first,
-    size_t last,
+    SizeT first,
+    SizeT last,
     Function fun,
     double (*norm)(double, double) = dont_normalize
 )
 {
   using instrumented = instrumented<double>;
-  using esize_t = instrumented::op::enum_type::size_type;
+  using eSizeT = instrumented::op::enum_type::SizeType;
 
-  constexpr esize_t cols = instrumented::op::enum_type::size;
-  const esize_t decimals((norm == dont_normalize) ? 0 : 2);
+  constexpr eSizeT cols = instrumented::op::enum_type::size;
+  const eSizeT decimals((norm == dont_normalize) ? 0 : 2);
 
-  instrumented_base::op::enum_type::array<double> values;
+  InstrumentedBase::op::enum_type::array<double> values;
 
   static constexpr int width = 12;
   table const tbl(width);
@@ -226,7 +226,7 @@ void count_operations(
     const auto dbl = static_cast<double>(first);
 
     values[instrumented_base::op::n] = dbl;
-    for (esize_t k = 1; k < cols; ++k) {
+    for (eSizeT k = 1; k < cols; ++k) {
       const auto& val = instrumented::op::enum_type::get(k);
       values[val] = norm(instrumented::counts[val], dbl);
     }

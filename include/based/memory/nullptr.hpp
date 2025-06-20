@@ -3,6 +3,6 @@
 namespace based
 {
 
-using nullptr_t = decltype(nullptr);
+using NullptrT = decltype(nullptr);
 
 }  // namespace based

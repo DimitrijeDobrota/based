@@ -12,7 +12,7 @@ namespace based
 
 /* ----- Buffer used for Local Buffer Optimization ----- */
 
-template<size_t size, size_t alignment = alignof(void*)>
+template<SizeT size, SizeT alignment = alignof(void*)>
 struct Buffer
 {
   template<typename T>

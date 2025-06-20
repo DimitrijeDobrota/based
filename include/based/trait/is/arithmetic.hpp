@@ -8,7 +8,7 @@ namespace based
 {
 
 template<class T>
-struct IsArithmetic : bool_constant<is_integral_v<T> || is_floating_point_v<T>>
+struct IsArithmetic : BoolConstant<is_integral_v<T> || is_floating_point_v<T>>
 {
 };
 

@@ -5,36 +5,37 @@
 #include "based/concept/is/regular.hpp"
 #include "based/concept/is/same.hpp"
 #include "based/concept/is/semiregular.hpp"
+#include "based/integral/types.hpp"
+#include "based/trait/invoke_result.hpp"
 #include "based/trait/is/const.hpp"
 #include "based/trait/remove/cvref.hpp"
 #include "based/trait/remove/pointer.hpp"
 #include "based/trait/remove/reference.hpp"
-#include "based/integral/types.hpp"
 
 namespace based
 {
 
 template<typename T>
-concept Input = SameAs<T, remove_cvref_t<remove_pointer_t<T>>>
-    || is_const_v<remove_reference_t<T>> || is_const_v<remove_pointer_t<T>>;
+concept Input = SameAs<T, RemoveCvrefT<RemovePointerT<T>>>
+    || is_const_v<RemoveReferenceT<T>> || is_const_v<RemovePointerT<T>>;
 
-template<size_t idx, typename... Args>
+template<SizeT idx, typename... Args>
   requires(idx < sizeof...(Args))
-using elem_t = std::tuple_element_t<idx, std::tuple<Args...>>;
+using ElemT = std::tuple_element_t<idx, std::tuple<Args...>>;
 
 template<typename... Args>
-concept SemiregularDomain = (Semiregular<remove_cvref_t<Args>> && ...);
+concept SemiregularDomain = (Semiregular<RemoveCvrefT<Args>> && ...);
 
 template<typename... Args>
-concept RegularDomain = (Regular<remove_cvref_t<Args>> && ...);
+concept RegularDomain = (Regular<RemoveCvrefT<Args>> && ...);
 
 template<typename... Args>
 concept InputDomain = (Input<Args> && ...);
 
 template<typename... Args>
-concept HomogeneousDomain = (SameAs<elem_t<0, Args...>, Args> && ...);
+concept HomogeneousDomain = (SameAs<ElemT<0, Args...>, Args> && ...);
 
 template<typename P, typename... Args>
-using ret_t = std::invoke_result_t<P, Args...>;
+using RetT = InvokeResultT<P, Args...>;
 
 }  // namespace based

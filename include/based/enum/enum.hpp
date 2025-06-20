@@ -131,13 +131,13 @@ template<class Enum>
 concept HasValueType = requires { typename Traits<Enum>::value_type; };
 
 template<HasCategory Enum>
-using category_type = typename Traits<Enum>::category;
+using CategoryType = typename Traits<Enum>::category;
 
 template<HasValueType Enum>
 using value_type = typename Traits<Enum>::value_type;
 
 template<HasValueType Enum>
-using basic_type = typename Traits<Enum>::value_type::basic_type;
+using BasicType = typename Traits<Enum>::value_type::basic_type;
 
 template<class Enum>
 concept HasNone = requires {
@@ -172,7 +172,7 @@ static constexpr Enum max = Enum::max;
 template<class Enum, class Category>
 concept IsCategory = requires {
   requires(HasCategory<Enum>);
-  requires(SameAs<Category, category_type<Enum>>);
+  requires(SameAs<Category, CategoryType<Enum>>);
 };
 
 template<class Enum>
@@ -227,7 +227,7 @@ template<class Enum>
 constexpr enum_traits::value_type<Enum> value_cast_impl(Enum value) noexcept
 {
   return static_cast<enum_traits::value_type<Enum>>(
-      static_cast<enum_traits::basic_type<Enum>>(value)
+      static_cast<enum_traits::BasicType<Enum>>(value)
   );
 }
 
@@ -235,7 +235,7 @@ template<class Enum>
 constexpr Enum enum_cast_impl(enum_traits::value_type<Enum> value) noexcept
 {
   // NOLINTNEXTLINE(*EnumCastOutOfRange*)
-  return static_cast<Enum>(static_cast<enum_traits::basic_type<Enum>>(value));
+  return static_cast<Enum>(static_cast<enum_traits::BasicType<Enum>>(value));
 }
 
 }  // namespace detail
@@ -260,15 +260,15 @@ struct Traits;
 template<>
 struct Traits<category::Def>
 {
-  using category = category::Def;
+  using Category = category::Def;
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr bool valid() noexcept
   {
     return true;
   }
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     return static_cast<Enum>(value);
@@ -278,9 +278,9 @@ struct Traits<category::Def>
 template<>
 struct Traits<category::Standard>
 {
-  using category = category::Standard;
+  using Category = category::Standard;
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr bool valid() noexcept
   {
     if constexpr (enum_traits::HasNone<Enum>) {
@@ -293,7 +293,7 @@ struct Traits<category::Standard>
     return false;
   }
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
@@ -308,9 +308,9 @@ struct Traits<category::Standard>
 template<>
 struct Traits<category::Linear>
 {
-  using category = category::Linear;
+  using Category = category::Linear;
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr bool valid() noexcept
   {
     if constexpr (enum_traits::HasNone<Enum>) {
@@ -323,7 +323,7 @@ struct Traits<category::Linear>
     }
   }
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> x) noexcept
   {
     constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
@@ -338,9 +338,9 @@ struct Traits<category::Linear>
 template<>
 struct Traits<category::Bitmask>
 {
-  using category = category::Bitmask;
+  using Category = category::Bitmask;
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr bool valid() noexcept
   {
     constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
@@ -357,7 +357,7 @@ struct Traits<category::Bitmask>
     return false;
   }
 
-  template<enum_traits::IsCategory<category> Enum>
+  template<enum_traits::IsCategory<Category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
@@ -381,9 +381,9 @@ struct Traits<category::Bitmask>
 template<class Enum, Enum... vals>
 struct Traits<category::Discrete<Enum, vals...>>
 {
-  using category = category::Discrete<Enum, vals...>;
+  using Category = category::Discrete<Enum, vals...>;
 
-  template<enum_traits::IsCategory<category> EnumI>
+  template<enum_traits::IsCategory<Category> EnumI>
     requires SameAs<Enum, EnumI>
   static constexpr bool valid() noexcept
   {
@@ -394,7 +394,7 @@ struct Traits<category::Discrete<Enum, vals...>>
     }
   }
 
-  template<enum_traits::IsCategory<category> EnumI>
+  template<enum_traits::IsCategory<Category> EnumI>
     requires SameAs<Enum, EnumI>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
@@ -408,14 +408,13 @@ struct Traits<category::Discrete<Enum, vals...>>
 template<class Enum>
 static constexpr auto valid() noexcept
 {
-  return Traits<enum_traits::category_type<Enum>>::template valid<Enum>();
+  return Traits<enum_traits::CategoryType<Enum>>::template valid<Enum>();
 }
 
 template<class Enum>
 static constexpr auto enum_cast(enum_traits::value_type<Enum> value) noexcept
 {
-  return Traits<enum_traits::category_type<Enum>>::template enum_cast<Enum>(
-      value
+  return Traits<enum_traits::CategoryType<Enum>>::template enum_cast<Enum>(value
   );
 }
 
