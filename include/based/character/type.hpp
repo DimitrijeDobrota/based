@@ -5,46 +5,46 @@
 namespace based
 {
 
-struct character : public strong_type<char, character>
+struct Character : public StrongType<char, Character>
 {
-  using strong_type::strong_type;
-  using strong_type::operator=;
+  using StrongType::StrongType;
+  using StrongType::operator=;
 
-  constexpr character(char chr)  // NOLINT(*explicit*)
-      : strong_type(chr)
+  constexpr Character(char chr)  // NOLINT(*explicit*)
+      : StrongType(chr)
   {
   }
 
-  explicit constexpr character(u8 ord)
-      : strong_type(static_cast<char>(ord.value))
+  explicit constexpr Character(U8 ord)
+      : StrongType(static_cast<char>(ord.value))
   {
   }
 
   [[nodiscard]] char chr() const { return value; }
-  [[nodiscard]] u8 ord() const { return u8::underlying_cast(value); }
+  [[nodiscard]] U8 ord() const { return U8::underlying_cast(value); }
 
-  friend constexpr bool operator==(character lhs, char rhs)
+  friend constexpr bool operator==(Character lhs, char rhs)
   {
     return lhs.value == rhs;
   }
 
-  friend constexpr bool operator==(char lhs, character rhs)
+  friend constexpr bool operator==(char lhs, Character rhs)
   {
     return lhs == rhs.value;
   }
 
-  friend constexpr auto operator<=>(character lhs, char rhs)
+  friend constexpr auto operator<=>(Character lhs, char rhs)
   {
     return lhs.value <=> rhs;
   }
 
-  friend constexpr auto operator<=>(char lhs, character rhs)
+  friend constexpr auto operator<=>(char lhs, Character rhs)
   {
     return lhs <=> rhs.value;
   }
 };
 
-auto compare(character, character) -> bool;
-auto order(character, character) -> bool;
+auto compare(Character, Character) -> bool;
+auto order(Character, Character) -> bool;
 
 }  // namespace based

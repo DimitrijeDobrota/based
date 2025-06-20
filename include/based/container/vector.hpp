@@ -6,7 +6,7 @@ namespace based
 {
 
 template<class T, class U, class Allocator = std::allocator<T>>
-class vector : public std::vector<T, Allocator>
+class Vector : public std::vector<T, Allocator>
 {
   using base = std::vector<T, Allocator>;
 

@@ -15,11 +15,11 @@
 namespace based
 {
 
-struct instrumented_base
+struct InstrumentedBase
 {
-  BASED_DECLARE_ENUM(
+  based_declare_enum(
       op,
-      based::bu8,
+      based::u8,
       0,
       n,
       ctor_default,
@@ -31,21 +31,21 @@ struct instrumented_base
       destructor,
       equality,
       comparison
-  )
+  );
 
   static op::enum_type::array<double> counts;
 
   static void initialize(size_t size)
   {
     std::fill(std::begin(counts), std::end(counts), 0.0);
-    counts[op::n] = static_cast<double>(size);
+    std::count[op::n] = static_cast<double>(size);
   }
 };
 
 BASED_DEFINE_ENUM_CLASS(
     instrumented_base,
     op,
-    bu8,
+    u8,
     0,
     n,
     ctor_default,
@@ -208,7 +208,7 @@ void count_operations(
   instrumented_base::op::enum_type::array<double> values;
 
   static constexpr int width = 12;
-  table tbl(width);
+  table const tbl(width);
   tbl.print_header(
       std::begin(instrumented::op::enum_type::names),
       std::end(instrumented::op::enum_type::names)

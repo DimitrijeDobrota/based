@@ -6,14 +6,14 @@
 
 #include "based/integral/literals.hpp"
 
-template class based::list_pool<based::u8, based::u8>;
+template class based::ListPool<based::U8, based::U8>;
 
 // NOLINTBEGIN(*complexity*)
 
-TEST_CASE("list_pool", "[container/list_pool]")
+TEST_CASE("ListPool", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::list_pool<based::u8, based::u8>;
+  using list_pool = based::ListPool<based::U8, based::U8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
@@ -65,10 +65,10 @@ TEST_CASE("list_pool", "[container/list_pool]")
   REQUIRE(pool.node_empty() == head);
 }
 
-TEST_CASE("list_pool iterator", "[container/list_pool]")
+TEST_CASE("ListPool iterator", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::list_pool<based::u8, based::u8>;
+  using list_pool = based::ListPool<based::U8, based::U8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
@@ -82,13 +82,13 @@ TEST_CASE("list_pool iterator", "[container/list_pool]")
   {
     using iter = list_pool::iterator;
 
-    auto sum = 0_u32;
+    auto sum = 0_U32;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 255_u32 * 254_u32);
+    REQUIRE(sum == 255_U32 * 254_U32);
   }
 
   SECTION("accumulate")
@@ -98,23 +98,23 @@ TEST_CASE("list_pool iterator", "[container/list_pool]")
     const auto sum = std::accumulate(
         iter(pool, head),
         iter(pool),
-        based::u32 {0},
+        based::U32 {0},
         [](auto a, auto b)
         {
           return a + b;
         }
     );
 
-    REQUIRE(sum == 255_u32 * 254_u32 / 2_u32);
+    REQUIRE(sum == 255_U32 * 254_U32 / 2_U32);
   }
 
   based::free_list(pool, head);
 }
 
-TEST_CASE("list_pool const iterator", "[container/list_pool]")
+TEST_CASE("ListPool const iterator", "[container/ListPool]")
 {
   using namespace based::literals;  // NOLINT(*namespace*)
-  using list_pool = based::list_pool<based::u8, based::u8>;
+  using list_pool = based::ListPool<based::U8, based::U8>;
 
   auto pool = list_pool();
   auto head = pool.node_empty();
@@ -128,13 +128,13 @@ TEST_CASE("list_pool const iterator", "[container/list_pool]")
   {
     using iter = list_pool::const_iterator;
 
-    auto sum = 0_u32;
+    auto sum = 0_U32;
     for (auto it = iter(pool, head); it != iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 255_u32 * 254_u32);
+    REQUIRE(sum == 255_U32 * 254_U32);
   }
 
   SECTION("const accumulate")
@@ -147,7 +147,7 @@ TEST_CASE("list_pool const iterator", "[container/list_pool]")
       return std::accumulate(
           iter(lpool, lhead),
           iter(lpool),
-          based::u32 {0},
+          based::U32 {0},
           [](auto a, auto b)
           {
             return a + b;
@@ -155,15 +155,15 @@ TEST_CASE("list_pool const iterator", "[container/list_pool]")
       );
     };
 
-    REQUIRE(sum(pool, head) == 255_u32 * 254_u32 / 2_u32);
+    REQUIRE(sum(pool, head) == 255_U32 * 254_U32 / 2_U32);
   }
 
   based::free_list(pool, head);
 }
 
-TEST_CASE("list_pool queue", "[container/list_pool/queue]")
+TEST_CASE("ListPool queue", "[container/ListPool/queue]")
 {
-  using list_pool = based::list_pool<based::u8, based::u8>;
+  using list_pool = based::ListPool<based::U8, based::U8>;
   using iter = list_pool::iterator;
 
   auto pool = list_pool();
@@ -195,14 +195,14 @@ TEST_CASE("list_pool queue", "[container/list_pool/queue]")
       }
     }
 
-    auto sum = 0_u64;
+    auto sum = 0_U64;
     for (auto it = iter(pool, queue.first); it != iter(pool); ++it) {
       sum += *it;
     }
 
     pool.free(queue);
 
-    REQUIRE(sum == 21717_u64);
+    REQUIRE(sum == 21717_U64);
   }
 }
 

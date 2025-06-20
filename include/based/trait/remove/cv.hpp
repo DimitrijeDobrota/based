@@ -5,12 +5,12 @@ namespace based
 
 // clang-format off
 
-template<class T> struct remove_cv                   { using type = T; };
-template<class T> struct remove_cv<const T>          { using type = T; };
-template<class T> struct remove_cv<volatile T>       { using type = T; };
-template<class T> struct remove_cv<const volatile T> { using type = T; };
+template<class T> struct RemoveCv                   { using type = T; };
+template<class T> struct RemoveCv<const T>          { using type = T; };
+template<class T> struct RemoveCv<volatile T>       { using type = T; };
+template<class T> struct RemoveCv<const volatile T> { using type = T; };
 
-template<class T> using remove_cv_t = typename remove_cv<T>::type;
+template<class T> using remove_cv_t = typename RemoveCv<T>::type;
 
 // clang-format on
 

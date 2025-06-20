@@ -4,7 +4,7 @@
 
 TEST_CASE("empty", "[string/literal]")
 {
-  const based::string_literal sltr = "";
+  const based::StringLiteral sltr = "";
 
   REQUIRE(sltr.size() == 0);
   REQUIRE(std::memcmp(sltr.data(), "", sltr.size()) == 0);
@@ -12,7 +12,7 @@ TEST_CASE("empty", "[string/literal]")
 
 TEST_CASE("nonempty", "[string/literal]")
 {
-  const based::string_literal sltr = "nonempty";
+  const based::StringLiteral sltr = "nonempty";
 
   REQUIRE(sltr.size() == 8);
   REQUIRE(std::memcmp(sltr.data(), "nonempty", sltr.size()) == 0);
@@ -20,12 +20,12 @@ TEST_CASE("nonempty", "[string/literal]")
 
 TEST_CASE("template", "[string/literal]")
 {
-  const auto data = []<based::string_literal l>()
+  const auto data = []<based::StringLiteral l>()
   {
     return l.data();
   };
 
-  const auto size = []<based::string_literal l>()
+  const auto size = []<based::StringLiteral l>()
   {
     return l.size();
   };

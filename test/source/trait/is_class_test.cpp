@@ -7,19 +7,19 @@
 TEST_CASE("is_class", "[trait/is_class]")
 {
   // clang-format off
-  struct a {};
-  class b {};
+  struct A {};
+  class B {};
   enum class e {};
-  union u { class uc {}; };
+  union u { class Uc {}; };
 
-  STATIC_REQUIRE(based::is_class<a>::value);
-  STATIC_REQUIRE(based::is_class_v<b>);
-  STATIC_REQUIRE(!based::is_class_v<b*>);
-  STATIC_REQUIRE(!based::is_class_v<b&>);
-  STATIC_REQUIRE(based::is_class_v<const b>);
-  STATIC_REQUIRE(!based::is_class<e>::value);
+  STATIC_REQUIRE(std::is_class<A>::value);
+  STATIC_REQUIRE(based::is_class_v<B>);
+  STATIC_REQUIRE(!based::is_class_v<B*>);
+  STATIC_REQUIRE(!based::is_class_v<B&>);
+  STATIC_REQUIRE(based::is_class_v<const B>);
+  STATIC_REQUIRE(!std::is_class<e>::value);
   STATIC_REQUIRE(!based::is_class_v<u>);
-  STATIC_REQUIRE(based::is_class_v<u::uc>);
+  STATIC_REQUIRE(based::is_class_v<u::Uc>);
   STATIC_REQUIRE(!based::is_class_v<int>);
   // clang-format on
 }

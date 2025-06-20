@@ -8,10 +8,10 @@
 namespace based
 {
 
-class table
+class Table
 {
 public:
-  explicit table(size_t min_wth)
+  explicit Table(size_t min_wth)
       : m_min_wth(min_wth)
   {
   }

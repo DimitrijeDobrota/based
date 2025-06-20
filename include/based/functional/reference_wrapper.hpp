@@ -22,7 +22,7 @@ template<class T> void fun(T&&) = delete;
 }  // namespace detail
 
 template<class T>
-class reference_wrapper
+class ReferenceWrapper
 {
 public:
   // types
@@ -32,23 +32,23 @@ public:
   template<class U>
     requires(requires {
       detail::fun<T>(declval<U>());
-      requires(!is_same_v<reference_wrapper, remove_cvref_t<U>>);
+      requires(!is_same_v<ReferenceWrapper, remove_cvref_t<U>>);
     })
 
   // NOLINTNEXTLINE(*explicit*)
-  constexpr reference_wrapper(U&& obj
+  constexpr ReferenceWrapper(U&& obj
   ) noexcept(noexcept(detail::fun<T>(based::forward<U>(obj))))
       : m_ptr(addressof(detail::fun<T>(based::forward<U>(obj))))
   {
   }
 
-  reference_wrapper(const reference_wrapper&) noexcept = default;
-  reference_wrapper& operator=(const reference_wrapper& x) noexcept = default;
+  ReferenceWrapper(const ReferenceWrapper&) noexcept = default;
+  ReferenceWrapper& operator=(const ReferenceWrapper& x) noexcept = default;
 
-  reference_wrapper(reference_wrapper&&) noexcept = delete;
-  reference_wrapper& operator=(reference_wrapper&& x) noexcept = delete;
+  ReferenceWrapper(ReferenceWrapper&&) noexcept = delete;
+  ReferenceWrapper& operator=(ReferenceWrapper&& x) noexcept = delete;
 
-  ~reference_wrapper() = default;
+  ~ReferenceWrapper() = default;
 
   // NOLINTBEGIN(*explicit*)
   constexpr operator T&() const noexcept { return *m_ptr; }
@@ -68,6 +68,6 @@ private:
 
 // deduction guides
 template<class T>
-reference_wrapper(T&) -> reference_wrapper<T>;
+ReferenceWrapper(T&) -> ReferenceWrapper<T>;
 
 }  // namespace based

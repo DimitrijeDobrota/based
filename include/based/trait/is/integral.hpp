@@ -6,7 +6,7 @@ namespace based
 {
 
 template<class T>
-struct is_integral : false_type
+struct IsIntegral : false_type
 {
 };
 
@@ -21,11 +21,11 @@ template<class T>
         ptr + obj;  // Exclude everything not yet excluded but integral types
       }
   )
-struct is_integral<T> : true_type
+struct IsIntegral<T> : true_type
 {
 };
 
 template<class T>
-constexpr bool is_integral_v = is_integral<T>::value;
+constexpr bool is_integral_v = IsIntegral<T>::value;
 
 }  // namespace based

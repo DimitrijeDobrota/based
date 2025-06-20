@@ -11,7 +11,7 @@ namespace based
 {
 
 template<class T>
-struct oversized_array
+struct OversizedArray
 {
   static constexpr auto oversized_size = static_cast<std::size_t>(10 * 1024);
 
@@ -36,7 +36,7 @@ struct oversized_array
 template<class Data>
 consteval auto to_oversized_array(const Data& str)
 {
-  oversized_array<typename Data::value_type> result;
+  OversizedArray<typename Data::value_type> result;
   std::ranges::copy(str, std::begin(result));
   result.size = str.size();
   return result;

@@ -7,13 +7,13 @@ namespace based
 {
 
 template<typename Func, bool on_success = false, bool on_failure = false>
-class scopeguard
+class Scopeguard
 {
-  uncaught_exception_detector m_detector;
+  UncaughtExceptionDetector m_detector;
   Func m_func;
 
 public:
-  scopeguard(Func&& func)  // NOLINT(*explicit*)
+  Scopeguard(Func&& func)  // NOLINT(*explicit*)
       : m_func(based::move(func))
   {
   }
@@ -25,13 +25,13 @@ public:
   }
   */
 
-  scopeguard(const scopeguard&) = delete;
-  scopeguard& operator=(const scopeguard&) = delete;
+  Scopeguard(const Scopeguard&) = delete;
+  Scopeguard& operator=(const Scopeguard&) = delete;
 
-  scopeguard(scopeguard&&) = delete;
-  scopeguard& operator=(scopeguard&&) = delete;
+  Scopeguard(Scopeguard&&) = delete;
+  Scopeguard& operator=(Scopeguard&&) = delete;
 
-  ~scopeguard()
+  ~Scopeguard()
   {
     if ((on_success && !m_detector) || (on_failure && m_detector)) {
       m_func();
@@ -40,13 +40,13 @@ public:
 };
 
 template<typename Func>
-class scopeguard<Func, false, false>
+class Scopeguard<Func, false, false>
 {
   bool m_commit = false;
   Func m_func;
 
 public:
-  scopeguard(Func&& func)  // NOLINT(*explicit*)
+  Scopeguard(Func&& func)  // NOLINT(*explicit*)
       : m_func(based::move(func))
   {
   }
@@ -58,13 +58,13 @@ public:
   }
   */
 
-  scopeguard(const scopeguard&) = delete;
-  scopeguard& operator=(const scopeguard&) = delete;
+  Scopeguard(const Scopeguard&) = delete;
+  Scopeguard& operator=(const Scopeguard&) = delete;
 
-  scopeguard(scopeguard&&) = delete;
-  scopeguard& operator=(scopeguard&&) = delete;
+  Scopeguard(Scopeguard&&) = delete;
+  Scopeguard& operator=(Scopeguard&&) = delete;
 
-  ~scopeguard()
+  ~Scopeguard()
   {
     if (m_commit) {
       m_func();
@@ -74,12 +74,12 @@ public:
 };
 
 template<typename Func>
-using scopeguard_exit = scopeguard<Func, true, true>;
+using scopeguard_exit = Scopeguard<Func, true, true>;
 
 template<typename Func>
-using scopeguard_success = scopeguard<Func, true, false>;
+using scopeguard_success = Scopeguard<Func, true, false>;
 
 template<typename Func>
-using scopeguard_failure = scopeguard<Func, false, true>;
+using scopeguard_failure = Scopeguard<Func, false, true>;
 
 }  // namespace based

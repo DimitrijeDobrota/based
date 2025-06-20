@@ -6,16 +6,16 @@ namespace based
 {
 
 template<class T>
-struct is_reference_wrapper : false_type
+struct IsReferenceWrapper : false_type
 {
 };
 
 template<class U>
-struct is_reference_wrapper<reference_wrapper<U>> : true_type
+struct IsReferenceWrapper<ReferenceWrapper<U>> : true_type
 {
 };
 
 template<class T>
-constexpr bool is_reference_wrapper_v = is_reference_wrapper<T>::value;
+constexpr bool is_reference_wrapper_v = IsReferenceWrapper<T>::value;
 
 }  // namespace based

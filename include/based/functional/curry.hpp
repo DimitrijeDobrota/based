@@ -9,22 +9,22 @@ namespace based
 {
 
 template<typename Function, typename... CapturedArgs>
-class curried
+class Curried
 {
   template<typename FFunction, typename... FCapturedArgs>
-  friend class curried;
+  friend class Curried;
 
   Function m_function;
   std::tuple<CapturedArgs...> m_captured;
 
-  curried(Function function, std::tuple<CapturedArgs...> args)
+  Curried(Function function, std::tuple<CapturedArgs...> args)
       : m_function(function)
       , m_captured(based::move(args))
   {
   }
 
 public:
-  curried(Function function, CapturedArgs&&... args)  // NOLINT(*explicit*)
+  Curried(Function function, CapturedArgs&&... args)  // NOLINT(*explicit*)
       : m_function(function)
       , m_captured(based::forward<CapturedArgs>(args)...)
   {
@@ -40,7 +40,7 @@ public:
     if constexpr (std::is_invocable_v<Function, CapturedArgs..., NewArgs...>) {
       return std::apply(m_function, based::move(all_args));
     } else {
-      return curried<Function, CapturedArgs..., NewArgs...> {
+      return Curried<Function, CapturedArgs..., NewArgs...> {
           m_function, based::move(all_args)
       };
     }

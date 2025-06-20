@@ -8,9 +8,9 @@
 
 // NOLINTBEGIN(*cognitive-complexity*)
 
-struct set
+struct Set
 {
-  explicit set(int& val)
+  explicit Set(int& val)
       : m_val(&val)
   {
   }
@@ -21,7 +21,7 @@ private:
   int* m_val;
 };
 
-template class based::scopeguard<set>;
+template class based::Scopeguard<Set>;
 
 TEST_CASE("manual", "[utility/scopeguard]")
 {
@@ -29,7 +29,7 @@ TEST_CASE("manual", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      based::scopeguard guard = set(test);
+      based::Scopeguard guard = Set(test);
       guard.commit();
     } catch (...) {
       REQUIRE(false);
@@ -42,7 +42,7 @@ TEST_CASE("manual", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      based::scopeguard guard = set(test);  // NOLINT(*const*)
+      based::Scopeguard guard = Set(test);  // NOLINT(*const*)
     } catch (...) {
       test *= 1;
     }
@@ -56,7 +56,7 @@ TEST_CASE("on success", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_success guard = set(test);
+      const based::scopeguard_success guard = Set(test);
     } catch (...) {
       test *= 1;
     }
@@ -68,7 +68,7 @@ TEST_CASE("on success", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_success guard = set(test);
+      const based::scopeguard_success guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       test *= 1;
@@ -83,7 +83,7 @@ TEST_CASE("on failure", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_failure guard = set(test);
+      const based::scopeguard_failure guard = Set(test);
     } catch (...) {
       test *= 1;
     }
@@ -95,7 +95,7 @@ TEST_CASE("on failure", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_failure guard = set(test);
+      const based::scopeguard_failure guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       REQUIRE(true);
@@ -110,7 +110,7 @@ TEST_CASE("exit", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_exit guard = set(test);
+      const based::scopeguard_exit guard = Set(test);
     } catch (...) {
       REQUIRE(false);
     }
@@ -122,7 +122,7 @@ TEST_CASE("exit", "[utility/scopeguard]")
   {
     int test = 0;
     try {
-      const based::scopeguard_exit guard = set(test);
+      const based::scopeguard_exit guard = Set(test);
       throw std::runtime_error {"should not leak"};
     } catch (...) {
       test *= 1;

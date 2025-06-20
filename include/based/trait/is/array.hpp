@@ -8,22 +8,22 @@ namespace based
 
 // NOLINTBEGIN(*array*)
 template<class T>
-struct is_array : false_type
+struct IsArray : false_type
 {
 };
 
 template<class T>
-struct is_array<T[]> : true_type
+struct IsArray<T[]> : true_type
 {
 };
 
 template<class T, size_t n>
-struct is_array<T[n]> : true_type
+struct IsArray<T[n]> : true_type
 {
 };
 // NOLINTEND(*array*)
 
 template<class T>
-constexpr bool is_array_v = is_array<T>::value;
+constexpr bool is_array_v = IsArray<T>::value;
 
 }  // namespace based

@@ -7,12 +7,12 @@
 TEST_CASE("is_array", "[trait/is_array]")
 {
   // clang-format off
-  struct test {};
+  struct Test {};
 
   // NOLINTBEGIN(*array*)
-  STATIC_REQUIRE(!based::is_array_v<test>);
-  STATIC_REQUIRE(based::is_array_v<test[]>);
-  STATIC_REQUIRE(based::is_array_v<test[3]>);
+  STATIC_REQUIRE(!based::is_array_v<Test>);
+  STATIC_REQUIRE(based::is_array_v<Test[]>);
+  STATIC_REQUIRE(based::is_array_v<Test[3]>);
   STATIC_REQUIRE(!based::is_array_v<float>);
   STATIC_REQUIRE(!based::is_array_v<int>);
   STATIC_REQUIRE(based::is_array_v<int[]>);

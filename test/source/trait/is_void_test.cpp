@@ -6,7 +6,7 @@
 
 TEST_CASE("is_void", "[trait/is_void]")
 {
-  double test = 0;
+  double const test = 0;
 
   // NOLINTBEGIN(*array*)
   // clang-format off

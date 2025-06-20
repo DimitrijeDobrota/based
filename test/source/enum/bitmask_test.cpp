@@ -7,14 +7,14 @@
 #include "based/concept/is/same.hpp"
 #include "based/integral/types.hpp"
 
-BASED_ENUM_BITMASK(var, based::u8) {
+BASED_ENUM_BITMASK(var, based::U8) {
     a = 1,
     b = 2,
     c = 4,
     min = 0,
     max = a | b | c,  // NOLINT
 };
-BASED_ENUM_TRAITS_BITMASK(var, based::u8)
+BASED_ENUM_TRAITS_BITMASK(var, based::U8)
 
 TEST_CASE("types", "[enum/enum_flag]")
 {

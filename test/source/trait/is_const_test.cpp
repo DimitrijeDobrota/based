@@ -7,7 +7,7 @@
 TEST_CASE("is_const", "[trait/is_const]")
 {
   // clang-format off
-  struct test {};
+  struct Test {};
 
   // NOLINTBEGIN(*array*)
   STATIC_REQUIRE(!based::is_const_v<int>);

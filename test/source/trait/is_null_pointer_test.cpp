@@ -6,7 +6,7 @@
 
 TEST_CASE("is_null_pointer", "[trait/is_null_pointer]")
 {
-  double test = 0;
+  double const test = 0;
 
   // NOLINTBEGIN(*array*)
   // clang-format off

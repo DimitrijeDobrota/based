@@ -5,12 +5,12 @@
 namespace based
 {
 
-class uncaught_exception_detector
+class UncaughtExceptionDetector
 {
   int m_count;
 
 public:
-  uncaught_exception_detector()
+  UncaughtExceptionDetector()
       : m_count(std::uncaught_exceptions())
   {
   }

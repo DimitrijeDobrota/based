@@ -6,16 +6,16 @@ namespace based
 {
 
 template<class T>
-struct is_rvalue_reference : false_type
+struct IsRvalueReference : false_type
 {
 };
 
 template<class T>
-struct is_rvalue_reference<T&&> : true_type
+struct IsRvalueReference<T&&> : true_type
 {
 };
 
 template<class T>
-constexpr bool is_rvalue_reference_v = is_rvalue_reference<T>::value;
+constexpr bool is_rvalue_reference_v = IsRvalueReference<T>::value;
 
 }  // namespace based

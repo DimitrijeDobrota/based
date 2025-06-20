@@ -6,16 +6,16 @@ namespace based
 {
 
 template<class T>
-struct is_const : false_type
+struct IsConst : false_type
 {
 };
 
 template<class T>
-struct is_const<const T> : true_type
+struct IsConst<const T> : true_type
 {
 };
 
 template<class T>
-constexpr bool is_const_v = is_const<T>::value;
+constexpr bool is_const_v = IsConst<T>::value;
 
 }  // namespace based

@@ -11,17 +11,17 @@ namespace based
 {
 
 template<class T>
-struct is_scalar : false_type
+struct IsScalar : false_type
 {
 };
 
 template<class T>
   requires(is_arithmetic_v<T> || is_enum_v<T> || is_pointer_v<T> || is_member_pointer_v<T> || is_null_pointer_v<T>)
-struct is_scalar<T>
+struct IsScalar<T>
 {
 };
 
 template<class T>
-constexpr bool is_scalar_v = is_scalar<T>::value;
+constexpr bool is_scalar_v = IsScalar<T>::value;
 
 }  // namespace based

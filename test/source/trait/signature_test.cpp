@@ -5,7 +5,6 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "based/concept/is/same.hpp"
-
 // NOLINTBEGIN(*cognitive-complexity*)
 
 namespace
@@ -27,32 +26,32 @@ int free_func_noexcept(const double& a, int&& b) noexcept(true)
 
 using based::SameAs;
 
-TEST_CASE("free function", "[trait/signature]")
+TEST_CASE("free function", "[trait/Signature]")
 {
-  using sig = based::signature<decltype(free_func)>;
+  using sig = based::Signature<decltype(free_func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("free function noexcept", "[trait/signature]")
+TEST_CASE("free function noexcept", "[trait/Signature]")
 {
-  using sig = based::signature<decltype(free_func_noexcept)>;
+  using sig = based::Signature<decltype(free_func_noexcept)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("empty", "[trait/signature]")
+TEST_CASE("empty", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -63,14 +62,14 @@ TEST_CASE("empty", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const", "[trait/signature]")
+TEST_CASE("const", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -81,14 +80,14 @@ TEST_CASE("const", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile", "[trait/signature]")
+TEST_CASE("volatile", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -99,14 +98,14 @@ TEST_CASE("volatile", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile", "[trait/signature]")
+TEST_CASE("const volatile", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -117,14 +116,14 @@ TEST_CASE("const volatile", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept", "[trait/signature]")
+TEST_CASE("noexcept", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -135,14 +134,14 @@ TEST_CASE("noexcept", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept", "[trait/signature]")
+TEST_CASE("const noexcept", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -153,14 +152,14 @@ TEST_CASE("const noexcept", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept", "[trait/signature]")
+TEST_CASE("volatile noexcept", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -171,14 +170,14 @@ TEST_CASE("volatile noexcept", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept", "[trait/signature]")
+TEST_CASE("const volatile noexcept", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -189,14 +188,14 @@ TEST_CASE("const volatile noexcept", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("lvalref", "[trait/signature]")
+TEST_CASE("lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) & noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -207,14 +206,14 @@ TEST_CASE("lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const lvalref", "[trait/signature]")
+TEST_CASE("const lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -225,14 +224,14 @@ TEST_CASE("const lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile lvalref", "[trait/signature]")
+TEST_CASE("volatile lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -243,14 +242,14 @@ TEST_CASE("volatile lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile lvalref", "[trait/signature]")
+TEST_CASE("const volatile lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -261,14 +260,14 @@ TEST_CASE("const volatile lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept lvalref", "[trait/signature]")
+TEST_CASE("noexcept lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) & noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -279,14 +278,14 @@ TEST_CASE("noexcept lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept lvalref", "[trait/signature]")
+TEST_CASE("const noexcept lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -297,14 +296,14 @@ TEST_CASE("const noexcept lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept lvalref", "[trait/signature]")
+TEST_CASE("volatile noexcept lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -315,14 +314,14 @@ TEST_CASE("volatile noexcept lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept lvalref", "[trait/signature]")
+TEST_CASE("const volatile noexcept lvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -333,14 +332,14 @@ TEST_CASE("const volatile noexcept lvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("rvalref", "[trait/signature]")
+TEST_CASE("rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) && noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -351,14 +350,14 @@ TEST_CASE("rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const rvalref", "[trait/signature]")
+TEST_CASE("const rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const&& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -369,14 +368,14 @@ TEST_CASE("const rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile rvalref", "[trait/signature]")
+TEST_CASE("volatile rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile&& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -387,14 +386,14 @@ TEST_CASE("volatile rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile rvalref", "[trait/signature]")
+TEST_CASE("const volatile rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile&& noexcept(false);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -405,14 +404,14 @@ TEST_CASE("const volatile rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::false_type, sig::noexcept_val>);
 }
 
-TEST_CASE("noexcept rvalref", "[trait/signature]")
+TEST_CASE("noexcept rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) && noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -423,14 +422,14 @@ TEST_CASE("noexcept rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const noexcept rvalref", "[trait/signature]")
+TEST_CASE("const noexcept rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const&& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -441,14 +440,14 @@ TEST_CASE("const noexcept rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("volatile noexcept rvalref", "[trait/signature]")
+TEST_CASE("volatile noexcept rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) volatile&& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);
@@ -459,14 +458,14 @@ TEST_CASE("volatile noexcept rvalref", "[trait/signature]")
   STATIC_REQUIRE(SameAs<based::true_type, sig::noexcept_val>);
 }
 
-TEST_CASE("const volatile noexcept rvalref", "[trait/signature]")
+TEST_CASE("const volatile noexcept rvalref", "[trait/Signature]")
 {
-  struct test
+  struct Test
   {
     int func(const double& a, int&& b) const volatile&& noexcept(true);
   };
 
-  using sig = based::signature<decltype(&test::func)>;
+  using sig = based::Signature<decltype(&Test::func)>;
   STATIC_REQUIRE(SameAs<int(const double&, int&&), sig::sig_type>);
   STATIC_REQUIRE(SameAs<std::tuple<const double&, int&&>, sig::arg_type>);
   STATIC_REQUIRE(SameAs<int, sig::ret_type>);

@@ -11,14 +11,14 @@ namespace based
 namespace detail
 {
 
-template<class T> type_identity<remove_reference_t<T>*> try_add_pointer(int);
-template<class T> type_identity<T> try_add_pointer(...);
+template<class T> TypeIdentity<remove_reference_t<T>*> try_add_pointer(int);
+template<class T> TypeIdentity<T> try_add_pointer(...);
 
 }  // namespace detail
 
-template<class T> struct add_pointer : decltype(detail::try_add_pointer<T>(0)) {};
+template<class T> struct AddPointer : decltype(detail::try_add_pointer<T>(0)) {};
 
-template<class T> using add_pointer_t = add_pointer<T>::type;
+template<class T> using add_pointer_t = AddPointer<T>::type;
 
 // clang-format on
 

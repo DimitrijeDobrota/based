@@ -12,7 +12,7 @@ namespace based
 // clang-format off
 
 template<typename T>
-concept totally_ordered = requires {
+concept TotallyOrdered = requires {
 	requires(EqualityComparable<T>);
 	requires(LessComparable<T>);
 	requires(GreaterComparable<T>);

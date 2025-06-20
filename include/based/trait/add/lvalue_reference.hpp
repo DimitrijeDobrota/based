@@ -18,9 +18,9 @@ template<class T> auto try_add(...) -> type_identity<T>;
 
 }  // namespace detail
 
-template<class T> struct add_lvalue_reference : decltype(detail::try_add<T>(0)) {};
+template<class T> struct AddLvalueReference : decltype(detail::try_add<T>(0)) {};
 
-template<class T> using add_lvalue_reference_t = add_lvalue_reference<T>::type;
+template<class T> using add_lvalue_reference_t = AddLvalueReference<T>::type;
 
 // clang-format on
 

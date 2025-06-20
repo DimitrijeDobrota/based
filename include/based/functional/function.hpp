@@ -22,7 +22,7 @@ class function;
 template<size_t size, size_t alignment, typename Ret, typename... Args>
 class function<Ret(Args...), size, alignment>
 {
-  buffer<size, alignment> m_space;
+  Buffer<size, alignment> m_space{};
 
   using executor_t = Ret (*)(Args..., void*);
 

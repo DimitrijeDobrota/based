@@ -13,7 +13,7 @@ namespace based
 /* ----- Buffer used for Local Buffer Optimization ----- */
 
 template<size_t size, size_t alignment = alignof(void*)>
-struct buffer
+struct Buffer
 {
   template<typename T>
   static constexpr bool valid_type()
@@ -23,11 +23,11 @@ struct buffer
 
   alignas(alignment) char m_space[size] = {0};  // NOLINT(*array*)
 
-  buffer() = default;
+  Buffer() = default;
 
   template<typename T, typename... Args>
     requires(valid_type<T>() && std::constructible_from<T, Args...>)
-  explicit buffer(
+  explicit Buffer(
       std::in_place_type_t<T> /* t */, Args&&... args
   ) noexcept(std::is_nothrow_constructible_v<T, Args...>)
   {
@@ -59,10 +59,10 @@ struct buffer
     requires(valid_type<T>())
   [[nodiscard]] const T* as() const noexcept
   {
-    return const_cast<buffer*>(this)->as<T>();  // NOLINT(*const-cast*)
+    return const_cast<Buffer*>(this)->as<T>();  // NOLINT(*const-cast*)
   }
 
-  void swap(buffer& that) noexcept
+  void swap(Buffer& that) noexcept
   {
     // NOLINTBEGIN(*array*)
     alignas(alignment) char tmp[size];

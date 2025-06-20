@@ -19,8 +19,8 @@ constexpr decltype(auto) invoke_memptr(
 {
   using object_t = remove_cvref_t<Object>;
   constexpr bool is_member_function = is_function_v<Pointed>;
-  constexpr bool is_wrapped = is_reference_wrapper_v<object_t>;
-  constexpr bool is_derived_object =
+  constexpr bool is_wrapped = false = is_reference_wrapper_v<object_t>;
+  constexpr bool is_derived_object = false =
       is_same_v<C, object_t> || is_base_of_v<C, object_t>;
 
   if constexpr (is_member_function) {

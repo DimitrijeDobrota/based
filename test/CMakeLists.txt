@@ -50,7 +50,7 @@ add_test(trait remove_cv_test)
 add_test(trait remove_pointer_test)
 add_test(trait remove_reference_test)
 add_test(trait remove_volatile_test)
-add_test(trait signature_test_test)
+add_test(trait signature_test)
 
 ## ----- Concept -----
 

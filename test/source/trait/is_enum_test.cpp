@@ -7,12 +7,12 @@
 TEST_CASE("is_enum", "[trait/is_enum]")
 {
   // clang-format off
-	struct a { enum e {}; };
+	struct A { enum e {}; };
 	enum e {};
 	enum class ec : int {};
 
-	STATIC_REQUIRE(!based::is_enum_v<a>);
-	STATIC_REQUIRE(based::is_enum_v<a::e>);
+	STATIC_REQUIRE(!based::is_enum_v<A>);
+	STATIC_REQUIRE(based::is_enum_v<A::e>);
 	STATIC_REQUIRE(based::is_enum_v<e>);
 	STATIC_REQUIRE(based::is_enum_v<ec>);
 	STATIC_REQUIRE(!based::is_enum_v<int>);

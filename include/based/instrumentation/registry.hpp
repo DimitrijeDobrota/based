@@ -6,7 +6,7 @@ namespace based
 {
 
 template<typename D>
-class registry
+class Registry
 {
 public:
   static size_t count;
@@ -14,13 +14,13 @@ public:
   D* prev;
   D* next;
 
-  registry(registry&&) = delete;
+  Registry(Registry&&) = delete;
 
-  registry& operator=(const registry&) = delete;
-  registry& operator=(registry&&) = delete;
+  Registry& operator=(const Registry&) = delete;
+  Registry& operator=(Registry&&) = delete;
 
 private:
-  registry()
+  Registry()
       : prev(nullptr)
       , next(head)
   {
@@ -31,12 +31,12 @@ private:
     }
   }
 
-  registry(const registry& /* reg */)
-      : registry()
+  Registry(const Registry& /* reg */)
+      : Registry()
   {
   }
 
-  ~registry()
+  ~Registry()
   {
     --count;
     if (prev != nullptr) {
@@ -54,9 +54,9 @@ private:
 };
 
 template<typename D>
-size_t registry<D>::count(0);
+size_t Registry<D>::count(0);
 
 template<typename D>
-D* registry<D>::head(nullptr);
+D* Registry<D>::head(nullptr);
 
 }  // namespace based

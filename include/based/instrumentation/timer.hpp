@@ -7,23 +7,23 @@
 namespace based
 {
 
-class timer
+class Timer
 {
 public:
   using clock_t = std::chrono::high_resolution_clock;
   using duration_t = std::chrono::microseconds;
 
-  timer()
+  Timer()
       : m_startp(clock_t::now())
   {
   }
 
-  timer(const timer&) = delete;
-  timer(timer&&) = delete;
-  timer& operator=(const timer&) = delete;
-  timer& operator=(timer&&) = delete;
+  Timer(const Timer&) = delete;
+  Timer(Timer&&) = delete;
+  Timer& operator=(const Timer&) = delete;
+  Timer& operator=(Timer&&) = delete;
 
-  ~timer()
+  ~Timer()
   {
     stop();
     std::cout << std::flush;

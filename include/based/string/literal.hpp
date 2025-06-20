@@ -8,10 +8,10 @@ namespace based
 {
 
 template<size_t n>
-struct string_literal
+struct StringLiteral
 {
   // NOLINTNEXTLINE(*explicit*, *array*)
-  constexpr string_literal(const char (&str)[n])
+  constexpr StringLiteral(const char (&str)[n])
       : m_value(std::to_array(str))
   {
   }

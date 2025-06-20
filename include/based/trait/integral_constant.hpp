@@ -4,12 +4,12 @@ namespace based
 {
 
 template<class T, T v>
-struct integral_constant
+struct IntegralConstant
 {
   static constexpr T value = v;
 
   using value_type = T;
-  using type = integral_constant;
+  using type = IntegralConstant;
 
   // NOLINTNEXTLINE(*explicit*)
   constexpr operator value_type() const noexcept { return value; }
@@ -17,7 +17,7 @@ struct integral_constant
 };
 
 template<bool b>
-using bool_constant = integral_constant<bool, b>;
+using bool_constant = IntegralConstant<bool, b>;
 
 using true_type = bool_constant<true>;
 using false_type = bool_constant<false>;

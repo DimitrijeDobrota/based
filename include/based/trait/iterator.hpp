@@ -10,7 +10,7 @@ namespace based
 namespace detail
 {
 template<typename I>
-struct iterator_traits
+struct IteratorTraits
 {
   using value_type = I;
   using distance_type = u64;
@@ -20,7 +20,7 @@ struct iterator_traits
 
 template<typename I>
   requires std::input_or_output_iterator<I>
-struct iterator_traits<I>
+struct IteratorTraits<I>
 {
   using value_type = std::iterator_traits<I>::value_type;
   using distance_type = std::iterator_traits<I>::difference_type;
@@ -31,15 +31,15 @@ struct iterator_traits<I>
 }  // namespace detail
 
 template<typename T>
-using iter_value_t = detail::iterator_traits<T>::value_type;
+using iter_value_t = detail::IteratorTraits<T>::value_type;
 
 template<typename T>
-using iter_dist_t = detail::iterator_traits<T>::distance_type;
+using iter_dist_t = detail::IteratorTraits<T>::distance_type;
 
 template<typename T>
-using iter_ptr_t = detail::iterator_traits<T>::pointer;
+using iter_ptr_t = detail::IteratorTraits<T>::pointer;
 
 template<typename T>
-using iter_ref_t = detail::iterator_traits<T>::reference;
+using iter_ref_t = detail::IteratorTraits<T>::reference;
 
 }  // namespace based

@@ -14,7 +14,7 @@ namespace based
 // clang-format off
 
 template<class T>
-struct decay
+struct Decay
 {
 private:
   using u = remove_reference_t<T>;
@@ -30,7 +30,7 @@ public:
 	  >;
 };
 
-template<class T> using decay_t = typename decay<T>::type;
+template<class T> using decay_t = typename Decay<T>::type;
 
 // clang-format on
 

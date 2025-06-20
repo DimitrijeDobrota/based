@@ -10,17 +10,17 @@ namespace based
 {
 
 template<class T>
-struct is_object : false_type
+struct IsObject : false_type
 {
 };
 
 template<class T>
   requires(is_scalar_v<T> || is_array_v<T> || is_union_v<T> || is_class_v<T>)
-struct is_object<T> : true_type
+struct IsObject<T> : true_type
 {
 };
 
 template<class T>
-constexpr bool is_object_v = is_object<T>::value;
+constexpr bool is_object_v = IsObject<T>::value;
 
 }  // namespace based

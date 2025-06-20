@@ -15,18 +15,18 @@ namespace detail
 
 // clang-format off
 
-template<typename P, typename Sig> struct procedure : public false_type {};
+template<typename P, typename Sig> struct Procedure : public false_type {};
 
 template<typename P, typename Ret, typename... Args>
 requires (Invocable<P, Args...> && ConvertibleTo<invoke_result_t<P, Args...>, Ret>)
-struct procedure<P, Ret(Args...)> : public true_type {};
+struct Procedure<P, Ret(Args...)> : public true_type {};
 
 template<typename P, typename... Args>
 requires (Invocable<P, Args...>)
-struct procedure<P, void(Args...)> : public true_type {};
+struct Procedure<P, void(Args...)> : public true_type {};
 
 template<typename P, typename Ret, typename... Args>
-static constexpr bool procedure_v = procedure<P, Ret(Args...)>::value;
+static constexpr bool procedure_v = Procedure<P, Ret(Args...)>::value;
 
 // clang-format on
 

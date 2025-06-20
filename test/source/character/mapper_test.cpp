@@ -6,12 +6,12 @@
 
 #include "based/character/type.hpp"
 
-struct test
+struct Test
 {
-  constexpr bool operator()(based::character chr) const { return chr >= '\0'; }
+  constexpr bool operator()(based::Character chr) const { return chr >= '\0'; }
 };
 
-template class based::mapper<test>;
+template class based::Mapper<Test>;
 
 TEST_CASE("mapper", "[character/mapper]")
 {

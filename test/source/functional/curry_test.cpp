@@ -16,7 +16,7 @@ auto free_func(int a, double b, int c, double d)
 
 TEST_CASE("free function", "[functional/curry]")
 {
-  const based::curried curried = free_func;
+  const based::Curried curried = free_func;
 
   REQUIRE(curried(1)(2.0)(3)(4.0) == 10);
   REQUIRE(curried(1)(2.0, 3)(4.0) == 10);
@@ -28,7 +28,7 @@ TEST_CASE("free function", "[functional/curry]")
 
 TEST_CASE("lambda", "[functional/curry]")
 {
-  const based::curried curried = [](int a, double b, int c, double d)
+  const based::Curried curried = [](int a, double b, int c, double d)
   {
     return static_cast<int>(a + b + c + d);
   };
@@ -45,7 +45,7 @@ TEST_CASE("lambda", "[functional/curry]")
 
 TEST_CASE("member function", "[functional/curry]")
 {
-  struct test
+  struct Test
   {
     [[nodiscard]] auto func(int a, double b, int c, double d) const
     {
@@ -55,8 +55,8 @@ TEST_CASE("member function", "[functional/curry]")
     int m_x = 0;
   };
 
-  const based::curried curried = &test::func;
-  test tmp;
+  const based::Curried curried = &Test::func;
+  Test tmp;
 
   REQUIRE(curried(std::ref(tmp))(1)(2.0)(3)(4.0) == 10);
   REQUIRE(curried(std::ref(tmp))(1)(2.0)(3, 4.0) == 10);

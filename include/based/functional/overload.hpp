@@ -6,12 +6,12 @@ namespace based
 /* ----- Overload Lambdas ----- */
 
 template<typename... F>
-struct overload : public F...
+struct Overload : public F...
 {
   using F::operator()...;
 };
 
 template<typename... F>
-overload(F&&...) -> overload<F...>;
+Overload(F&&...) -> Overload<F...>;
 
 }  // namespace based

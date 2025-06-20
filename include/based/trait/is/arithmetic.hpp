@@ -8,11 +8,11 @@ namespace based
 {
 
 template<class T>
-struct is_arithmetic : bool_constant<is_integral_v<T> || is_floating_point_v<T>>
+struct IsArithmetic : bool_constant<is_integral_v<T> || is_floating_point_v<T>>
 {
 };
 
 template<class T>
-constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+constexpr bool is_arithmetic_v = IsArithmetic<T>::value;
 
 }  // namespace based

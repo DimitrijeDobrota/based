@@ -12,29 +12,29 @@ namespace based
 template<typename T, typename N>
 // T semiregular
 // N integral
-class list_pool
+class ListPool
 {
 public:
   using value_type = T;
   using list_type = N;
 
 private:
-  struct node_t
+  struct NodeT
   {
     value_type value {};
     list_type next;
   };
 
-  std::vector<node_t> m_pool;
+  std::vector<NodeT> m_pool{};
   list_type m_free_list;
 
-  [[nodiscard]] const node_t& node(list_type x) const
+  [[nodiscard]] const NodeT& node(list_type x) const
   {
     assert(x != list_type(0));
     return m_pool[(x - list_type(1)).value];
   }
 
-  [[nodiscard]] node_t& node(list_type x)
+  [[nodiscard]] NodeT& node(list_type x)
   {
     assert(x != list_type(0));
     return m_pool[(x - list_type(1)).value];
@@ -42,12 +42,12 @@ private:
 
   [[nodiscard]] list_type new_node()
   {
-    m_pool.push_back(node_t());
+    m_pool.push_back(NodeT());
     return list_type {static_cast<list_type::basic_type>(m_pool.size())};
   }
 
 public:
-  list_pool()
+  ListPool()
       : m_free_list(node_empty())
   {
   }
@@ -55,19 +55,19 @@ public:
   struct iterator
   {
     using iterator_category = std::forward_iterator_tag;
-    using difference_type = list_pool::list_type;
-    using value_type = list_pool::value_type;
+    using difference_type = ListPool::list_type;
+    using value_type = ListPool::value_type;
     using reference = value_type&;
     using pointer = value_type*;
 
     iterator() = default;
 
-    explicit iterator(list_pool& pool)
+    explicit iterator(ListPool& pool)
         : iterator(pool, pool.node_empty())
     {
     }
 
-    iterator(list_pool& pool, list_pool::list_type node)
+    iterator(ListPool& pool, ListPool::list_type node)
         : m_pool(&pool)
         , m_node(node)
     {
@@ -101,26 +101,26 @@ public:
     }
 
   private:
-    list_pool* m_pool;
-    list_pool::list_type m_node;
+    ListPool* m_pool;
+    ListPool::list_type m_node;
   };
 
   struct const_iterator
   {
     using iterator_category = std::forward_iterator_tag;
-    using difference_type = list_pool::list_type;
-    using value_type = list_pool::value_type;
+    using difference_type = ListPool::list_type;
+    using value_type = ListPool::value_type;
     using reference = const value_type&;
     using pointer = const value_type*;
 
     const_iterator() = default;
 
-    explicit const_iterator(const list_pool& pool)
+    explicit const_iterator(const ListPool& pool)
         : const_iterator(pool, pool.node_empty())
     {
     }
 
-    const_iterator(const list_pool& pool, list_pool::list_type node)
+    const_iterator(const ListPool& pool, ListPool::list_type node)
         : m_pool(&pool)
         , m_node(node)
     {
@@ -154,8 +154,8 @@ public:
     }
 
   private:
-    const list_pool* m_pool;
-    list_pool::list_type m_node;
+    const ListPool* m_pool;
+    ListPool::list_type m_node;
   };
 
   [[nodiscard]] bool is_empty(list_type x) const { return x == node_empty(); }
@@ -252,7 +252,7 @@ public:
 };
 
 template<typename T, typename N>
-void free_list(list_pool<T, N>& pool, typename list_pool<T, N>::list_type x)
+void free_list(ListPool<T, N>& pool, typename ListPool<T, N>::list_type x)
 {
   while (!pool.is_empty(x)) {
     x = pool.free(x);

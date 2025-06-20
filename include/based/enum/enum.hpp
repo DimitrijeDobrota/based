@@ -16,7 +16,7 @@ namespace category
  * Conversion is equivalent to static_cast
  * Unspecified enum_traits use this category
  */
-struct def
+struct Def
 {
 };
 
@@ -33,7 +33,7 @@ struct def
  * Additional operators:
  *  - operator!
  */
-struct standard
+struct Standard
 {
 };
 
@@ -52,7 +52,7 @@ struct standard
  *  - operator++
  *  - operator--
  */
-struct linear
+struct Linear
 {
 };
 
@@ -76,7 +76,7 @@ struct linear
  *  - operator^=
  *  - operator~
  */
-struct bitmask
+struct Bitmask
 {
 };
 
@@ -94,7 +94,7 @@ struct bitmask
  *  - operator!
  */
 template<class Enum, Enum... vals>
-struct discrete
+struct Discrete
 {
 };
 
@@ -116,7 +116,7 @@ namespace enum_traits
 template<class T>
   requires IsScopedEnum<T>
 // TODO: check for proper int type
-struct traits
+struct Traits
 {
   /* TODO (provide defaults)
   using category = enum_default;
@@ -125,84 +125,84 @@ struct traits
 };
 
 template<class Enum>
-concept has_category = requires { typename traits<Enum>::category; };
+concept HasCategory = requires { typename Traits<Enum>::category; };
 
 template<class Enum>
-concept has_value_type = requires { typename traits<Enum>::value_type; };
+concept HasValueType = requires { typename Traits<Enum>::value_type; };
 
-template<has_category Enum>
-using category_type = typename traits<Enum>::category;
+template<HasCategory Enum>
+using category_type = typename Traits<Enum>::category;
 
-template<has_value_type Enum>
-using value_type = typename traits<Enum>::value_type;
+template<HasValueType Enum>
+using value_type = typename Traits<Enum>::value_type;
 
-template<has_value_type Enum>
-using basic_type = typename traits<Enum>::value_type::basic_type;
+template<HasValueType Enum>
+using basic_type = typename Traits<Enum>::value_type::basic_type;
 
 template<class Enum>
-concept has_none = requires {
+concept HasNone = requires {
   {
     Enum::none
   };
 };
 
 template<class Enum>
-concept has_min = requires {
+concept HasMin = requires {
   {
     Enum::min
   };
 };
 
 template<class Enum>
-concept has_max = requires {
+concept HasMax = requires {
   {
     Enum::max
   };
 };
 
-template<has_none Enum>
+template<HasNone Enum>
 static constexpr Enum none = Enum::none;
 
-template<has_min Enum>
+template<HasMin Enum>
 static constexpr Enum min = Enum::min;
 
-template<has_max Enum>
+template<HasMin Enum>
 static constexpr Enum max = Enum::max;
 
 template<class Enum, class Category>
-concept is_category = requires {
-  requires(has_category<Enum>);
+concept IsCategory = requires {
+  requires(HasCategory<Enum>);
   requires(SameAs<Category, category_type<Enum>>);
 };
 
 template<class Enum>
-concept is_default = is_category<Enum, category::def>;
+concept IsDefault = IsCategory<Enum, category::Def>;
 
 template<class Enum>
-concept is_standard = requires {
-  requires(is_category<Enum, category::standard>);
-  requires(has_none<Enum>);
+concept IsStandard = requires {
+  requires(IsCategory<Enum, category::Standard>);
+  requires(HasNone<Enum>);
   requires(
-      !has_min<Enum> || !has_max<Enum>
+      !HasMin<Enum> || !HasMin<Enum>
       || !(min<Enum> <= none<Enum> && none<Enum> <= max<Enum>)
   );
 };
 
 template<class Enum>
-concept is_linear = requires {
-  requires(is_category<Enum, category::linear>);
-  requires(has_none<Enum>);
+concept IsLinear = requires {
+  requires(IsCategory<Enum, category::Linear>);
+  requires(HasNone<Enum>);
   requires(
-      !has_min<Enum> || !has_max<Enum>
+      !HasMin<Enum> || !HasMin<Enum>
       || !(min<Enum> <= none<Enum> && none<Enum> <= max<Enum>)
   );
 };
 
 template<class Enum>
-concept is_bitmask = requires {
-  requires(is_category<Enum, category::bitmask>);
-  requires(has_min<Enum>);
-  requires(has_max<Enum>);
+concept IsBitmask = requires {
+  requires(IsCategory<Enum, category::Bitmask>);
+  requires(HasMin<Enum>);
+  requires(HasMin<Enum>);
 };
 
 }  // namespace enum_traits
@@ -255,20 +255,20 @@ namespace category_traits
  *      Maps a given value to the enumeration type
  */
 template<class Category>
-struct traits;
+struct Traits;
 
 template<>
-struct traits<category::def>
+struct Traits<category::Def>
 {
-  using category = category::def;
+  using category = category::Def;
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr bool valid() noexcept
   {
     return true;
   }
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     return static_cast<Enum>(value);
@@ -276,14 +276,14 @@ struct traits<category::def>
 };
 
 template<>
-struct traits<category::standard>
+struct Traits<category::Standard>
 {
-  using category = category::standard;
+  using category = category::Standard;
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr bool valid() noexcept
   {
-    if constexpr (enum_traits::has_none<Enum>) {
+    if constexpr (enum_traits::HasNone<Enum>) {
       constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
       constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
       constexpr auto xmax = detail::value_cast_impl(enum_traits::max<Enum>);
@@ -293,7 +293,7 @@ struct traits<category::standard>
     return false;
   }
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
@@ -306,14 +306,14 @@ struct traits<category::standard>
 };
 
 template<>
-struct traits<category::linear>
+struct Traits<category::Linear>
 {
-  using category = category::linear;
+  using category = category::Linear;
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr bool valid() noexcept
   {
-    if constexpr (enum_traits::has_none<Enum>) {
+    if constexpr (enum_traits::HasNone<Enum>) {
       constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
       constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
       constexpr auto xmax = detail::value_cast_impl(enum_traits::max<Enum>);
@@ -323,7 +323,7 @@ struct traits<category::linear>
     }
   }
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> x) noexcept
   {
     constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
@@ -336,18 +336,18 @@ struct traits<category::linear>
 };
 
 template<>
-struct traits<category::bitmask>
+struct Traits<category::Bitmask>
 {
-  using category = category::bitmask;
+  using category = category::Bitmask;
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr bool valid() noexcept
   {
     constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
     constexpr auto xmax = detail::value_cast_impl(enum_traits::max<Enum>);
 
     if constexpr ((xmin & xmax) == xmin) {
-      if constexpr (enum_traits::has_none<Enum>) {
+      if constexpr (enum_traits::HasNone<Enum>) {
         constexpr auto xnone = detail::value_cast_impl(enum_traits::none<Enum>);
         return xnone != detail::bitwise_clamp(xnone, xmin, xmax);
       }
@@ -357,13 +357,13 @@ struct traits<category::bitmask>
     return false;
   }
 
-  template<enum_traits::is_category<category> Enum>
+  template<enum_traits::IsCategory<category> Enum>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
     constexpr auto xmin = detail::value_cast_impl(enum_traits::min<Enum>);
     constexpr auto xmax = detail::value_cast_impl(enum_traits::max<Enum>);
 
-    if constexpr (!enum_traits::has_none<Enum>) {
+    if constexpr (!enum_traits::HasNone<Enum>) {
       return detail::enum_cast_impl<Enum>(
           detail::bitwise_clamp<decltype(xmin)>(value, xmin, xmax)
       );
@@ -379,22 +379,22 @@ struct traits<category::bitmask>
 };
 
 template<class Enum, Enum... vals>
-struct traits<category::discrete<Enum, vals...>>
+struct Traits<category::Discrete<Enum, vals...>>
 {
-  using category = category::discrete<Enum, vals...>;
+  using category = category::Discrete<Enum, vals...>;
 
-  template<enum_traits::is_category<category> EnumI>
+  template<enum_traits::IsCategory<category> EnumI>
     requires SameAs<Enum, EnumI>
   static constexpr bool valid() noexcept
   {
-    if constexpr (enum_traits::has_none<Enum>) {
+    if constexpr (enum_traits::HasNone<Enum>) {
       return !(... || (vals == Enum::none));
     } else {
       return false;
     }
   }
 
-  template<enum_traits::is_category<category> EnumI>
+  template<enum_traits::IsCategory<category> EnumI>
     requires SameAs<Enum, EnumI>
   static constexpr Enum enum_cast(enum_traits::value_type<Enum> value) noexcept
   {
@@ -408,13 +408,13 @@ struct traits<category::discrete<Enum, vals...>>
 template<class Enum>
 static constexpr auto valid() noexcept
 {
-  return traits<enum_traits::category_type<Enum>>::template valid<Enum>();
+  return Traits<enum_traits::category_type<Enum>>::template valid<Enum>();
 }
 
 template<class Enum>
 static constexpr auto enum_cast(enum_traits::value_type<Enum> value) noexcept
 {
-  return traits<enum_traits::category_type<Enum>>::template enum_cast<Enum>(
+  return Traits<enum_traits::category_type<Enum>>::template enum_cast<Enum>(
       value
   );
 }
@@ -445,7 +445,7 @@ constexpr Enum enum_cast(Enum value) noexcept
 inline namespace operators
 {
 
-template<enum_traits::has_none Enum>
+template<enum_traits::HasNone Enum>
 constexpr bool operator!(const Enum& lhs) noexcept
 {
   return lhs == enum_traits::none<Enum>;
@@ -454,7 +454,7 @@ constexpr bool operator!(const Enum& lhs) noexcept
 inline namespace op_inc
 {
 
-template<enum_traits::is_linear Enum>
+template<enum_traits::IsLinear Enum>
 constexpr Enum& operator++(Enum& lhs) noexcept
 {
   if (!(!lhs || lhs == enum_traits::max<Enum>)) {
@@ -463,7 +463,7 @@ constexpr Enum& operator++(Enum& lhs) noexcept
   return lhs;
 }
 
-template<enum_traits::is_linear Enum>
+template<enum_traits::IsLinear Enum>
 constexpr Enum operator++(const Enum& lhs, int) noexcept
 {
   Enum ret = lhs;
@@ -476,7 +476,7 @@ constexpr Enum operator++(const Enum& lhs, int) noexcept
 inline namespace op_dec
 {
 
-template<enum_traits::is_linear Enum>
+template<enum_traits::IsLinear Enum>
 constexpr Enum& operator--(Enum& lhs) noexcept
 {
   if (!(!lhs || lhs == enum_traits::min<Enum>)) {
@@ -485,7 +485,7 @@ constexpr Enum& operator--(Enum& lhs) noexcept
   return lhs;
 }
 
-template<enum_traits::is_linear Enum>
+template<enum_traits::IsLinear Enum>
 constexpr Enum operator--(const Enum& lhs, int) noexcept
 {
   Enum ret = lhs;
@@ -498,10 +498,10 @@ constexpr Enum operator--(const Enum& lhs, int) noexcept
 inline namespace op_or
 {
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum operator|(const Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!lhs || !rhs) {
       return enum_traits::none<Enum>;
     }
@@ -509,10 +509,10 @@ constexpr Enum operator|(const Enum& lhs, const Enum& rhs) noexcept
   return enum_cast<Enum>(value_cast(lhs) | value_cast(rhs));
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& operator|=(Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!(!lhs || !rhs)) {
       return lhs = enum_cast<Enum>(value_cast(lhs) | value_cast(rhs));
     }
@@ -527,10 +527,10 @@ constexpr Enum& operator|=(Enum& lhs, const Enum& rhs) noexcept
 inline namespace op_and
 {
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum operator&(const Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!lhs || !rhs) {
       return enum_traits::none<Enum>;
     }
@@ -538,10 +538,10 @@ constexpr Enum operator&(const Enum& lhs, const Enum& rhs) noexcept
   return enum_cast<Enum>(value_cast(lhs) & value_cast(rhs));
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& operator&=(Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!(!lhs || !rhs)) {
       return lhs = enum_cast<Enum>(value_cast(lhs) & value_cast(rhs));
     }
@@ -556,10 +556,10 @@ constexpr Enum& operator&=(Enum& lhs, const Enum& rhs) noexcept
 inline namespace op_xor
 {
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum operator^(const Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!lhs || !rhs) {
       return enum_traits::none<Enum>;
     }
@@ -567,10 +567,10 @@ constexpr Enum operator^(const Enum& lhs, const Enum& rhs) noexcept
   return enum_cast<Enum>(value_cast(lhs) ^ value_cast(rhs));
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& operator^=(Enum& lhs, const Enum& rhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!(!lhs || !rhs)) {
       return lhs = enum_cast<Enum>(value_cast(lhs) ^ value_cast(rhs));
     }
@@ -585,10 +585,10 @@ constexpr Enum& operator^=(Enum& lhs, const Enum& rhs) noexcept
 inline namespace op_not
 {
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum operator~(const Enum& lhs) noexcept
 {
-  if constexpr (enum_traits::has_none<Enum>) {
+  if constexpr (enum_traits::HasNone<Enum>) {
     if (!lhs) {
       return enum_traits::none<Enum>;
     }
@@ -601,37 +601,37 @@ constexpr Enum operator~(const Enum& lhs) noexcept
 inline namespace shorthand
 {
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& set(Enum& lhs, const Enum& rhs) noexcept
 {
   return lhs |= rhs;
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& mask(Enum& lhs, const Enum& rhs) noexcept
 {
   return lhs &= rhs;
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& tgl(Enum& lhs, const Enum& rhs) noexcept
 {
   return lhs ^= rhs;
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& neg(Enum& lhs) noexcept
 {
   return lhs = ~lhs;
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr Enum& clear(Enum& lhs, const Enum& rhs) noexcept
 {
   return lhs &= ~rhs;
 }
 
-template<enum_traits::is_bitmask Enum>
+template<enum_traits::IsBitmask Enum>
 constexpr bool test(const Enum& lhs, const Enum& rhs) noexcept
 {
   return (lhs & rhs) == rhs;
@@ -647,31 +647,31 @@ constexpr bool test(const Enum& lhs, const Enum& rhs) noexcept
 
 #define BASED_ENUM_TRAITS(Name, Type, Category)                                \
   template<>                                                                   \
-  struct based::enumeration::enum_traits::traits<Name>                         \
+  struct based::enumeration::enum_traits::Traits<Name>                         \
   {                                                                            \
     using category = Category;                                                 \
     using value_type = Type;                                                   \
   };
 
 #define BASED_ENUM_TRAITS_STANDARD(Name, Type)                                 \
-  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::standard)
+  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::Standard)
 
 #define BASED_ENUM_TRAITS_LINEAR(Name, Type)                                   \
-  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::linear)
+  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::Linear)
 
 #define BASED_ENUM_TRAITS_BITMASK(Name, Type)                                  \
-  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::bitmask)
+  BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::Bitmask)
 
 #define BASED_ENUM(Name, Type, Category)                                       \
   enum class Name : typename Type::basic_type
 
 #define BASED_ENUM_STANDARD(Name, Type)                                        \
-  BASED_ENUM(Name, Type, based::enumeration::category::standard)
+  BASED_ENUM(Name, Type, based::enumeration::category::Standard)
 
 #define BASED_ENUM_LINEAR(Name, Type)                                          \
-  BASED_ENUM(Name, Type, based::enumeration::category::linear)
+  BASED_ENUM(Name, Type, based::enumeration::category::Linear)
 
 #define BASED_ENUM_BITMASK(Name, Type)                                         \
-  BASED_ENUM(Name, Type, based::enumeration::category::bitmask)
+  BASED_ENUM(Name, Type, based::enumeration::category::Bitmask)
 
 // NOLINTEND(*macro*)
