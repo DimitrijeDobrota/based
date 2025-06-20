@@ -2,13 +2,13 @@
 
 #include "based/memory/nullptr.hpp"
 #include "based/trait/is/same.hpp"
-#include "based/trait/remove/cv.hpp"
+#include "based/trait/remove_cv.hpp"
 
 namespace based
 {
 
 template<class T>
-struct IsNullPointer : IsSame<NullptrT, RemoveCvT<T>>
+struct IsNullPointer : IsSame<NullptrT, trait::RemoveCv<T>>
 {
 };
 

@@ -23,15 +23,15 @@ template<class B, class MT>
 struct InvokeImpl<MT B::*>
 {
   template<class T>
-    requires(is_base_of_v<B, DecayT<T>>)
+    requires(is_base_of_v<B, trait::Decay<T>>)
   static auto get(T&& obj) -> T&&;
 
   template<class T>
-    requires(is_reference_wrapper_v<DecayT<T>>)
+    requires(is_reference_wrapper_v<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(obj.get());
 
   template<class T>
-    requires(!is_base_of_v<B, DecayT<T>> && !is_reference_wrapper_v<DecayT<T>>)
+    requires(!is_base_of_v<B, trait::Decay<T>> && !is_reference_wrapper_v<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(*based::forward<T>(obj));
 
   template<class T, class... Args, class MT1>
@@ -47,7 +47,7 @@ struct InvokeImpl<MT B::*>
 };
 
 template<class F, class... Args>
-auto invoke_f(F&& func, Args&&... args) -> decltype(InvokeImpl<DecayT<F>>::call(
+auto invoke_f(F&& func, Args&&... args) -> decltype(InvokeImpl<trait::Decay<F>>::call(
     based::forward<F>(func), based::forward<Args>(args)...
 ));
 

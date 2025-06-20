@@ -1,37 +1,41 @@
 #pragma once
 
-#include "based/trait/add/pointer.hpp"
-#include "based/trait/conditional.hpp"
+#include "based/trait/add_pointer.hpp"
 #include "based/trait/is/array.hpp"
 #include "based/trait/is/function.hpp"
-#include "based/trait/remove/cv.hpp"
-#include "based/trait/remove/extent.hpp"
-#include "based/trait/remove/reference.hpp"
+#include "based/trait/remove_cv.hpp"
+#include "based/trait/remove_extent.hpp"
+#include "based/trait/remove_reference.hpp"
 
-namespace based
+namespace based::trait
 {
 
-// clang-format off
+namespace detail
+{
 
-template<class T>
+template<class U>
 struct Decay
 {
-private:
-  using U = RemoveReferenceT<T>;
-
-public:
-  using Type = ConditionalT<
-      is_array_v<U>,
-      AddPointerT<RemoveExtentT<U>>,
-      ConditionalT<
-		is_function_v<U>,
-		AddPointerT<U>,
-		RemoveCvT<U>>
-	  >;
+  using Type = trait::RemoveCv<U>;
 };
 
-template<class T> using DecayT = typename Decay<T>::Type;
+template<class U>
+  requires is_array_v<U>
+struct Decay<U>
+{
+  using Type = trait::AddPointer<trait::RemoveExtent<U>>;
+};
 
-// clang-format on
+template<class U>
+  requires is_function_v<U>
+struct Decay<U>
+{
+  using Type = trait::AddPointer<U>;
+};
 
-}  // namespace based
+}  // namespace detail
+
+template<class T>
+using Decay = typename detail::Decay<RemoveReference<T>>::Type;
+
+}  // namespace based::trait

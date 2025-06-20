@@ -1,7 +1,7 @@
 #pragma once
 
 #include "based/concept/is/same.hpp"
-#include "based/trait/remove/reference.hpp"
+#include "based/trait/remove_reference.hpp"
 
 namespace based
 {
@@ -10,7 +10,7 @@ namespace based
 
 template<typename T>
 concept NotEqualComparable = requires
-(const RemoveReferenceT<T>& lhs, const RemoveReferenceT<T>& rhs)
+(const trait::RemoveReference<T>& lhs, const trait::RemoveReference<T>& rhs)
 {
 	{lhs != rhs} -> SameAs<bool>;
 	{rhs != lhs} -> SameAs<bool>;

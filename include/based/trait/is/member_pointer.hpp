@@ -1,7 +1,7 @@
 #pragma once
 
 #include "based/trait/integral_constant.hpp"
-#include "based/trait/remove/cv.hpp"
+#include "based/trait/remove_cv.hpp"
 
 namespace based
 {
@@ -22,7 +22,7 @@ struct IsMemberPointerHelper<T U::*> : TrueType
 }  // namespace detail
 
 template<class T>
-struct IsMemberPointer : detail::IsMemberPointerHelper<RemoveCvT<T>>
+struct IsMemberPointer : detail::IsMemberPointerHelper<trait::RemoveCv<T>>
 {
 };
 

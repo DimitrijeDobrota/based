@@ -1,13 +1,13 @@
 #pragma once
 
 #include "based/trait/is/same.hpp"
-#include "based/trait/remove/cv.hpp"
+#include "based/trait/remove_cv.hpp"
 
 namespace based
 {
 
 template<class T>
-struct IsVoid : IsSame<void, RemoveCvT<T>>
+struct IsVoid : IsSame<void, trait::RemoveCv<T>>
 {
 };
 

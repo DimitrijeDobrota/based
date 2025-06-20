@@ -8,26 +8,26 @@
 #include "based/integral/types.hpp"
 #include "based/trait/invoke_result.hpp"
 #include "based/trait/is/const.hpp"
-#include "based/trait/remove/cvref.hpp"
-#include "based/trait/remove/pointer.hpp"
-#include "based/trait/remove/reference.hpp"
+#include "based/trait/remove_cvref.hpp"
+#include "based/trait/remove_pointer.hpp"
+#include "based/trait/remove_reference.hpp"
 
 namespace based
 {
 
 template<typename T>
-concept Input = SameAs<T, RemoveCvrefT<RemovePointerT<T>>>
-    || is_const_v<RemoveReferenceT<T>> || is_const_v<RemovePointerT<T>>;
+concept Input = SameAs<T, trait::RemoveCvref<trait::RemovePointer<T>>>
+    || is_const_v<trait::RemoveReference<T>> || is_const_v<trait::RemovePointer<T>>;
 
 template<SizeT idx, typename... Args>
   requires(idx < sizeof...(Args))
 using ElemT = std::tuple_element_t<idx, std::tuple<Args...>>;
 
 template<typename... Args>
-concept SemiregularDomain = (Semiregular<RemoveCvrefT<Args>> && ...);
+concept SemiregularDomain = (Semiregular<trait::RemoveCvref<Args>> && ...);
 
 template<typename... Args>
-concept RegularDomain = (Regular<RemoveCvrefT<Args>> && ...);
+concept RegularDomain = (Regular<trait::RemoveCvref<Args>> && ...);
 
 template<typename... Args>
 concept InputDomain = (Input<Args> && ...);

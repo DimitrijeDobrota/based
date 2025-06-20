@@ -47,7 +47,7 @@ class Function<Ret(Args...), size, alignment>
 public:
   Function() = default;
 
-  template<typename CallableArg, typename Callable = DecayT<CallableArg>>
+  template<typename CallableArg, typename Callable = trait::Decay<CallableArg>>
     requires(requires {
               !SameAs<Function, Callable>;
               sizeof(Callable) <= size;

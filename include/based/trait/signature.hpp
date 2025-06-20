@@ -235,7 +235,7 @@ struct SignatureStatic<Ret (*)(Args...) noexcept(ne)>
 };
 
 template<typename F, typename Op>
-using SignatureT = typename ConditionalT<requires(F& func) {
+using SignatureT = typename trait::Conditional<requires(F& func) {
   (void)func.operator();
 }, SignatureStatic<Op>, Signature<Op>>::SigType;
 

@@ -5,6 +5,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "based/concept/is/same.hpp"
+#include "based/trait/remove_extent.hpp"
 
 namespace
 {
@@ -41,20 +42,20 @@ TEST_CASE("lambda", "[concept/callable]")
   STATIC_REQUIRE(SameAs<based::CallableRetT<TypeT>, int>);
 }
 
-/*
-struct func
+struct Func
 {
   auto operator()(auto a, auto b) { return static_cast<int>(a + b); }
 };
 
+/*
 TEST_CASE("member function", "[concept/callable]")
 {
   // [&](auto&&... args) -> decltype(auto) { return
   // f(based::forward<decltype(args)>(args)...); }
 
   // based::error_template<decltype(&func::template operator()<int, double>)>();
-  STATIC_REQUIRE(based::Callable<func>);
-  STATIC_REQUIRE(SameAs<based::CallableSigT<func>, int(int, double)>);
-  STATIC_REQUIRE(SameAs<based::CallableRetT<func>, int>);
+  STATIC_REQUIRE(based::Callable<Func>);
+  STATIC_REQUIRE(SameAs<based::CallableSigT<Func>, int(int, double)>);
+  STATIC_REQUIRE(SameAs<based::CallableRetT<Func>, int>);
 }
 */

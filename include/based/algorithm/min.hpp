@@ -3,7 +3,7 @@
 #include "based/concept/is/regular.hpp"
 #include "based/concept/is/same.hpp"
 #include "based/concept/procedure/procedure.hpp"
-#include "based/trait/remove/reference.hpp"
+#include "based/trait/remove_reference.hpp"
 #include "based/utility/forward.hpp"
 
 namespace based
@@ -24,7 +24,7 @@ constexpr decltype(auto) min(T&& lhs, U&& rhs)
   return based::min(
       based::forward<T>(lhs),
       based::forward<U>(rhs),
-      [](const RemoveReferenceT<T>& llhs, const RemoveReferenceT<U>& lrhs)
+      [](const trait::RemoveReference<T>& llhs, const trait::RemoveReference<U>& lrhs)
       {
         return llhs < lrhs;
       }

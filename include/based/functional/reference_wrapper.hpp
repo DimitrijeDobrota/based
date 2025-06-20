@@ -3,7 +3,7 @@
 #include "based/memory/addressof.hpp"
 #include "based/trait/is/invocable.hpp"
 #include "based/trait/is/same.hpp"
-#include "based/trait/remove/cvref.hpp"
+#include "based/trait/remove_cvref.hpp"
 #include "based/utility/declvar.hpp"
 #include "based/utility/forward.hpp"
 
@@ -32,7 +32,7 @@ public:
   template<class U>
     requires(requires {
       detail::fun<T>(declval<U>());
-      requires(!is_same_v<ReferenceWrapper, RemoveCvrefT<U>>);
+      requires(!is_same_v<ReferenceWrapper, trait::RemoveCvref<U>>);
     })
 
   // NOLINTNEXTLINE(*explicit*)

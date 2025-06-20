@@ -2,7 +2,7 @@
 
 #include "based/trait/integral_constant.hpp"
 #include "based/trait/is/same.hpp"
-#include "based/trait/remove/cv.hpp"
+#include "based/trait/remove_cv.hpp"
 
 namespace based
 {
@@ -13,7 +13,7 @@ struct IsFloatingPoint : FalseType
 };
 
 template<class T>
-  requires(is_same_v<float, RemoveCvT<T>> || is_same_v<double, RemoveCvT<T>> || is_same_v<long double, RemoveCvT<T>>)
+  requires(is_same_v<float, trait::RemoveCv<T>> || is_same_v<double, trait::RemoveCv<T>> || is_same_v<long double, trait::RemoveCv<T>>)
 struct IsFloatingPoint<T> : TrueType
 {
 };
