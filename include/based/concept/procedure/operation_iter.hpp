@@ -3,19 +3,19 @@
 #include "based/concept/iterator.hpp"
 #include "based/concept/procedure/operation.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename P, typename Ret, typename... I>
-concept IterOperation = requires {
-  requires(Iterator<I> && ...);
-  requires(Operation<P, iter_value_t<I>...>);
+template<class P, class Ret, class... I>
+concept IsOperationIter = requires {
+  requires(IsIterator<I> && ...);
+  requires(IsOperation<P, IterValueT<I>...>);
 };
 
-template<typename P, typename Ret, typename I>
-concept IterBinaryOperation = requires {
-  requires(Iterator<I>);
-  requires(BinaryOperation<P, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsBinaryOperationIter = requires {
+  requires(IsIterator<I>);
+  requires(IsOperationBinary<P, IterValueT<I>>);
 };
 
-}  // namespace based
+}  // namespace based::trait

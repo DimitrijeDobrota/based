@@ -3,19 +3,17 @@
 #include "based/concept/is_same.hpp"
 #include "based/trait/remove_reference.hpp"
 
-namespace based
+namespace based::trait
 {
 
 // clang-format off
-
-template<typename T>
-concept EqualComparable = requires(
-    const trait::RemoveReference<T>& lhs, const trait::RemoveReference<T>& rhs
-) {
-  { lhs == rhs } -> trait::IsSame<bool>;
-  { rhs == lhs } -> trait::IsSame<bool>;
+template<class T>
+concept EqualComparable = requires
+(const RemoveReference<T>& lhs, const RemoveReference<T>& rhs)
+{
+  { lhs == rhs } -> IsSame<bool>;
+  { rhs == lhs } -> IsSame<bool>;
 };
-
 // clang-format on
 
-}  // namespace based
+}  // namespace based::trait

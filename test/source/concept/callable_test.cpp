@@ -19,16 +19,16 @@ int free_func(int a, double b)
 
 using based::trait::IsSame;
 
-TEST_CASE("free function", "[concept/callable]")
+TEST_CASE("free function", "[concept/IsCallable]")
 {
   using TypeT = decltype(free_func);
 
-  STATIC_REQUIRE(based::Callable<TypeT>);
-  STATIC_REQUIRE(IsSame<based::CallableSigT<TypeT>, int(int, double)>);
-  STATIC_REQUIRE(IsSame<based::CallableRetT<TypeT>, int>);
+  STATIC_REQUIRE(based::trait::IsCallable<TypeT>);
+  STATIC_REQUIRE(IsSame<based::trait::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(IsSame<based::trait::CallableRetT<TypeT>, int>);
 }
 
-TEST_CASE("lambda", "[concept/callable]")
+TEST_CASE("lambda", "[concept/IsCallable]")
 {
   const auto func = [](int a, double b)
   {
@@ -36,9 +36,9 @@ TEST_CASE("lambda", "[concept/callable]")
   };
   using TypeT = decltype(func);
 
-  STATIC_REQUIRE(based::Callable<TypeT>);
-  STATIC_REQUIRE(IsSame<based::CallableSigT<TypeT>, int(int, double)>);
-  STATIC_REQUIRE(IsSame<based::CallableRetT<TypeT>, int>);
+  STATIC_REQUIRE(based::trait::IsCallable<TypeT>);
+  STATIC_REQUIRE(IsSame<based::trait::CallableSigT<TypeT>, int(int, double)>);
+  STATIC_REQUIRE(IsSame<based::trait::CallableRetT<TypeT>, int>);
 }
 
 struct Func
@@ -47,13 +47,13 @@ struct Func
 };
 
 /*
-TEST_CASE("member function", "[concept/callable]")
+TEST_CASE("member function", "[concept/IsCallable]")
 {
   // [&](auto&&... args) -> decltype(auto) { return
   // f(based::forward<decltype(args)>(args)...); }
 
   // based::error_template<decltype(&func::template operator()<int, double>)>();
-  STATIC_REQUIRE(based::Callable<Func>);
+  STATIC_REQUIRE(based::IsCallable<Func>);
   STATIC_REQUIRE(IsSame<based::CallableSigT<Func>, int(int, double)>);
   STATIC_REQUIRE(IsSame<based::CallableRetT<Func>, int>);
 }

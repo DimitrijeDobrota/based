@@ -9,13 +9,13 @@ namespace detail
 {
 
 // clang-format off
-template<class T> struct IsLvalueReference     : FalseType {};
-template<class T> struct IsLvalueReference<T&> : TrueType  {};
+template<class T> struct IsLValueRefeHelper     : FalseType {};
+template<class T> struct IsLValueRefeHelper<T&> : TrueType  {};
 // clang-format on
 
 }  // namespace detail
 
 template<class T>
-concept IsLvalueReference = detail::IsLvalueReference<T>::value;
+concept IsLValueRef = detail::IsLValueRefeHelper<T>::value;
 
 }  // namespace based::trait

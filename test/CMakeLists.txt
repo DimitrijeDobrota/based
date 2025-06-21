@@ -35,15 +35,6 @@ add_test(integral literals_test)
 ## ----- Trait -----
 
 add_test(trait invoke_result_test)
-add_test(trait is_array_test)
-add_test(trait is_base_of_test)
-add_test(trait is_class_test)
-add_test(trait is_const_test)
-add_test(trait is_enum_test)
-add_test(trait is_lvalue_reference_test)
-add_test(trait is_null_pointer_test)
-add_test(trait is_rvalue_reference_test)
-add_test(trait is_void_test)
 add_test(trait remove_const_test)
 add_test(trait remove_cvref_test)
 add_test(trait remove_cv_test)
@@ -55,6 +46,15 @@ add_test(trait signature_test)
 ## ----- Concept -----
 
 add_test(concept callable_test)
+add_test(concept is_array_test)
+add_test(concept is_base_of_test)
+add_test(concept is_class_test)
+add_test(concept is_const_test)
+add_test(concept is_enum_test)
+add_test(concept is_lvalue_reference_test)
+add_test(concept is_null_pointer_test)
+add_test(concept is_rvalue_reference_test)
+add_test(concept is_void_test)
 
 ## ----- Algorithm -----
 

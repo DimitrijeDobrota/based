@@ -10,9 +10,9 @@ namespace based
 {
 
 template<
-    trait::BareRegular T,
-    trait::BareRegular U,
-    RegularProcedure<bool, T, T> Rel>
+    trait::IsRegularBare T,
+    trait::IsRegularBare U,
+    trait::IsProcedureRegular<bool, T, T> Rel>
   requires trait::IsSameBare<T, U>
 constexpr decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 {
@@ -20,7 +20,7 @@ constexpr decltype(auto) min(T&& lhs, U&& rhs, Rel rel)
 }
 
 // returns min element, first if equal
-template<trait::BareRegular T, trait::BareRegular U>
+template<trait::IsRegularBare T, trait::IsRegularBare U>
   requires trait::IsSameBare<T, U>
 constexpr decltype(auto) min(T&& lhs, U&& rhs)
 {

@@ -13,10 +13,10 @@ namespace based
 
 // clamp a value between low and high
 template<
-    trait::BareRegular T,
-    trait::BareRegular U,
-    trait::BareRegular V,
-    RegularProcedure<bool, T, T> Rel>
+    trait::IsRegularBare T,
+    trait::IsRegularBare U,
+    trait::IsRegularBare V,
+    trait::IsProcedureRegular<bool, T, T> Rel>
   requires(trait::IsSameBare<T, U> && trait::IsSameBare<T, V>)
 constexpr decltype(auto) clamp(T&& value, U&& low, V&& high, Rel rel)
 {
@@ -28,7 +28,7 @@ constexpr decltype(auto) clamp(T&& value, U&& low, V&& high, Rel rel)
 }
 
 // clamp a value between low and high
-template<trait::BareRegular T, trait::BareRegular U, trait::BareRegular V>
+template<trait::IsRegularBare T, trait::IsRegularBare U, trait::IsRegularBare V>
   requires(trait::IsSameBare<T, U> && trait::IsSameBare<T, V>)
 constexpr decltype(auto) clamp(T&& value, U&& low, V&& high)
 {

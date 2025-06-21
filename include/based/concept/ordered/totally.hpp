@@ -6,20 +6,16 @@
 #include "based/concept/comparable/less.hpp"
 #include "based/concept/comparable/less_equal.hpp"
 
-namespace based
+namespace based::trait
 {
 
-// clang-format off
-
-template<typename T>
+template<class T>
 concept TotallyOrdered = requires {
-	requires(EqualityComparable<T>);
-	requires(LessComparable<T>);
-	requires(GreaterComparable<T>);
-	requires(LessEqualComparable<T>);
-	requires(GreaterEqualComparable<T>);
+  requires(EqualityComparable<T>);
+  requires(LessComparable<T>);
+  requires(GreaterComparable<T>);
+  requires(LessEqualComparable<T>);
+  requires(GreaterEqualComparable<T>);
 };
 
-// clang-format on
-
-}  // namespace based
+}  // namespace based::trait

@@ -1,15 +1,19 @@
 #pragma once
 
-namespace based
+namespace based::trait
+{
+
+namespace detail
 {
 
 // clang-format off
-
-template<bool b, class T = void> struct EnableIf          {};
-template<class T>                struct EnableIf<true, T> { using Type = T; };
-
-template<bool b, class T = void> using EnableIfT = typename EnableIf<b, T>::type;
-
+template<bool b, class T = void> struct EnableIfHelper          {};
+template<class T>                struct EnableIfHelper<true, T> { using Type = T; };
 // clang-format on
 
-}  // namespace based
+}  // namespace detail
+
+template<bool b, class T = void>
+using EnableIfT = typename detail::EnableIfHelper<b, T>::type;
+
+}  // namespace based::trait

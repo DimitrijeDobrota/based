@@ -3,25 +3,25 @@
 #include "based/concept/iterator.hpp"
 #include "based/concept/procedure/function.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename P, typename Ret, typename I>
-concept IterFunctionalProcedure = requires {
-  requires(Iterator<I>);
-  requires(FunctionalProcedure<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsProcedureFunctionalIter = requires {
+  requires(IsIterator<I>);
+  requires(IsProcedureFunctional<P, Ret, IterValueT<I>>);
 };
 
-template<typename P, typename Ret, typename I>
-concept IterUnaryFunction = requires {
-  requires(Iterator<I>);
-  requires(UnaryFunction<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsFunctionUnaryIter = requires {
+  requires(IsIterator<I>);
+  requires(IsFunctionUnary<P, Ret, IterValueT<I>>);
 };
 
-template<typename P, typename Ret, typename I>
-concept IterHomogeneousFunction = requires {
-  requires(Iterator<I>);
-  requires(HomogeneousFunction<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsFunctionHomogeneousIter = requires {
+  requires(IsIterator<I>);
+  requires(IsFunctionHomogeneous<P, Ret, IterValueT<I>>);
 };
 
-}  // namespace based
+}  // namespace based::trait

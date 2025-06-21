@@ -153,7 +153,7 @@ CheckOptions:
   - key: 'readability-identifier-naming.TypeAliasCase'
     value: 'CamelCase'
   - key: 'readability-identifier-naming.TypeAliasIgnoredRegexp'
-    value: '(difference_type|value_type|pointer|const_pointer|reference|const_reference|iterator|const_iterator|reverse_iterator|const_reverse_iterator)'
+    value: '(size_type|value_type|difference_type|pointer|const_pointer|reference|const_reference|iterator|const_iterator|reverse_iterator|const_reverse_iterator)'
   - key: 'readability-identifier-naming.TypedefCase'
     value: 'lower_case'
   - key: 'readability-identifier-naming.TypeTemplateParameterCase'

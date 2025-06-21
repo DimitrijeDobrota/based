@@ -9,13 +9,13 @@ namespace detail
 {
 
 // clang-format off
-template<class T> struct IsReferenceWrapper                      : FalseType {};
-template<class U> struct IsReferenceWrapper<ReferenceWrapper<U>> : TrueType  {};
+template<class T> struct IsRefWrapperHelper                : FalseType {};
+template<class U> struct IsRefWrapperHelper<RefWrapper<U>> : TrueType  {};
 // clang-format on
 
 }  // namespace detail
 
 template<class T>
-concept IsReferenceWrapper = detail::IsReferenceWrapper<T>::value;
+concept IsRefWrapper = detail::IsRefWrapperHelper<T>::value;
 
 }  // namespace based::trait

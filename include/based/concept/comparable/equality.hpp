@@ -3,17 +3,15 @@
 #include "based/concept/comparable/equal.hpp"
 #include "based/concept/comparable/not_equal.hpp"
 
-namespace based
+namespace based::trait
 {
 
 // clang-format off
-
-template<typename T>
+template<class T>
 concept EqualityComparable = requires {
 	requires(EqualComparable<T>);
     requires(NotEqualComparable<T>);
 };
-
 // clang-format on
 
-}  // namespace based
+}  // namespace based::trait

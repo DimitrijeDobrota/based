@@ -10,19 +10,19 @@ namespace detail
 {
 
 template<class T>
-auto try_add_pointer(int) -> TypeIdentity<trait::RemoveReference<T>*>;
+auto try_add_pointer(int) -> TypeIdentity<RemoveReference<T>*>;
 
 template<class T>
 auto try_add_pointer(...) -> TypeIdentity<T>;
 
 template<class T>
-struct AddPointer : decltype(detail::try_add_pointer<T>(0))
+struct AddPointerHelper : decltype(detail::try_add_pointer<T>(0))
 {
 };
 
 }  // namespace detail
 
 template<class T>
-using AddPointer = typename detail::AddPointer<T>::Type;
+using AddPointer = typename detail::AddPointerHelper<T>::Type;
 
 }  // namespace based::trait

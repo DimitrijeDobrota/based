@@ -10,13 +10,13 @@ namespace detail
 {
 
 // clang-format off
-template<class T>          struct IsMemberPointer         : FalseType {};
-template<class T, class U> struct IsMemberPointer<T U::*> : TrueType  {};
+template<class T>          struct IsMemberPointerHelper         : FalseType {};
+template<class T, class U> struct IsMemberPointerHelper<T U::*> : TrueType  {};
 // clang-format on
 
 }  // namespace detail
 
 template<class T>
-concept IsMemberPointer = detail::IsMemberPointer<RemoveCv<T>>::value;
+concept IsMemberPointer = detail::IsMemberPointerHelper<RemoveCv<T>>::value;
 
 }  // namespace based::trait

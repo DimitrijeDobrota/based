@@ -3,16 +3,10 @@
 namespace based::trait
 {
 
-namespace detail
-{
-
-// clang-format off
-template<class T> struct TypeIdentity { using Type = T; };
-// clang-format on
-
-}  // namespace detail
-
 template<class T>
-using TypeIdentity = detail::TypeIdentity<T>::Type;
+struct TypeIdentity
+{
+  using Type = T;
+};
 
 }  // namespace based::trait

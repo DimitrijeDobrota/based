@@ -7,10 +7,10 @@
 namespace based::trait
 {
 
-template<typename T>
-concept Regular = std::regular<T>;
+template<class T>
+concept IsRegular = std::regular<T>;
 
-template<typename T>
-concept BareRegular = Regular<RemoveCvref<T>>;
+template<class T>
+concept IsRegularBare = IsRegular<RemoveCvref<T>>;
 
 }  // namespace based::trait

@@ -4,16 +4,17 @@
 
 #include "based/integral/types.hpp"
 
-namespace based
+namespace based::trait
 {
 
 namespace detail
 {
+
 template<typename I>
 struct IteratorTraits
 {
   using value_type = I;
-  using distance_type = u64;
+  using distance_type = U64;  // NOLINT(*identifier*)
   using PointerType = I&;
   using ReferenceType = I*;
 };
@@ -42,4 +43,4 @@ using IterPtrT = detail::IteratorTraits<T>::pointer;
 template<typename T>
 using IterRefT = detail::IteratorTraits<T>::reference;
 
-}  // namespace based
+}  // namespace based::trait

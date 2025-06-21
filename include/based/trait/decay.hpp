@@ -14,21 +14,21 @@ namespace detail
 {
 
 template<class U>
-struct Decay
+struct DecayHelper
 {
   using Type = trait::RemoveCv<U>;
 };
 
 template<class U>
   requires trait::IsArray<U>
-struct Decay<U>
+struct DecayHelper<U>
 {
   using Type = trait::AddPointer<trait::RemoveExtent<U>>;
 };
 
 template<class U>
   requires trait::IsFunction<U>
-struct Decay<U>
+struct DecayHelper<U>
 {
   using Type = trait::AddPointer<U>;
 };
@@ -36,6 +36,6 @@ struct Decay<U>
 }  // namespace detail
 
 template<class T>
-using Decay = typename detail::Decay<RemoveReference<T>>::Type;
+using Decay = typename detail::DecayHelper<RemoveReference<T>>::Type;
 
 }  // namespace based::trait

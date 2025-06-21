@@ -3,25 +3,25 @@
 #include "based/concept/iterator.hpp"
 #include "based/concept/procedure/procedure.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename P, typename Ret, typename I>
-concept IterProcedure = requires {
-  requires(Iterator<I>);
-  requires(Procedure<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsProcedureIter = requires {
+  requires(IsIterator<I>);
+  requires(IsProcedure<P, Ret, IterValueT<I>>);
 };
 
-template<typename P, typename Ret, typename I>
-concept IterUnaryProcedure = requires {
-  requires(Iterator<I>);
-  requires(UnaryProcedure<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsProcedureUnaryIter = requires {
+  requires(IsIterator<I>);
+  requires(IsProcedureUnary<P, Ret, IterValueT<I>>);
 };
 
-template<typename P, typename Ret, typename I>
-concept Itertrait::RegularProcedure = requires {
-  requires(Iterator<I>);
-  requires(trait::RegularProcedure<P, Ret, iter_value_t<I>>);
+template<class P, class Ret, class I>
+concept IsProcedureRegularIter = requires {
+  requires(IsIterator<I>);
+  requires(trait::IsProcedureRegular<P, Ret, IterValueT<I>>);
 };
 
-}  // namespace based
+}  // namespace based::trait

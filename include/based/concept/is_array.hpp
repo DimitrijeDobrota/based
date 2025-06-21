@@ -11,15 +11,15 @@ namespace detail
 
 // clang-format off
 // NOLINTBEGIN(*array*)
-template<class T>          struct IsArray       : FalseType {};
-template<class T>          struct IsArray<T[]>  : TrueType  {};
-template<class T, SizeT n> struct IsArray<T[n]> : TrueType  {};
+template<class T>          struct IsArrayHelper       : FalseType {};
+template<class T>          struct IsArrayHelper<T[]>  : TrueType  {};
+template<class T, SizeT n> struct IsArrayHelper<T[n]> : TrueType  {};
 // NOLINTEND(*array*)
 // clang-format on
 
 }  // namespace detail
 
 template<class T>
-concept IsArray = detail::IsArray<T>::value;
+concept IsArray = detail::IsArrayHelper<T>::value;
 
 }  // namespace based::trait

@@ -7,10 +7,10 @@
 namespace based::trait
 {
 
-template<typename T>
-concept Semiregular = std::semiregular<T>;
+template<class T>
+concept IsSemiregular = std::semiregular<T>;
 
-template<typename T>
-concept BareSemiregular = Semiregular<RemoveCvref<T>>;
+template<class T>
+concept IsSemiregularBare = IsSemiregular<RemoveCvref<T>>;
 
 }  // namespace based::trait

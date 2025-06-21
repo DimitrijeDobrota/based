@@ -2,25 +2,25 @@
 
 #include "based/concept/procedure/function.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename P, typename... Args>
-concept Predicate = FunctionalProcedure<P, bool, Args...>;
+template<class P, class... Args>
+concept IsPredicate = IsProcedureFunctional<P, bool, Args...>;
 
-template<typename P, typename... Args>
-concept HomogeneousPredicate = requires {
-  requires(Predicate<P, Args...>);
-  requires(HomogeneousFunction<P, bool, Args...>);
+template<class P, class... Args>
+concept IsPredicateHomogeneous = requires {
+  requires(IsPredicate<P, Args...>);
+  requires(IsFunctionHomogeneous<P, bool, Args...>);
 };
 
-template<typename P, typename Arg>
-concept UnaryPredicate = requires {
-  requires(Predicate<P, Arg>);
-  requires(UnaryFunction<P, bool, Arg>);
+template<class P, class Arg>
+concept IsPredicateUnary = requires {
+  requires(IsPredicate<P, Arg>);
+  requires(IsFunctionUnary<P, bool, Arg>);
 };
 
-template<typename P, typename Arg>
-concept Relation = HomogeneousPredicate<P, Arg, Arg>;
+template<class P, class Arg>
+concept IsRelation = IsPredicateHomogeneous<P, Arg, Arg>;
 
-}  // namespace based
+}  // namespace based::trait

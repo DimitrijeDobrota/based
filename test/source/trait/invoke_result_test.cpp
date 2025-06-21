@@ -15,7 +15,8 @@ int func(double);
 }  // namespace
 
 template<class Res, class T, class... Args>
-concept Test = based::trait::IsSame<based::InvokeResultT<T, Args...>, Res>;
+concept Test =
+    based::trait::IsSame<based::trait::InvokeResult<T, Args...>, Res>;
 
 TEST_CASE("invoke_result", "[trait/invoke_result]")
 {

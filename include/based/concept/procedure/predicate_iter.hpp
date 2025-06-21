@@ -3,31 +3,31 @@
 #include "based/concept/iterator.hpp"
 #include "based/concept/procedure/predicate.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename P, typename... I>
-concept IterPredicate = requires {
-  requires(Iterator<I> && ...);
-  requires(Predicate<P, iter_value_t<I>...>);
+template<class P, class... I>
+concept IsPredicateIter = requires {
+  requires(IsIterator<I> && ...);
+  requires(IsPredicate<P, IterValueT<I>...>);
 };
 
-template<typename P, typename... I>
-concept IterHomogeneousPredicate = requires {
-  requires(Iterator<I> && ...);
-  requires(HomogeneousPredicate<P, iter_value_t<I>...>);
+template<class P, class... I>
+concept IsPredicateHomogeneousIter = requires {
+  requires(IsIterator<I> && ...);
+  requires(IsPredicateHomogeneous<P, IterValueT<I>...>);
 };
 
-template<typename P, typename I>
-concept IterUnaryPredicate = requires {
-  requires(Iterator<I>);
-  requires(UnaryPredicate<P, iter_value_t<I>>);
+template<class P, class I>
+concept IsPredicateUnaryIter = requires {
+  requires(IsIterator<I>);
+  requires(IsPredicateUnary<P, IterValueT<I>>);
 };
 
-template<typename P, typename I>
-concept IterRelation = requires {
-  requires(Iterator<I>);
-  requires(Relation<P, iter_value_t<I>>);
+template<class P, class I>
+concept IsRelationIter = requires {
+  requires(IsIterator<I>);
+  requires(IsRelation<P, IterValueT<I>>);
 };
 
-}  // namespace based
+}  // namespace based::trait

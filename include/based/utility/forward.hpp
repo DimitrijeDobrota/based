@@ -16,7 +16,7 @@ template<class T>
 // NOLINTNEXTLINE(*move*)
 constexpr decltype(auto) forward(trait::RemoveReference<T>&& tmp) noexcept
 {
-  static_assert(!trait::IsLvalueReference<T>);
+  static_assert(!trait::IsLValueRef<T>);
   return static_cast<T&&>(tmp);
 }
 

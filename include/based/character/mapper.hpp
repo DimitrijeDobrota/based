@@ -8,7 +8,7 @@
 namespace based
 {
 
-template<Predicate<Character> Predicate>
+template<trait::IsPredicate<Character> Predicate>
 class Mapper
 {
   static constexpr auto size = limits<U8>::max;

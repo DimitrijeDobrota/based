@@ -9,13 +9,13 @@ namespace detail
 {
 
 // clang-format off
-template<class T> struct IsConst          : FalseType {};
-template<class T> struct IsConst<const T> : TrueType  {};
+template<class T> struct IsConstHelper          : FalseType {};
+template<class T> struct IsConstHelper<const T> : TrueType  {};
 // clang-format on
 
 }  // namespace detail
 
 template<class T>
-concept IsConst = detail::IsConst<T>::value;
+concept IsConst = detail::IsConstHelper<T>::value;
 
 }  // namespace based::trait

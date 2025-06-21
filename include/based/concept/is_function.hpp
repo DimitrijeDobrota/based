@@ -10,82 +10,82 @@ namespace detail
 
 // clang-format off
 
-template<typename>
-struct IsFunction : FalseType {};
+template<class>
+struct IsFunctionHelper : FalseType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) volatile noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) volatile noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) volatile & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) volatile & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) volatile && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) volatile && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const volatile noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const volatile noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const volatile & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const volatile & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args...) const volatile && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args...) const volatile && noexcept(ne)> : TrueType {};
 
 // NOLINTBEGIN(*ambiguous-ellipsis*)
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) volatile noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) volatile noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) volatile & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) volatile & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) volatile && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) volatile && noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const volatile noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const volatile noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const volatile & noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const volatile & noexcept(ne)> : TrueType {};
 
-template<typename Ret, bool ne, typename... Args>
-struct IsFunction<Ret(Args......) const volatile && noexcept(ne)> : TrueType {};
+template<class Ret, bool ne, class... Args>
+struct IsFunctionHelper<Ret(Args......) const volatile && noexcept(ne)> : TrueType {};
 
 // NOLINTEND(*ambiguous-ellipsis*)
 
@@ -94,6 +94,6 @@ struct IsFunction<Ret(Args......) const volatile && noexcept(ne)> : TrueType {};
 }  // namespace detail
 
 template<class T>
-concept IsFunction = detail::IsFunction<T>::value;
+concept IsFunction = detail::IsFunctionHelper<T>::value;
 
 }  // namespace based::trait

@@ -7,7 +7,7 @@
 #include "based/trait/integral_constant.hpp"
 #include "based/trait/invoke_result.hpp"
 
-namespace based
+namespace based::trait
 {
 
 namespace detail
@@ -15,34 +15,31 @@ namespace detail
 
 // clang-format off
 
-template<typename P, typename Sig> struct Procedure : public FalseType {};
+template<class P, class Sig> struct IsProcedureHelper : public FalseType {};
 
-template<typename P, typename Ret, typename... Args>
-requires (trait::IsInvocable<P, Args...> && trait::IsConvertible<InvokeResultT<P, Args...>, Ret>)
-struct Procedure<P, Ret(Args...)> : public TrueType {};
+template<class P, class Ret, class... Args>
+requires (IsInvocable<P, Args...> && IsConvertible<InvokeResult<P, Args...>, Ret>)
+struct IsProcedureHelper<P, Ret(Args...)> : public TrueType {};
 
-template<typename P, typename... Args>
-requires (trait::IsInvocable<P, Args...>)
-struct Procedure<P, void(Args...)> : public TrueType {};
-
-template<typename P, typename Ret, typename... Args>
-static constexpr bool procedure_v = Procedure<P, Ret(Args...)>::value;
+template<class P, class... Args>
+requires (IsInvocable<P, Args...>)
+struct IsProcedureHelper<P, void(Args...)> : public TrueType {};
 
 // clang-format on
 
 }  // namespace detail
 
-template<typename P, typename Ret, typename... Args>
-concept Procedure = detail::procedure_v<P, Ret, Args...>;
+template<class P, class Ret, class... Args>
+concept IsProcedure = detail::IsProcedureHelper<P, Ret(Args...)>::value;
 
-template<typename P, typename Ret, typename Arg>
-concept UnaryProcedure = Procedure<P, Ret, Arg>;
+template<class P, class Ret, class Arg>
+concept IsProcedureUnary = IsProcedure<P, Ret, Arg>;
 
-template<typename P, typename Ret, typename... Args>
-concept RegularProcedure = requires {
-  requires(Procedure<P, Ret, Args...>);
-  requires(RegularDomain<Args...>);
-  requires(trait::Regular<RetT<P, Args...>>);
+template<class P, class Ret, class... Args>
+concept IsProcedureRegular = requires {
+  requires(IsProcedure<P, Ret, Args...>);
+  requires(IsDomainRegular<Args...>);
+  requires(IsRegular<RetT<P, Args...>>);
 };
 
-}  // namespace based
+}  // namespace based::trait

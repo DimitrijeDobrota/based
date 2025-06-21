@@ -12,32 +12,30 @@
 #include "based/trait/remove_pointer.hpp"
 #include "based/trait/remove_reference.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename T>
-concept Input = trait::IsSame<T, trait::RemoveCvref<trait::RemovePointer<T>>>
-    || trait::IsConst<trait::RemoveReference<T>>
-    || trait::IsConst<trait::RemovePointer<T>>;
+template<class T>
+concept IsInput = IsSame<T, RemoveCvref<RemovePointer<T>>>
+    || IsConst<RemoveReference<T>> || IsConst<RemovePointer<T>>;
 
-template<SizeT idx, typename... Args>
+template<SizeT idx, class... Args>
   requires(idx < sizeof...(Args))
 using ElemT = std::tuple_element_t<idx, std::tuple<Args...>>;
 
-template<typename... Args>
-concept SemiregularDomain =
-    (trait::Semiregular<trait::RemoveCvref<Args>> && ...);
+template<class... Args>
+concept IsDomainSemiregular = (IsSemiregular<RemoveCvref<Args>> && ...);
 
-template<typename... Args>
-concept RegularDomain = (trait::Regular<trait::RemoveCvref<Args>> && ...);
+template<class... Args>
+concept IsDomainRegular = (IsRegular<RemoveCvref<Args>> && ...);
 
-template<typename... Args>
-concept InputDomain = (Input<Args> && ...);
+template<class... Args>
+concept IsDomainInput = (IsInput<Args> && ...);
 
-template<typename... Args>
-concept HomogeneousDomain = (trait::IsSame<ElemT<0, Args...>, Args> && ...);
+template<class... Args>
+concept IsDomainHomogeneous = (IsSame<ElemT<0, Args...>, Args> && ...);
 
-template<typename P, typename... Args>
-using RetT = InvokeResultT<P, Args...>;
+template<class P, class... Args>
+using RetT = InvokeResult<P, Args...>;
 
-}  // namespace based
+}  // namespace based::trait

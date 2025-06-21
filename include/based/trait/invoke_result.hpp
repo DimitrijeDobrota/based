@@ -5,7 +5,7 @@
 #include "based/trait/decay.hpp"
 #include "based/utility/forward.hpp"
 
-namespace based
+namespace based::trait
 {
 
 namespace detail
@@ -27,11 +27,11 @@ struct InvokeImpl<MT B::*>
   static auto get(T&& obj) -> T&&;
 
   template<class T>
-    requires(trait::IsReferenceWrapper<trait::Decay<T>>)
+    requires(trait::IsRefWrapper<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(obj.get());
 
   template<class T>
-    requires(!trait::IsBaseOf<B, trait::Decay<T>> && !trait::IsReferenceWrapper<trait::Decay<T>>)
+    requires(!trait::IsBaseOf<B, trait::Decay<T>> && !trait::IsRefWrapper<trait::Decay<T>>)
   static auto get(T&& obj) -> decltype(*based::forward<T>(obj));
 
   template<class T, class... Args, class MT1>
@@ -58,12 +58,12 @@ namespace detail
 {
 
 template<typename AlwaysVoid, typename, typename...>
-struct InvokeResult
+struct InvokeResultHelperHelper
 {
 };
 
 template<typename F, typename... Args>
-struct InvokeResult<
+struct InvokeResultHelperHelper<
     decltype(void(detail::invoke_f(declval<F>(), declval<Args>()...))),
     F,
     Args...>
@@ -71,14 +71,14 @@ struct InvokeResult<
   using Type = decltype(detail::invoke_f(declval<F>(), declval<Args>()...));
 };
 
-}  // namespace detail
-
 template<class F, class... Args>
-struct InvokeResult : detail::InvokeResult<void, F, Args...>
+struct InvokeResultHelper : detail::InvokeResultHelperHelper<void, F, Args...>
 {
 };
 
-template<class F, class... Args>
-using InvokeResultT = typename InvokeResult<F, Args...>::Type;
+}  // namespace detail
 
-}  // namespace based
+template<class F, class... Args>
+using InvokeResult = typename detail::InvokeResultHelper<F, Args...>::Type;
+
+}  // namespace based::trait

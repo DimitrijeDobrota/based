@@ -5,38 +5,38 @@
 #include "based/trait/remove_pointer.hpp"
 #include "based/trait/signature.hpp"
 
-namespace based
+namespace based::trait
 {
 
-template<typename T>
-struct callable;
+template<class T>
+struct IsCallableHelper;
 
-template<typename T>
-  requires(trait::IsFunction<T>)
-struct callable<T> : public Signature<trait::Decay<T>>
-{
-};
-
-template<typename T>
-  requires(requires { &trait::Decay<T>::operator(); })
-struct callable<T> : public Signature<decltype(&T::operator())>
+template<class T>
+  requires(IsFunction<T>)
+struct IsCallableHelper<T> : public Signature<Decay<T>>
 {
 };
 
-template<typename T>
-  requires(std::is_member_function_pointer_v<trait::Decay<T>>)
-struct callable<T> : public Signature<trait::RemovePointer<T>>
+template<class T>
+  requires(requires { &Decay<T>::operator(); })
+struct IsCallableHelper<T> : public Signature<decltype(&T::operator())>
 {
 };
 
-template<typename T>
+template<class T>
+  requires(std::is_member_function_pointer_v<Decay<T>>)
+struct IsCallableHelper<T> : public Signature<RemovePointer<T>>
+{
+};
+
+template<class T>
 // concept Callable = is_instantiable_v<callable, T>;
-concept Callable = true;
+concept IsCallable = true;
 
-template<Callable T>
-using CallableSigT = typename callable<T>::Signature::SigType;
+template<IsCallable T>
+using CallableSigT = typename IsCallableHelper<T>::Signature::SigType;
 
-template<Callable T>
-using CallableRetT = typename callable<T>::Signature::RetType;
+template<IsCallable T>
+using CallableRetT = typename IsCallableHelper<T>::Signature::RetType;
 
-}  // namespace based
+}  // namespace based::trait

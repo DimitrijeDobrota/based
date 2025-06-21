@@ -4,48 +4,48 @@
 #include "based/concept/is_same.hpp"
 #include "based/trait/iterator.hpp"
 
-namespace based
+namespace based::trait
 {
 
 // clang-format off
 
-template<typename T>
-concept Readable = requires(T val) {
-  requires(trait::Regular<T>);
-  typename iter_value_t<T>;
+template<class T>
+concept IsReadable = requires(T val) {
+  requires(IsRegular<T>);
+  typename IterValueT<T>;
   {
     *val
-  } -> trait::IsSameBare<iter_value_t<T>>;
+  } -> IsSameBare<IterValueT<T>>;
 };
 
-template<typename T>
-concept Iterator = requires(T val) {
-  requires(trait::Regular<T>);
-  typename iter_dist_t<T>;
+template<class T>
+concept IsIterator = requires(T val) {
+  requires(IsRegular<T>);
+  typename IterDistT<T>;
   {
     ++val
-  } -> trait::IsSameBare<T>;
+  } -> IsSameBare<T>;
   // successor is not necessarily regular
 };
 
-template<typename T>
-concept ForwardIterator = requires {
-  requires(Iterator<T>);
+template<class T>
+concept IsIteratorForward = requires {
+  requires(IsIterator<T>);
   // successor is regular
 };
 
-template<typename T>
-concept ReadableIterator = requires {
-  requires(Iterator<T>);
-  requires(Readable<T>);
+template<class T>
+concept IsIteratorReadable = requires {
+  requires(IsIterator<T>);
+  requires(IsReadable<T>);
 };
 
-template<typename T>
-concept ReadableForwardIterator = requires {
-  requires(ForwardIterator<T>);
-  requires(Readable<T>);
+template<class T>
+concept IsIteratorForwardReadable = requires {
+  requires(IsIteratorForward<T>);
+  requires(IsReadable<T>);
 };
 
 // clang-format on
 
-}  // namespace based
+}  // namespace based::trait

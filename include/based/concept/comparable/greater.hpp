@@ -3,19 +3,17 @@
 #include "based/concept/is_same.hpp"
 #include "based/trait/remove_reference.hpp"
 
-namespace based
+namespace based::trait
 {
 
 // clang-format off
-
-template<typename T>
+template<class T>
 concept GreaterComparable = requires
-(const trait::RemoveReference<T>& lhs, const trait::RemoveReference<T>& rhs)
+(const RemoveReference<T>& lhs, const RemoveReference<T>& rhs)
 {
-	{lhs > rhs} -> trait::IsSame<bool>;
-	{rhs > lhs} -> trait::IsSame<bool>;
+	{lhs > rhs} -> IsSame<bool>;
+	{rhs > lhs} -> IsSame<bool>;
 };
-
 // clang-format on
 
-}  // namespace based
+}  // namespace based::trait

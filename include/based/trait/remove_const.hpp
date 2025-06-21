@@ -7,13 +7,13 @@ namespace detail
 {
 
 template<class T>
-struct RemoveConst
+struct RemoveConstHelper
 {
   using Type = T;
 };
 
 template<class T>
-struct RemoveConst<const T>
+struct RemoveConstHelper<const T>
 {
   using Type = T;
 };
@@ -21,6 +21,6 @@ struct RemoveConst<const T>
 }  // namespace detail
 
 template<class T>
-using RemoveConst = typename detail::RemoveConst<T>::Type;
+using RemoveConst = typename detail::RemoveConstHelper<T>::Type;
 
 }  // namespace based::trait
