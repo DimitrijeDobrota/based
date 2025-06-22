@@ -6,7 +6,7 @@ namespace based
 {
 
 template<typename T>
-trait::AddRvalueReference<T> declval() noexcept
+trait::AddRValueReference<T> declval() noexcept
 {
   static_assert(false, "declval not allowed in an evaluated context");
 }

@@ -15,13 +15,13 @@ template<class T>  // Handle T = cv void case
 auto try_add(...) -> TypeIdentity<T>;
 
 template<class T>
-struct AddLvalueReferenceHelper : decltype(detail::try_add<T>(0))
+struct AddLValueReferenceHelper : decltype(detail::try_add<T>(0))
 {
 };
 
 }  // namespace detail
 
 template<class T>
-using AddLvalueReference = typename detail::AddLvalueReferenceHelper<T>::Type;
+using AddLValueReference = typename detail::AddLValueReferenceHelper<T>::Type;
 
 }  // namespace based::trait

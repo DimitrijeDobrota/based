@@ -17,13 +17,13 @@ template<class T>
 auto try_add(...) -> TypeIdentity<T>;
 
 template<class T>
-struct AddRvalueReferenceHelper : decltype(detail::try_add<T>(0))
+struct AddRValueReferenceHelper : decltype(detail::try_add<T>(0))
 {
 };
 
 }  // namespace detail
 
 template<class T>
-using AddRvalueReference = typename detail::AddRvalueReferenceHelper<T>::Type;
+using AddRValueReference = typename detail::AddRValueReferenceHelper<T>::Type;
 
 }  // namespace based::trait
