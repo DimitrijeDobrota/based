@@ -60,7 +60,7 @@ class Mapper
 
 public:
   static constexpr bool predicate(Character chr) { return m_predicate(chr); }
-  static constexpr Character map(MappedType value) { return reverse[value]; }
+  static constexpr Character  map(MappedType value) { return reverse[value]; }
   static constexpr MappedType map(Character chr) { return direct[chr.ord()]; }
 };
 

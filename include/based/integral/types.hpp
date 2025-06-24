@@ -10,6 +10,7 @@ namespace based
 // NOLINTBEGIN(google-runtime-int)
 
 using SizeT = unsigned long long int;
+using PtrDiffT = signed long long int;
 
 #define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
   auto Name(Prefix##8)->Prefix##8;                                             \
