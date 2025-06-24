@@ -8,11 +8,11 @@ namespace based::trait
 
 // clang-format off
 template<class T>
-concept GreaterEqualComparable = requires
+concept IsLessEqualComparable = requires
 (const RemoveReference<T>& lhs, const RemoveReference<T>& rhs)
 {
-	{lhs >= rhs} -> IsSame<bool>;
-	{rhs >= lhs} -> IsSame<bool>;
+	{lhs <= rhs} -> IsSame<bool>;
+	{rhs <= lhs} -> IsSame<bool>;
 };
 // clang-format on
 

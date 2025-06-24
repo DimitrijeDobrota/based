@@ -11,11 +11,11 @@ namespace based::trait
 
 template<class T>
 concept TotallyOrdered = requires {
-  requires(EqualityComparable<T>);
-  requires(LessComparable<T>);
-  requires(GreaterComparable<T>);
-  requires(LessEqualComparable<T>);
-  requires(GreaterEqualComparable<T>);
+  requires(IsEqualityComparable<T>);
+  requires(IsLessComparable<T>);
+  requires(IsGreaterComparable<T>);
+  requires(IsLessEqualComparable<T>);
+  requires(IsGreaterEqualComparable<T>);
 };
 
 }  // namespace based::trait

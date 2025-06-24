@@ -8,9 +8,9 @@ namespace based::trait
 
 // clang-format off
 template<class T>
-concept EqualityComparable = requires {
-	requires(EqualComparable<T>);
-    requires(NotEqualComparable<T>);
+concept IsEqualityComparable = requires {
+    requires(IsEqualComparable<T>);
+    requires(IsNotEqualComparable<T>);
 };
 // clang-format on
 
