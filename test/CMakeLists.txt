@@ -89,6 +89,7 @@ add_test(character mapper_test)
 ## ----- Container -----
 
 add_test(container list_test)
+add_test(container array_test)
 
 # ---- End-of-file commands ----
 

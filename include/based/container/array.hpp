@@ -66,10 +66,10 @@ public:
   [[nodiscard]] constexpr const_reverse_iterator crend() const;
 
   // Capacity
-  [[nodiscard]] constexpr size_type size() const { return N; }
-  [[nodiscard]] constexpr size_type max_size() const { return N; }
+  [[nodiscard]] constexpr size_type size() const;
+  [[nodiscard]] constexpr size_type max_size() const;
 
-  [[nodiscard]] constexpr bool empty() const { return size() == 0; }
+  [[nodiscard]] constexpr bool empty() const;
 
   // Operations
   constexpr void fill(const value_type& value);
@@ -93,7 +93,7 @@ auto constexpr operator<=>(const ARRAY& lhs, const ARRAY& rhs)
 TEMPLATE
 inline auto constexpr ARRAY::fill(const ARRAY::value_type& value) -> void
 {
-  std::fill_n(begin(), size(), value);
+  std::fill_n(begin(), size().value, value);
 }
 
 TEMPLATE
@@ -123,13 +123,15 @@ inline auto constexpr ARRAY::begin() const -> ARRAY::const_iterator
 TEMPLATE
 inline auto constexpr ARRAY::end() -> ARRAY::iterator
 {
-  return iterator(addressof(m_instance[N]));
+  // NOLINTNEXTLINE(*array-bounds*)
+  return iterator(addressof(m_instance[N.value]));
 }
 
 TEMPLATE
 inline auto constexpr ARRAY::end() const -> ARRAY::const_iterator
 {
-  return const_iterator(addressof(m_instance[N]));
+  // NOLINTNEXTLINE(*array-bounds*)
+  return const_iterator(addressof(m_instance[N.value]));
 }
 
 TEMPLATE
@@ -165,7 +167,8 @@ inline auto constexpr ARRAY::cbegin() const -> ARRAY::const_iterator
 TEMPLATE
 inline auto constexpr ARRAY::cend() const -> ARRAY::const_iterator
 {
-  return const_iterator(addressof(m_instance[N]));
+  // NOLINTNEXTLINE(*array-bounds*)
+  return const_iterator(addressof(m_instance[N.value]));
 }
 
 TEMPLATE
@@ -208,13 +211,13 @@ inline auto constexpr ARRAY::front() const -> ARRAY::const_reference
 TEMPLATE
 inline auto constexpr ARRAY::back() -> ARRAY::reference
 {
-  return N ? *(end() - 1) : *end();
+  return N != size_type(0) ? *(end() - 1) : *end();
 }
 
 TEMPLATE
 inline auto constexpr ARRAY::back() const -> ARRAY::const_reference
 {
-  return N ? *(end() - 1) : *end();
+  return N != size_type(0) ? *(end() - 1) : *end();
 }
 
 TEMPLATE
@@ -227,6 +230,21 @@ TEMPLATE
 inline auto constexpr ARRAY::data() const -> ARRAY::const_pointer
 {
   return addressof(m_instance[0]);
+}
+
+TEMPLATE inline auto constexpr ARRAY::size() const -> ARRAY::size_type
+{
+  return N;
+}
+
+TEMPLATE inline auto constexpr ARRAY::max_size() const -> ARRAY::size_type
+{
+  return N;
+}
+
+TEMPLATE inline auto constexpr ARRAY::empty() const -> bool
+{
+  return size() == size_type(0);
 }
 
 #undef TEMPLATE
