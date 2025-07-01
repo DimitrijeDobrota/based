@@ -28,7 +28,14 @@ endfunction()
 ## ----- Integral -----
 
 add_test(integral strong_type_test)
-add_test(integral type_test)
+add_test(integral type_u8_test)
+add_test(integral type_u16_test)
+add_test(integral type_u32_test)
+add_test(integral type_u64_test)
+add_test(integral type_i8_test)
+add_test(integral type_i16_test)
+add_test(integral type_i32_test)
+add_test(integral type_i64_test)
 add_test(integral limits_test)
 add_test(integral literals_test)
 
@@ -90,6 +97,7 @@ add_test(character mapper_test)
 
 add_test(container list_test)
 add_test(container array_test)
+add_test(container vector_test)
 
 # ---- End-of-file commands ----
 

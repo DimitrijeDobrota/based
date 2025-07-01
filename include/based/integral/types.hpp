@@ -1,6 +1,7 @@
 #pragma once
 
-#include "based/integral/strong.hpp"
+#include <compare>
+
 #include "based/macro/foreach_1.hpp"
 #include "based/utility/assert.hpp"
 
@@ -13,58 +14,425 @@ using SizeT = unsigned long long int;
 using PtrDiffT = signed long long int;
 
 #define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
-  auto Name(Prefix##8)->Prefix##8;                                             \
-  auto Name(Prefix##16)->Prefix##16;                                           \
-  auto Name(Prefix##32)->Prefix##32;                                           \
-  auto Name(Prefix##64)->Prefix##64;                                           \
-  auto Name(Prefix)->Prefix;
+  inline constexpr auto operator Name(Prefix##8 lhs)                           \
+  {                                                                            \
+    return Prefix##8 ::underlying_cast(Name(lhs.value));                       \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs)                          \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(Name(lhs.value));                      \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs)                          \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(Name(lhs.value));                      \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs)                          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(Name(lhs.value));                      \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs)                              \
+  {                                                                            \
+    return Prefix::underlying_cast(Name(lhs.value));                           \
+  }
+
+#define BASED_DETAIL_OP_UNARY_PRE(Prefix, Name, Index)                         \
+  inline constexpr auto& operator Name(Prefix##8 & lhs)                        \
+  {                                                                            \
+    Name lhs.value;                                                            \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name(Prefix##16 & lhs)                       \
+  {                                                                            \
+    Name lhs.value;                                                            \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name(Prefix##32 & lhs)                       \
+  {                                                                            \
+    Name lhs.value;                                                            \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name(Prefix##64 & lhs)                       \
+  {                                                                            \
+    Name lhs.value;                                                            \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name(Prefix & lhs)                           \
+  {                                                                            \
+    Name lhs.value;                                                            \
+    return lhs;                                                                \
+  }
+
+#define BASED_DETAIL_OP_UNARY_POST(Prefix, Name, Index)                        \
+  inline constexpr auto operator Name(Prefix##8 & lhs, int)                    \
+  {                                                                            \
+    const auto crnt = lhs;                                                     \
+    Name       lhs;                                                            \
+    return crnt;                                                               \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 & lhs, int)                   \
+  {                                                                            \
+    const auto crnt = lhs;                                                     \
+    Name       lhs;                                                            \
+    return crnt;                                                               \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 & lhs, int)                   \
+  {                                                                            \
+    const auto crnt = lhs;                                                     \
+    Name       lhs;                                                            \
+    return crnt;                                                               \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 & lhs, int)                   \
+  {                                                                            \
+    const auto crnt = lhs;                                                     \
+    Name       lhs;                                                            \
+    return crnt;                                                               \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, int)                         \
+  {                                                                            \
+    const auto crnt = lhs;                                                     \
+    Name       lhs;                                                            \
+    return crnt;                                                               \
+  }
 
 #define BASED_DETAIL_OP_BINARY(Prefix, Name, Index)                            \
-  auto Name(Prefix##8, Prefix##8)->Prefix##8;                                  \
-  auto Name(Prefix##8, Prefix##16)->Prefix##16;                                \
-  auto Name(Prefix##8, Prefix##32)->Prefix##32;                                \
-  auto Name(Prefix##8, Prefix##64)->Prefix##64;                                \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##8 rhs)            \
+  {                                                                            \
+    return Prefix##8 ::underlying_cast(lhs.value Name rhs.value);              \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##16 rhs)           \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##32 rhs)           \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##64 rhs)           \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
                                                                                \
-  auto Name(Prefix##16, Prefix##8)->Prefix##16;                                \
-  auto Name(Prefix##16, Prefix##16)->Prefix##16;                               \
-  auto Name(Prefix##16, Prefix##32)->Prefix##32;                               \
-  auto Name(Prefix##16, Prefix##64)->Prefix##64;                               \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
                                                                                \
-  auto Name(Prefix##32, Prefix##8)->Prefix##32;                                \
-  auto Name(Prefix##32, Prefix##16)->Prefix##32;                               \
-  auto Name(Prefix##32, Prefix##32)->Prefix##32;                               \
-  auto Name(Prefix##32, Prefix##64)->Prefix##64;                               \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
                                                                                \
-  auto Name(Prefix##64, Prefix##8)->Prefix##64;                                \
-  auto Name(Prefix##64, Prefix##16)->Prefix##64;                               \
-  auto Name(Prefix##64, Prefix##32)->Prefix##64;                               \
-  auto Name(Prefix##64, Prefix##64)->Prefix##64;                               \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
                                                                                \
-  auto Name(Prefix, Prefix)->Prefix;
+  inline constexpr auto& operator Name##=(Prefix##8 & lhs, Prefix##8 rhs)      \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto& operator Name##=(Prefix##16 & lhs, Prefix##8 rhs)     \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##16 & lhs, Prefix##16 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto& operator Name##=(Prefix##32 & lhs, Prefix##8 rhs)     \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##32 & lhs, Prefix##16 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##32 & lhs, Prefix##32 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto& operator Name##=(Prefix##64 & lhs, Prefix##8 rhs)     \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##64 & lhs, Prefix##16 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##64 & lhs, Prefix##32 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+  inline constexpr auto& operator Name##=(Prefix##64 & lhs, Prefix##64 rhs)    \
+  {                                                                            \
+    lhs = lhs Name rhs;                                                        \
+    return lhs;                                                                \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix lhs, Prefix rhs)                  \
+  {                                                                            \
+    return Prefix::underlying_cast(lhs.value Name rhs.value);                  \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##8 rhs)               \
+  {                                                                            \
+    return Prefix##8 ::underlying_cast(lhs.value Name rhs.value);              \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##16 rhs)              \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##32 rhs)              \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##64 rhs)              \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix rhs)               \
+  {                                                                            \
+    return Prefix##8 ::underlying_cast(lhs.value Name rhs.value);              \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix rhs)              \
+  {                                                                            \
+    return Prefix##16 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix rhs)              \
+  {                                                                            \
+    return Prefix##32 ::underlying_cast(lhs.value Name rhs.value);             \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix rhs)              \
+  {                                                                            \
+    return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
+  }
+
+#define BASED_DETAIL_OP_COMPARE(Prefix, Name, Index)                           \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##8 rhs)            \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##16 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##32 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix##64 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##8 rhs)           \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##16 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##32 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix##64 rhs)          \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix rhs)                  \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+                                                                               \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##8 rhs)               \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##16 rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##32 rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix lhs, Prefix##64 rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##8 lhs, Prefix rhs)               \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##16 lhs, Prefix rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##32 lhs, Prefix rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }                                                                            \
+  inline constexpr auto operator Name(Prefix##64 lhs, Prefix rhs)              \
+  {                                                                            \
+    return (lhs.value Name rhs.value);                                         \
+  }
+
+namespace detail
+{
+
+template<class V, class Tag>
+// NOLINTBEGIN(*crtp*)
+struct StrongTypeImpl
+{
+  using value_type = StrongTypeImpl;
+  using underlying_type = V;  // NOLINT(*identifier*)
+  using tag_type = Tag;  // NOLINT(*identifier*)
+
+  underlying_type value;
+
+  constexpr ~StrongTypeImpl() = default;
+
+  explicit constexpr StrongTypeImpl()
+      : value(0)
+  {
+  }
+
+  explicit constexpr StrongTypeImpl(underlying_type val)
+      : value(val)
+  {
+  }
+
+  explicit constexpr operator underlying_type() const { return value; }
+
+  constexpr StrongTypeImpl(const StrongTypeImpl&) = default;
+  constexpr StrongTypeImpl(StrongTypeImpl&&) = default;
+
+  constexpr StrongTypeImpl& operator=(const StrongTypeImpl&) = default;
+  constexpr StrongTypeImpl& operator=(StrongTypeImpl&&) = default;
+
+  template<class T>
+  static constexpr Tag underlying_cast(T value)
+  {
+    return Tag {static_cast<underlying_type>(value)};
+  }
+
+  template<class T>
+  static constexpr Tag cast(T value)
+  {
+    return static_cast<Tag>(value);
+  }
+};
+// NOLINTEND(*crtp*)
+
+}  // namespace detail
 
 template<class T>
 struct limits;
 
-struct I64 : StrongType<signed long long int, I64>
+struct I64 : detail::StrongTypeImpl<signed long long int, I64>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 };
 
-struct I32 : StrongType<signed int, I32>
+struct I32 : detail::StrongTypeImpl<signed int, I32>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator I64() { return I64::underlying_cast(value); }
 
   [[nodiscard]] constexpr I64 to_i64() const { return I64::cast(*this); }
 };
 
-struct I16 : StrongType<signed short int, I16>
+struct I16 : detail::StrongTypeImpl<signed short int, I16>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator I64() { return I64::underlying_cast(value); }
   explicit constexpr operator I32() { return I32::underlying_cast(value); }
@@ -73,10 +441,10 @@ struct I16 : StrongType<signed short int, I16>
   [[nodiscard]] constexpr I32 to_i32() const { return I32::cast(*this); }
 };
 
-struct I8 : StrongType<signed char, I8>
+struct I8 : detail::StrongTypeImpl<signed char, I8>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator I64() { return I64::underlying_cast(value); }
   explicit constexpr operator I32() { return I32::underlying_cast(value); }
@@ -127,10 +495,10 @@ struct limits<I64>
   static constexpr auto max = I64::underlying_cast(0x7FFFFFFFFFFFFFFF);
 };
 
-struct I : StrongType<signed long long int, I>
+struct I : detail::StrongTypeImpl<signed long long int, I>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   consteval operator I8() const  // NOLINT(*explicit*)
   {
@@ -163,26 +531,26 @@ struct I : StrongType<signed long long int, I>
 
 auto unary(I) -> I;
 
-struct U64 : StrongType<unsigned long long int, U64>
+struct U64 : detail::StrongTypeImpl<unsigned long long int, U64>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 };
 
-struct U32 : StrongType<unsigned int, U32>
+struct U32 : detail::StrongTypeImpl<unsigned int, U32>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator U64() { return U64::underlying_cast(value); }
 
   [[nodiscard]] constexpr U64 to_u64() const { return U64::cast(*this); }
 };
 
-struct U16 : StrongType<unsigned short int, U16>
+struct U16 : detail::StrongTypeImpl<unsigned short int, U16>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator U64() { return U64::underlying_cast(value); }
   explicit constexpr operator U32() { return U32::underlying_cast(value); }
@@ -191,10 +559,10 @@ struct U16 : StrongType<unsigned short int, U16>
   [[nodiscard]] constexpr U32 to_u32() const { return U32::cast(*this); }
 };
 
-struct U8 : StrongType<unsigned char, U8>
+struct U8 : detail::StrongTypeImpl<unsigned char, U8>
 {
-  using StrongType::StrongType;
-  using StrongType::operator=;
+  using StrongTypeImpl::StrongTypeImpl;
+  using StrongTypeImpl::operator=;
 
   explicit constexpr operator U64() { return U64::underlying_cast(value); }
   explicit constexpr operator U32() { return U32::underlying_cast(value); }
@@ -245,9 +613,9 @@ struct limits<U64>
   static constexpr auto max = U64::underlying_cast(0xFFFFFFFFFFFFFFFF);
 };
 
-struct U : StrongType<unsigned long long int, U>
+struct U : detail::StrongTypeImpl<unsigned long long int, U>
 {
-  using StrongType::StrongType;
+  using StrongTypeImpl::StrongTypeImpl;
 
   consteval operator U8() const  // NOLINT(*explicit*)
   {
@@ -278,37 +646,22 @@ struct U : StrongType<unsigned long long int, U>
   }
 };
 
-BASED_FOREACH_1(
-    I, BASED_DETAIL_OP_UNARY, unary, preinc, postinc, predec, postdec
-)
-BASED_FOREACH_1(
-    I, BASED_DETAIL_OP_BINARY, compare, order, add, sub, mul, div, mod
-)
+BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY, +, -)
+BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY_PRE, ++, --)
+BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY_POST, ++, --)
+BASED_FOREACH_1(I, BASED_DETAIL_OP_COMPARE, ==, <=>)
+BASED_FOREACH_1(I, BASED_DETAIL_OP_BINARY, +, -, *, /, %)
 
-BASED_FOREACH_1(
-    U, BASED_DETAIL_OP_UNARY, preinc, postinc, predec, postdec, lnot
-)
+BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY, +, -, ~)
+BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY_PRE, ++, --)
+BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY_POST, ++, --)
+BASED_FOREACH_1(U, BASED_DETAIL_OP_BINARY, +, -, *, /, %, <<, >>, &, |, ^)
+BASED_FOREACH_1(U, BASED_DETAIL_OP_COMPARE, ==, <=>)
 
-BASED_FOREACH_1(
-    U,
-    BASED_DETAIL_OP_BINARY,
-    compare,
-    order,
-    add,
-    sub,
-    mul,
-    div,
-    mod,
-    lshift,
-    rshift,
-    land,
-    lor,
-    lxor
-)
-
-#undef BASED_DETAIL_TYPE
-#undef BASED_DETAIL_OP_UNARY
+#undef BASED_DETAIL_OP_UNARY_PRE
+#undef BASED_DETAIL_OP_UNARY_POST
 #undef BASED_DETAIL_OP_BINARY
+#undef BASED_DETAIL_OP_COMPARE
 
 // NOLINTEND(google-runtime-int)
 
