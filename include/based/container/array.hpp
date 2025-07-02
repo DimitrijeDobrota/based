@@ -16,7 +16,7 @@ namespace based
 TEMPLATE
 class Array
 {
-  T m_instance[N != U(0_u) ? N.value : U(1_u).value];  // NOLINT(*array*)
+  T m_instance[N != U(0_u) ? N.value + 1 : U(1_u).value];  // NOLINT(*array*)
 
 public:
   using value_type = T;

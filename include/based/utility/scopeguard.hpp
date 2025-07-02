@@ -10,7 +10,7 @@ template<typename Func, bool on_success = false, bool on_failure = false>
 class Scopeguard
 {
   UncaughtExceptionDetector m_detector;
-  Func m_func;
+  Func                      m_func;
 
 public:
   Scopeguard(Func&& func)  // NOLINT(*explicit*)

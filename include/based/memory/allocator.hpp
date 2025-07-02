@@ -30,10 +30,13 @@ public:
 
   constexpr Allocator() noexcept = default;
 
-  template<class T_, trait::IsUnsignedIntegral U_>
-  // NOLINTNEXTLINE(*explicit*,*unused*)
-  constexpr Allocator(const Allocator<T_, U_>& that) noexcept
+  template<class LT, trait::IsUnsignedIntegral LU>
+  // NOLINTNEXTLINE(*explicit*)
+  constexpr Allocator(const Allocator<LT, LU>& that) noexcept
   {
+    // This constructor is used to allow the allocator to be used with different
+    // types, but we don't need to do anything here.
+    (void)that;
   }
 
   constexpr Allocator(const Allocator&) noexcept = default;

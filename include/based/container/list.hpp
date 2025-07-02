@@ -3,15 +3,14 @@
 #include <cassert>
 #include <vector>
 
-#include "based/concept/is_same.hpp"
-#include "based/integral/types.hpp"
+#include "based/integral/literals.hpp"
+#include "based/concept/is_integral.hpp"
 
 namespace based
 {
 
-template<typename T, typename N>
+template<typename T, trait::IsUnsignedIntegral N>
 // T semiregular
-// N integral
 class ListPool
 {
 public:
@@ -22,28 +21,28 @@ private:
   struct NodeT
   {
     value_type value {};
-    ListType next;
+    ListType   next;
   };
 
   std::vector<NodeT> m_pool {};
-  ListType m_free_list;
+  ListType           m_free_list;
 
   [[nodiscard]] const NodeT& node(ListType x) const
   {
-    assert(x != ListType(0));
-    return m_pool[(x - ListType(1)).value];
+    assert(x != 0_u);
+    return m_pool[(x - 1_u).value];
   }
 
   [[nodiscard]] NodeT& node(ListType x)
   {
-    assert(x != ListType(0));
-    return m_pool[(x - ListType(1)).value];
+    assert(x != 0_u);
+    return m_pool[(x - 1_u).value];
   }
 
   [[nodiscard]] ListType new_node()
   {
     m_pool.push_back(NodeT());
-    return ListType {static_cast<ListType::basic_type>(m_pool.size())};
+    return ListType::underlying_cast(m_pool.size());
   }
 
 public:
@@ -74,7 +73,7 @@ public:
     }
 
     reference operator*() const { return m_pool->value(m_node); }
-    pointer operator->() const { return &**this; }
+    pointer   operator->() const { return &**this; }
 
     Iterator& operator++()
     {
@@ -101,7 +100,7 @@ public:
     }
 
   private:
-    ListPool* m_pool;
+    ListPool*          m_pool;
     ListPool::ListType m_node;
   };
 
@@ -127,7 +126,7 @@ public:
     }
 
     reference operator*() const { return m_pool->value(m_node); }
-    pointer operator->() const { return &**this; }
+    pointer   operator->() const { return &**this; }
 
     ConstIterator& operator++()
     {
@@ -154,12 +153,12 @@ public:
     }
 
   private:
-    const ListPool* m_pool;
+    const ListPool*    m_pool;
     ListPool::ListType m_node;
   };
 
   [[nodiscard]] bool is_empty(ListType x) const { return x == node_empty(); }
-  [[nodiscard]] ListType node_empty() const { return ListType(0); }
+  [[nodiscard]] ListType node_empty() const { return 0_u; }
 
   [[nodiscard]] const value_type& value(ListType x) const
   {
@@ -168,7 +167,7 @@ public:
   [[nodiscard]] value_type& value(ListType x) { return node(x).value; }
 
   [[nodiscard]] const ListType& next(ListType x) const { return node(x).next; }
-  [[nodiscard]] ListType& next(ListType x) { return node(x).next; }
+  [[nodiscard]] ListType&       next(ListType x) { return node(x).next; }
 
   ListType free(ListType x)
   {

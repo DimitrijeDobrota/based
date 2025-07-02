@@ -65,7 +65,7 @@ TEST_CASE("operations", "[enum/enum_flag]")
     {
       STATIC_REQUIRE(requires(var a, var b) {
         {
-          a& b
+          a & b
         } -> IsSame<var>;
       });
 

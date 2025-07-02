@@ -137,7 +137,7 @@ template<HasValueType Enum>
 using value_type = typename Traits<Enum>::value_type;
 
 template<HasValueType Enum>
-using BasicType = typename Traits<Enum>::value_type::basic_type;
+using BasicType = typename Traits<Enum>::value_type::underlying_type;
 
 template<class Enum>
 concept HasNone = requires {
@@ -414,7 +414,8 @@ static constexpr auto valid() noexcept
 template<class Enum>
 static constexpr auto enum_cast(enum_traits::value_type<Enum> value) noexcept
 {
-  return Traits<enum_traits::CategoryType<Enum>>::template enum_cast<Enum>(value
+  return Traits<enum_traits::CategoryType<Enum>>::template enum_cast<Enum>(
+      value
   );
 }
 
@@ -662,7 +663,7 @@ constexpr bool test(const Enum& lhs, const Enum& rhs) noexcept
   BASED_ENUM_TRAITS(Name, Type, based::enumeration::category::Bitmask)
 
 #define BASED_ENUM(Name, Type, Category)                                       \
-  enum class Name : typename Type::basic_type
+  enum class Name : typename Type::underlying_type
 
 #define BASED_ENUM_STANDARD(Name, Type)                                        \
   BASED_ENUM(Name, Type, based::enumeration::category::Standard)

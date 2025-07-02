@@ -38,7 +38,8 @@ struct Buffer
 
   template<typename T, typename... Args>
     requires(valid_type<T>() && std::constructible_from<T, Args...>)
-  T* emplace(Args&&... args
+  T* emplace(
+      Args&&... args
   ) noexcept(std::is_nothrow_constructible_v<T, Args...>)
   {
     static_assert(std::is_trivially_destructible_v<T>);

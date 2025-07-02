@@ -11,7 +11,7 @@ template<class T>
 constexpr std::string to_string(T value)
 {
   constexpr const T radix = 10;
-  std::string res;
+  std::string       res;
 
   do {
     res.push_back('0' + (value % radix));

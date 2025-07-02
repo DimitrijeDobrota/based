@@ -22,7 +22,7 @@ class Mapper
     DirectT res = {};
 
     MappedType count = 0_u8;
-    for (auto idx = 0_u8; idx < size; idx++) {
+    for (auto idx = 0_u8; idx != size; idx++) {
       if (m_predicate(Character::cast(idx))) {
         res[idx] = count++;
       }
@@ -34,7 +34,7 @@ class Mapper
   static constexpr const U8 count = []
   {
     MappedType count = 0_u8;
-    for (auto idx = 0_u8; idx < size; idx++) {
+    for (auto idx = 0_u8; idx != size; idx++) {
       if (m_predicate(Character::cast(idx))) {
         count++;
       }
@@ -48,7 +48,7 @@ class Mapper
     ReverseT res = {};
 
     MappedType count = 0_u8;
-    for (auto idx = 0_u8; idx < size; idx++) {
+    for (auto idx = 0_u8; idx != size; idx++) {
       const auto chr = Character::cast(idx);
       if (m_predicate(chr)) {
         res[count++] = chr;

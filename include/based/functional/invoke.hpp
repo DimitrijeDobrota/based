@@ -25,16 +25,18 @@ constexpr decltype(auto) invoke_memptr(
 
   if constexpr (is_member_function) {
     if constexpr (is_derived_object) {
-      return (based::forward<Object>(object).*member)(based::forward<Args>(args
-      )...);
+      return (based::forward<Object>(object).*member)(
+          based::forward<Args>(args)...
+      );
     }
 
     if constexpr (is_wrapped) {
       return (object.get().*member)(based::forward<Args>(args)...);
     }
 
-    return ((*based::forward<Object>(object)).*member)(based::forward<Args>(args
-    )...);
+    return ((*based::forward<Object>(object)).*member)(
+        based::forward<Args>(args)...
+    );
   } else {
     static_assert(is_object_v<Pointed> && sizeof...(args) == 0);
     if constexpr (is_derived_object) {

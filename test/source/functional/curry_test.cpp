@@ -56,7 +56,7 @@ TEST_CASE("member function", "[functional/curry]")
   };
 
   const based::Curried curried = &Test::func;
-  Test tmp;
+  Test                 tmp;
 
   REQUIRE(curried(std::ref(tmp))(1)(2.0)(3)(4.0) == 10);
   REQUIRE(curried(std::ref(tmp))(1)(2.0)(3, 4.0) == 10);

@@ -82,13 +82,13 @@ TEST_CASE("ListPool iterator", "[container/ListPool]")
   {
     using Iter = ListPool::Iterator;
 
-    auto sum = 0_U32;
+    auto sum = 0_u32;
     for (auto it = Iter(pool, head); it != Iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 255_U32 * 254_U32);
+    REQUIRE(sum == 255_u32 * 254_u32);
   }
 
   SECTION("accumulate")
@@ -105,7 +105,7 @@ TEST_CASE("ListPool iterator", "[container/ListPool]")
         }
     );
 
-    REQUIRE(sum == 255_U32 * 254_U32 / 2_U32);
+    REQUIRE(sum == 255_u32 * 254_u32 / 2_u32);
   }
 
   based::free_list(pool, head);
@@ -128,13 +128,13 @@ TEST_CASE("ListPool const iterator", "[container/ListPool]")
   {
     using Iter = ListPool::ConstIterator;
 
-    auto sum = 0_U32;
+    auto sum = 0_u32;
     for (auto it = Iter(pool, head); it != Iter(pool); it++) {
       sum += *it.operator->();
       sum += *it;
     }
 
-    REQUIRE(sum == 255_U32 * 254_U32);
+    REQUIRE(sum == 255_u32 * 254_u32);
   }
 
   SECTION("const accumulate")
@@ -155,7 +155,7 @@ TEST_CASE("ListPool const iterator", "[container/ListPool]")
       );
     };
 
-    REQUIRE(sum(pool, head) == 255_U32 * 254_U32 / 2_U32);
+    REQUIRE(sum(pool, head) == 255_u32 * 254_u32 / 2_u32);
   }
 
   based::free_list(pool, head);
@@ -195,14 +195,14 @@ TEST_CASE("ListPool queue", "[container/ListPool/queue]")
       }
     }
 
-    auto sum = 0_U64;
+    auto sum = 0_u64;
     for (auto it = Iter(pool, queue.first); it != Iter(pool); ++it) {
       sum += *it;
     }
 
     pool.free(queue);
 
-    REQUIRE(sum == 21717_U64);
+    REQUIRE(sum == 21717_u64);
   }
 }
 

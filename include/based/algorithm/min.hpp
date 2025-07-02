@@ -10,8 +10,8 @@ namespace based
 {
 
 template<
-    trait::IsRegularBare T,
-    trait::IsRegularBare U,
+    trait::IsRegularBare                  T,
+    trait::IsRegularBare                  U,
     trait::IsProcedureRegular<bool, T, T> Rel>
   requires trait::IsSameBare<T, U>
 constexpr decltype(auto) min(T&& lhs, U&& rhs, Rel rel)

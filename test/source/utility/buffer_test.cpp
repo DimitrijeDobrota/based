@@ -35,13 +35,13 @@ TEST_CASE("buffer", "[utility/buffer]")
   using Buffer = based::Buffer<sizeof(based::SizeT)>;
 
   static constexpr auto value = 8_u8;
-  Buffer buf(std::in_place_type<based::U8>, value);
+  Buffer                buf(std::in_place_type<based::U8>, value);
 
   REQUIRE(*buf.as<based::U8>() == value);
 
   SECTION("emplace")
   {
-    static constexpr auto new_value = 10_U16;
+    static constexpr auto new_value = 10_u16;
     buf.emplace<based::U16>(new_value);
 
     REQUIRE(*buf.as<based::U16>() == new_value);
@@ -49,8 +49,8 @@ TEST_CASE("buffer", "[utility/buffer]")
 
   SECTION("swap")
   {
-    static constexpr auto new_value = 10_U16;
-    Buffer new_buf(std::in_place_type<based::U16>, new_value);
+    static constexpr auto new_value = 10_u16;
+    Buffer                new_buf(std::in_place_type<based::U16>, new_value);
     buf.swap(new_buf);
 
     REQUIRE(*buf.as<based::U16>() == new_value);
@@ -64,7 +64,7 @@ TEST_CASE("const buffer", "[utility/buffer]")
   using Buffer = based::Buffer<sizeof(based::SizeT)>;
 
   static constexpr auto value = 8_u8;
-  const Buffer buf(std::in_place_type<based::U8>, value);
+  const Buffer          buf(std::in_place_type<based::U8>, value);
 
   REQUIRE(*buf.as<based::U8>() == value);
 }

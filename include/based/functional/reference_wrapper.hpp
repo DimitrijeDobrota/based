@@ -36,8 +36,9 @@ public:
     })
 
   // NOLINTNEXTLINE(*explicit*)
-  constexpr RefWrapper(U&& obj
-  ) noexcept(noexcept(detail::fun<T>(based::forward<U>(obj))))
+  constexpr RefWrapper(U&& obj) noexcept(
+      noexcept(detail::fun<T>(based::forward<U>(obj)))
+  )
       : m_ptr(addressof(detail::fun<T>(based::forward<U>(obj))))
   {
   }
@@ -51,13 +52,14 @@ public:
   ~RefWrapper() = default;
 
   // NOLINTBEGIN(*explicit*)
-  constexpr operator T&() const noexcept { return *m_ptr; }
+  constexpr    operator T&() const noexcept { return *m_ptr; }
   constexpr T& get() const noexcept { return *m_ptr; }
   // NOLINTEND(*explicit*)
 
   template<class... Args>
-  constexpr decltype(auto) operator()(Args&&... args) const
-      noexcept(trait::IsNothrowInvocable<T&, Args...>)
+  constexpr decltype(auto) operator()(
+      Args&&... args
+  ) const noexcept(trait::IsNothrowInvocable<T&, Args...>)
   {
     return get(based::forward<Args>(args)...);
   }

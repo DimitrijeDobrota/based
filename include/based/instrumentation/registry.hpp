@@ -10,9 +10,9 @@ class Registry
 {
 public:
   static SizeT count;
-  static D* head;
-  D* prev;
-  D* next;
+  static D*    head;
+  D*           prev;
+  D*           next;
 
   Registry(Registry&&) = delete;
 

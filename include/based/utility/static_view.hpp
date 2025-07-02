@@ -19,7 +19,7 @@ struct OversizedArray
   using value_type = T;
 
   std::array<T, oversized_size> data {};
-  std::size_t size {};
+  std::size_t                   size {};
 
   constexpr auto begin() { return std::begin(data); }
   constexpr auto end()

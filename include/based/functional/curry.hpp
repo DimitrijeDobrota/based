@@ -14,7 +14,7 @@ class Curried
   template<typename FFunction, typename... FCapturedArgs>
   friend class Curried;
 
-  Function m_function;
+  Function                    m_function;
   std::tuple<CapturedArgs...> m_captured;
 
   Curried(Function function, std::tuple<CapturedArgs...> args)

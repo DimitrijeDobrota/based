@@ -9,7 +9,7 @@ namespace based
 constexpr auto string_format(std::string_view format, auto... args)
 {
   std::string_view::size_type last = 0;
-  std::string res;
+  std::string                 res;
 
   [[maybe_unused]] const auto func = [&](std::string_view arg)
   {

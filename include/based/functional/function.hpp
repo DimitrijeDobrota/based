@@ -33,7 +33,7 @@ class Function<Ret(Args...), size, alignment>
   }
 
   constexpr static ExecutorT m_default_executor = default_executor;
-  ExecutorT m_executor = m_default_executor;
+  ExecutorT                  m_executor = m_default_executor;
 
   template<typename Callable>
   static Ret executor(Args... args, void* func)

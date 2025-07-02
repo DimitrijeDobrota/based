@@ -1,5 +1,6 @@
 #pragma once
 
+#include "based/concept/is_integral.hpp"
 #include "based/concept/is_same.hpp"
 
 namespace based
@@ -9,10 +10,10 @@ namespace based
 #define BASED_DETAIL_MACRO(decl, val)                                          \
   decltype(decl)                                                               \
   {                                                                            \
-    static_cast<decltype(decl)::basic_type>(val)                               \
+    val                                                                        \
   }
 
-template<class V, class Tag>
+template<trait::IsIntegral V, class Tag>
 // NOLINTBEGIN(*crtp*)
 struct StrongType
 {

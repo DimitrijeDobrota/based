@@ -31,7 +31,10 @@ struct InvokeImpl<MT B::*>
   static auto get(T&& obj) -> decltype(obj.get());
 
   template<class T>
-    requires(!trait::IsBaseOf<B, trait::Decay<T>> && !trait::IsRefWrapper<trait::Decay<T>>)
+    requires(
+        !trait::IsBaseOf<B, trait::Decay<T>>
+        && !trait::IsRefWrapper<trait::Decay<T>>
+    )
   static auto get(T&& obj) -> decltype(*based::forward<T>(obj));
 
   template<class T, class... Args, class MT1>

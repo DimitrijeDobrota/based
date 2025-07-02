@@ -151,7 +151,7 @@ TEST_CASE("max(const value, const value) = left", "[algorithm/max]")
 
 TEST_CASE("max(value, const value) = right", "[algorithm/max]")
 {
-  int a = 3;
+  int       a = 3;
   const int b = 4;
 
   using ResT = decltype(based::max(a, b));
@@ -162,7 +162,7 @@ TEST_CASE("max(value, const value) = right", "[algorithm/max]")
 
 TEST_CASE("max(value, const value) = left", "[algorithm/max]")
 {
-  int a = 4;
+  int       a = 4;
   const int b = 3;
 
   using ResT = decltype(based::max(a, b));
@@ -174,7 +174,7 @@ TEST_CASE("max(value, const value) = left", "[algorithm/max]")
 TEST_CASE("max(const value, value) = right", "[algorithm/max]")
 {
   const int a = 3;
-  int b = 4;
+  int       b = 4;
 
   using ResT = decltype(based::max(a, b));
 
@@ -185,7 +185,7 @@ TEST_CASE("max(const value, value) = right", "[algorithm/max]")
 TEST_CASE("max(const value, value) = left", "[algorithm/max]")
 {
   const int a = 4;
-  int b = 3;
+  int       b = 3;
 
   using ResT = decltype(based::max(a, b));
 
@@ -237,7 +237,7 @@ TEST_CASE("max(move, value) = left", "[algorithm/max]")
 
 TEST_CASE("max(move, const value) = right", "[algorithm/max]")
 {
-  int a = 3;
+  int       a = 3;
   const int b = 4;
 
   using ResT = decltype(based::max(based::move(a), b));
@@ -248,7 +248,7 @@ TEST_CASE("max(move, const value) = right", "[algorithm/max]")
 
 TEST_CASE("max(move, const value) = left", "[algorithm/max]")
 {
-  int a = 4;
+  int       a = 4;
   const int b = 3;
 
   using ResT = decltype(based::max(based::move(a), b));
@@ -302,7 +302,7 @@ TEST_CASE("max(value, move) = left", "[algorithm/max]")
 TEST_CASE("max(const value, move) = right", "[algorithm/max]")
 {
   const int a = 3;
-  int b = 4;
+  int       b = 4;
 
   using ResT = decltype(based::max(a, based::move(b)));
 
@@ -313,7 +313,7 @@ TEST_CASE("max(const value, move) = right", "[algorithm/max]")
 TEST_CASE("max(const value, move) = left", "[algorithm/max]")
 {
   const int a = 4;
-  int b = 3;
+  int       b = 3;
 
   using ResT = decltype(based::max(a, based::move(b)));
 

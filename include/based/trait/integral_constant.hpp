@@ -12,7 +12,7 @@ struct IntegralConstant
   using Type = IntegralConstant;
 
   // NOLINTNEXTLINE(*explicit*)
-  constexpr operator value_type() const noexcept { return value; }
+  constexpr            operator value_type() const noexcept { return value; }
   constexpr value_type operator()() const noexcept { return value; }
 };
 

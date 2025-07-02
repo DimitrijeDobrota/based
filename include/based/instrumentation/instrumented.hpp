@@ -112,7 +112,8 @@ struct instrumented : instrumented_base
   }
 
   // self assign should be handled by the value_type
-  instrumented& operator=(instrumented&& val
+  instrumented& operator=(
+      instrumented&& val
   ) noexcept  // NOLINT(*cert-oop54-cpp*)
   {
     ++counts[op::asgn_move];
@@ -193,8 +194,8 @@ inline auto normalize_nlogn1(double x, double n)
 
 template<typename Function>
 void count_operations(
-    SizeT first,
-    SizeT last,
+    SizeT    first,
+    SizeT    last,
     Function fun,
     double (*norm)(double, double) = dont_normalize
 )
@@ -203,12 +204,12 @@ void count_operations(
   using eSizeT = instrumented::op::enum_type::SizeType;
 
   constexpr eSizeT cols = instrumented::op::enum_type::size;
-  const eSizeT decimals((norm == dont_normalize) ? 0 : 2);
+  const eSizeT     decimals((norm == dont_normalize) ? 0 : 2);
 
   InstrumentedBase::op::enum_type::array<double> values;
 
   static constexpr int width = 12;
-  table const tbl(width);
+  table const          tbl(width);
   tbl.print_header(
       std::begin(instrumented::op::enum_type::names),
       std::end(instrumented::op::enum_type::names)
