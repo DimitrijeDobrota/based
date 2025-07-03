@@ -2,7 +2,6 @@
 
 #include <compare>
 
-#include "based/macro/foreach_1.hpp"
 #include "based/utility/assert.hpp"
 
 namespace based
@@ -13,7 +12,7 @@ namespace based
 using SizeT = unsigned long long int;
 using PtrDiffT = signed long long int;
 
-#define BASED_DETAIL_OP_UNARY(Prefix, Name, Index)                             \
+#define BASED_DETAIL_OP_UNARY(Prefix, Name)                                    \
   inline constexpr auto operator Name(Prefix##8 lhs)                           \
   {                                                                            \
     return Prefix##8 ::underlying_cast(Name(lhs.value));                       \
@@ -35,7 +34,7 @@ using PtrDiffT = signed long long int;
     return Prefix::underlying_cast(Name(lhs.value));                           \
   }
 
-#define BASED_DETAIL_OP_UNARY_PRE(Prefix, Name, Index)                         \
+#define BASED_DETAIL_OP_UNARY_PRE(Prefix, Name)                                \
   inline constexpr auto& operator Name(Prefix##8 & lhs)                        \
   {                                                                            \
     Name lhs.value;                                                            \
@@ -62,7 +61,7 @@ using PtrDiffT = signed long long int;
     return lhs;                                                                \
   }
 
-#define BASED_DETAIL_OP_UNARY_POST(Prefix, Name, Index)                        \
+#define BASED_DETAIL_OP_UNARY_POST(Prefix, Name)                               \
   inline constexpr auto operator Name(Prefix##8 & lhs, int)                    \
   {                                                                            \
     const auto crnt = lhs;                                                     \
@@ -94,7 +93,7 @@ using PtrDiffT = signed long long int;
     return crnt;                                                               \
   }
 
-#define BASED_DETAIL_OP_BINARY(Prefix, Name, Index)                            \
+#define BASED_DETAIL_OP_BINARY(Prefix, Name)                                   \
   inline constexpr auto operator Name(Prefix##8 lhs, Prefix##8 rhs)            \
   {                                                                            \
     return Prefix##8 ::underlying_cast(lhs.value Name rhs.value);              \
@@ -255,7 +254,7 @@ using PtrDiffT = signed long long int;
     return Prefix##64 ::underlying_cast(lhs.value Name rhs.value);             \
   }
 
-#define BASED_DETAIL_OP_COMPARE(Prefix, Name, Index)                           \
+#define BASED_DETAIL_OP_COMPARE(Prefix, Name)                                  \
   inline constexpr auto operator Name(Prefix##8 lhs, Prefix##8 rhs)            \
   {                                                                            \
     return (lhs.value Name rhs.value);                                         \
@@ -529,7 +528,23 @@ struct I : detail::StrongTypeImpl<signed long long int, I>
   }
 };
 
-auto unary(I) -> I;
+BASED_DETAIL_OP_UNARY(I, +)
+BASED_DETAIL_OP_UNARY(I, -)
+
+BASED_DETAIL_OP_UNARY_PRE(I, ++)
+BASED_DETAIL_OP_UNARY_PRE(I, --)
+
+BASED_DETAIL_OP_UNARY_POST(I, ++)
+BASED_DETAIL_OP_UNARY_POST(I, --)
+
+BASED_DETAIL_OP_COMPARE(I, ==)
+BASED_DETAIL_OP_COMPARE(I, <=>)
+
+BASED_DETAIL_OP_BINARY(I, +)
+BASED_DETAIL_OP_BINARY(I, -)
+BASED_DETAIL_OP_BINARY(I, *)
+BASED_DETAIL_OP_BINARY(I, /)
+BASED_DETAIL_OP_BINARY(I, %)
 
 struct U64 : detail::StrongTypeImpl<unsigned long long int, U64>
 {
@@ -646,17 +661,29 @@ struct U : detail::StrongTypeImpl<unsigned long long int, U>
   }
 };
 
-BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY, +, -)
-BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY_PRE, ++, --)
-BASED_FOREACH_1(I, BASED_DETAIL_OP_UNARY_POST, ++, --)
-BASED_FOREACH_1(I, BASED_DETAIL_OP_COMPARE, ==, <=>)
-BASED_FOREACH_1(I, BASED_DETAIL_OP_BINARY, +, -, *, /, %)
+BASED_DETAIL_OP_UNARY(U, +)
+BASED_DETAIL_OP_UNARY(U, -)
+BASED_DETAIL_OP_UNARY(U, ~)
 
-BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY, +, -, ~)
-BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY_PRE, ++, --)
-BASED_FOREACH_1(U, BASED_DETAIL_OP_UNARY_POST, ++, --)
-BASED_FOREACH_1(U, BASED_DETAIL_OP_BINARY, +, -, *, /, %, <<, >>, &, |, ^)
-BASED_FOREACH_1(U, BASED_DETAIL_OP_COMPARE, ==, <=>)
+BASED_DETAIL_OP_UNARY_PRE(U, ++)
+BASED_DETAIL_OP_UNARY_PRE(U, --)
+
+BASED_DETAIL_OP_UNARY_POST(U, ++)
+BASED_DETAIL_OP_UNARY_POST(U, --)
+
+BASED_DETAIL_OP_COMPARE(U, ==)
+BASED_DETAIL_OP_COMPARE(U, <=>)
+
+BASED_DETAIL_OP_BINARY(U, +)
+BASED_DETAIL_OP_BINARY(U, -)
+BASED_DETAIL_OP_BINARY(U, *)
+BASED_DETAIL_OP_BINARY(U, /)
+BASED_DETAIL_OP_BINARY(U, %)
+BASED_DETAIL_OP_BINARY(U, <<)
+BASED_DETAIL_OP_BINARY(U, >>)
+BASED_DETAIL_OP_BINARY(U, &)
+BASED_DETAIL_OP_BINARY(U, |)
+BASED_DETAIL_OP_BINARY(U, ^)
 
 #undef BASED_DETAIL_OP_UNARY_PRE
 #undef BASED_DETAIL_OP_UNARY_POST
